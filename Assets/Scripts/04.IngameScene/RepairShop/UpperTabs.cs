@@ -27,4 +27,18 @@ public class UpperTabs : MonoBehaviour
         StatusTab.SetActive(false);
         SkillTab.SetActive(true);
     }
+    public void OnSkillLowerTabClick(int index)
+    {
+        for (int i = 0; i < SkillLowerTabs2.Count; i++)
+        {
+            if (i == index)
+            {
+                SkillLowerTabs2[i].SetActive(true);
+            }
+            else
+            {
+                SkillLowerTabs2[i].SetActive(false);
+            }
+        }
+    }
 }
