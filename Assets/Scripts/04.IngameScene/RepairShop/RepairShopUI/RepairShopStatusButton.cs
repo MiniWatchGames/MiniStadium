@@ -63,7 +63,7 @@ public class RepairShopStatusButton : MonoBehaviour, IPointerEnterHandler, IPoin
             cb.normalColor = cb.selectedColor;
         else
             cb.normalColor = Color.white;
-        button.colors = cb;
+       button.colors = cb;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

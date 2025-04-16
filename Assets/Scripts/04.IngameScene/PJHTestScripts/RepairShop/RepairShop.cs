@@ -8,6 +8,7 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private GameObject RepairShopUI;
     [SerializeField] public List<GameObject> RepairShopUpperTabs;
     [SerializeField] public List<GameObject> RepairShopLowerTabs;
+    [SerializeField] public GameObject RepairShopStatus;
     
     public int currentMoney;
     public TMP_Text currentMoneyText;
@@ -16,6 +17,7 @@ public class RepairShop : MonoBehaviour
     {
         currentMoney = 30000;
         currentMoneyText.text = currentMoney.ToString();
+        RepairShopStatus.GetComponent<RepairShopStatus>().init();
     }
 
     string SetMoneyText(int Money)

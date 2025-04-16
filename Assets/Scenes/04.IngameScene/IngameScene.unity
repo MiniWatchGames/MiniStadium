@@ -1489,7 +1489,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 3
   m_Spacing: 4
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -9260,6 +9260,7 @@ MonoBehaviour:
   - {fileID: 603483394}
   - {fileID: 1643660673}
   - {fileID: 2091451082}
+  RepairShopStatus: {fileID: 799243224}
   currentMoney: 0
   currentMoneyText: {fileID: 2129342394}
 --- !u!114 &166702750
@@ -17226,7 +17227,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 3
   m_Spacing: 4
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -96632,7 +96633,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 3
   m_Spacing: 4
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
