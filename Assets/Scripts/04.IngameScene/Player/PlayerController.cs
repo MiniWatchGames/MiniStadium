@@ -32,7 +32,6 @@ public enum MovementState
 public class PlayerController : MonoBehaviour, IInputEvents
 {
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private Transform spine; // 캐릭터의 상체(척추) 본
     
     private CharacterController _characterController;
     private CameraController _cameraController;
@@ -43,6 +42,8 @@ public class PlayerController : MonoBehaviour, IInputEvents
     // input값 저장, 전달 
     private Vector2 _currentMoveInput;
     public Vector2 CurrentMoveInput => _currentMoveInput;
+    private float _lastInputTime;
+    private float _inputBufferTime = 0.1f; // 100ms의 버퍼 타임
     
     // --------
     // 상태 관련
@@ -154,19 +155,24 @@ public class PlayerController : MonoBehaviour, IInputEvents
         // 이동 
         if (input != Vector2.zero)
         {
+            _lastInputTime = Time.time;
             if (_movementFsm.CurrentState != MovementState.Walk)
             {
-
                 SetMovementState("Walk");
             }
             _currentMoveInput = input;
         }
         else
         {
-            if (_movementFsm.CurrentState != MovementState.Idle)
+            // 버퍼 시간 내에 입력이 없으면 Idle로 전환
+            if (Time.time - _lastInputTime > _inputBufferTime)
             {
-                SetMovementState("Idle");
+                if (_movementFsm.CurrentState != MovementState.Idle)
+                {
+                    SetMovementState("Idle");
+                }
             }
+            // 버퍼 시간 내에는 이전 입력 유지
         }
         
     }

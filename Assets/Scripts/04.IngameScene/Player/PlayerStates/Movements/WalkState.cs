@@ -5,6 +5,8 @@ using UnityEngine;
 public class WalkState : PlayerMovementState
 {
     private static readonly int IsMoving = Animator.StringToHash("isMoving");
+    private Vector2 _smoothedInput = Vector2.zero;
+    private float _smoothingSpeed = 10f;
     private static int aniName;
     public WalkState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
     {
@@ -23,9 +25,15 @@ public class WalkState : PlayerMovementState
     }
     public override void Update()
     {
-        Vector2 input = _playerController.CurrentMoveInput;
-        _playerController.Animator.SetFloat("MoveX", input.x);
-        _playerController.Animator.SetFloat("MoveZ", input.y);
-        base.Update();    
+        _smoothedInput = Vector2.Lerp(_smoothedInput, _playerController.CurrentMoveInput, Time.deltaTime * _smoothingSpeed);
+
+        // 매우 작은 값은 0으로 처리
+        if (_smoothedInput.magnitude < 0.01f)
+            _smoothedInput = Vector2.zero;
+
+        // 애니메이터에 스무딩된 값 전달
+        _playerController.Animator.SetFloat("MoveX", _smoothedInput.x);
+        _playerController.Animator.SetFloat("MoveZ", _smoothedInput.y);
+        base.Update();
     }
 }
