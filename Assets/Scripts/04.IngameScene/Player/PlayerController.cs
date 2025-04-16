@@ -3,6 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ActionState { 
+    Idle,
+    Attack,
+    Hit,
+    Dead,
+    MovementSkills,
+    WeaponSkills,
+    None
+}
+
+public enum PostureState { 
+    Idle,
+    Crouch,
+    None
+}
+
+public enum MovementState
+{
+    Idle,
+    Walk,
+    Jump,
+    None
+}
+
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, IInputEvents
@@ -13,13 +37,21 @@ public class PlayerController : MonoBehaviour, IInputEvents
     
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform spine; // 캐릭터의 상체(척추) 본
-    [SerializeField] private float maxSpineAngle = 30f; // 상체 최대 회전 각도
     
     private CharacterController _characterController;
     private CameraController _cameraController;
     private const float _gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
     private float jumpSpeed = 0.5f;
+    
+    // --------
+    // 상태 관련
+    [Header("FSM")]
+    private PlayerFSM<MovementState> _movementFsm;
+    private PlayerFSM<PostureState> _postureFsm;
+    private PlayerFSM<ActionState> _actionFsm;
+    [SerializeField]
+    private string defaultState;
     
     // --------
     // 카메라 관련
@@ -29,6 +61,9 @@ public class PlayerController : MonoBehaviour, IInputEvents
     [SerializeField] private float maxAngle;
     private float _yaw = 0f;
     private float _pitch = 0f;
+    
+    [Header("Weapon")]
+    Weapon _weapon;
 
     public Animator Animator { get; private set; }
     public bool IsGrounded
@@ -43,6 +78,11 @@ public class PlayerController : MonoBehaviour, IInputEvents
     {
         Animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
+        _weapon = GetComponent<Weapon>();
+        
+        _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _weapon, defaultState);
+        _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _weapon, defaultState);
+        _actionFsm = new PlayerFSM<ActionState>(StateType.Action, _weapon, defaultState);
     }
 
     private void Start()
@@ -58,6 +98,27 @@ public class PlayerController : MonoBehaviour, IInputEvents
         // 카메라 설정
         _cameraController = Camera.main.GetComponent<CameraController>();
         _cameraController.SetTarget(transform);
+        
+        _movementFsm.Run(this);
+        _postureFsm.Run(this);
+        _actionFsm.Run(this);
+
+        SetMovementState("Idle");
+        SetPostureState("Idle");
+        SetActionState("Idle");
+    }
+
+    public void SetMovementState(string stateName)
+    {
+        _movementFsm.ChangeState(stateName, this);
+    }
+    public void SetPostureState(string stateName)
+    {
+        _postureFsm.ChangeState(stateName, this);
+    }
+    public void SetActionState(string stateName)
+    {
+        _actionFsm.ChangeState(stateName, this);
     }
 
     private void OnAnimatorMove()
