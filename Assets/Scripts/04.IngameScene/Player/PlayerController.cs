@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
     private float _pitch = 0f;
     
     [Header("Weapon")]
-    Weapon _weapon;
+    PlayerWeapon _playerWeapon;
 
     public Animator Animator { get; private set; }
     public bool IsGrounded
@@ -77,11 +77,11 @@ public class PlayerController : MonoBehaviour, IInputEvents
     {
         Animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
-        _weapon = GetComponent<Weapon>();
+        _playerWeapon = GetComponent<PlayerWeapon>();
         
-        _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _weapon, defaultState);
-        _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _weapon, defaultState);
-        _actionFsm = new PlayerFSM<ActionState>(StateType.Action, _weapon, defaultState);
+        _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
+        _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
+        _actionFsm = new PlayerFSM<ActionState>(StateType.Action, _playerWeapon, defaultState);
     }
 
     private void Start()

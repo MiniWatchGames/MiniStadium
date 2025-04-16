@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerAnimationStrategyFactory 
 {
-    public  IWeaponAnimationStrategy CreateStrategy(Weapon weapon)
+    public  IWeaponAnimationStrategy CreateStrategy(PlayerWeapon playerWeapon)
     {
-        switch (weapon.WeaponType)
+        switch (playerWeapon.WeaponType)
         {
             case WeaponType.Sword:
                 return new SwordAnimationStrategy();

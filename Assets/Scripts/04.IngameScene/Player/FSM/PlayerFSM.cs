@@ -69,7 +69,7 @@ public class PlayerFSM<T> where T : Enum
     private IPlayerState _currentState;
     private Dictionary<Enum, IPlayerState> _states = new();
     private StateType _stateType;
-    private Weapon _weapon;
+    private PlayerWeapon _playerWeapon;
     private PlayerAnimationStrategyFactory _playerAnimationStrategyFactory;
     private IWeaponAnimationStrategy _aniStrategy;
     public T CurrentState { get; private set; }
@@ -79,13 +79,13 @@ public class PlayerFSM<T> where T : Enum
     /// FSM의 생성자입니다.
     /// </summary>
     /// <param name="value"></param>
-    public PlayerFSM(StateType value, Weapon weapon, string defaultState)
+    public PlayerFSM(StateType value, PlayerWeapon playerWeapon, string defaultState)
     {
         _defaultState = defaultState;
         _stateType = value;
-        _weapon = weapon;
+        _playerWeapon = playerWeapon;
         _playerAnimationStrategyFactory = new PlayerAnimationStrategyFactory();
-        _aniStrategy = _playerAnimationStrategyFactory.CreateStrategy(weapon);
+        _aniStrategy = _playerAnimationStrategyFactory.CreateStrategy(playerWeapon);
     }  
 
     public void Run(PlayerController playerController) 
@@ -125,11 +125,11 @@ public class PlayerFSM<T> where T : Enum
     /// <summary>
     /// 무기 변경시 새 전략으로 바꾸기위해 호출해줘야 함
     /// </summary>
-    public void ChangeWeapon(Weapon weapon, PlayerController playerController) {
-        _weapon = weapon;
+    public void ChangeWeapon(PlayerWeapon playerWeapon, PlayerController playerController) {
+        _playerWeapon = playerWeapon;
         _states.Clear();
         _states = null;
-        _aniStrategy = _playerAnimationStrategyFactory.CreateStrategy(_weapon);
+        _aniStrategy = _playerAnimationStrategyFactory.CreateStrategy(_playerWeapon);
         ChangeState(_defaultState, playerController);
     }
    

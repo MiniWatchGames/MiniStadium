@@ -7,7 +7,7 @@ public enum WeaponType
     Sword,
     Gun,
 }
-public class Weapon : MonoBehaviour
+public class PlayerWeapon : MonoBehaviour
 {
     [SerializeField]
     private WeaponType weaponType;
