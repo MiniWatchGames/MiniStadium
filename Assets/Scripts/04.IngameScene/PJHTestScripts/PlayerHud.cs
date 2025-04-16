@@ -29,7 +29,7 @@ public class PlayerHud : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Player HP: " + playerHp);
+        //Debug.Log("Player HP: " + playerHp);
     }
     public void SetPlayerHP()
     {
