@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class JumpState : PlayerMovementState
 {
+    private static readonly int Jump = Animator.StringToHash("Jump");
     private static int aniName;
     public JumpState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
     {
@@ -11,8 +12,9 @@ public class JumpState : PlayerMovementState
     }
     public override void Enter(PlayerController playerController)
     {
-        playerController.Animator.Play(aniName);
+        //playerController.Animator.Play(aniName);
         base.Enter(playerController);
+        _playerController.Animator.SetTrigger(Jump);
     }
     public override void Exit()
     {

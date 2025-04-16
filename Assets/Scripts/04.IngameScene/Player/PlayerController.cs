@@ -31,10 +31,6 @@ public enum MovementState
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, IInputEvents
 {
-    private static readonly int IsMoving = Animator.StringToHash("isMoving");
-    private static readonly int Jump = Animator.StringToHash("Jump");
-    private static readonly int IsCrouch = Animator.StringToHash("isCrouch");
-    
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform spine; // 캐릭터의 상체(척추) 본
     
@@ -44,14 +40,17 @@ public class PlayerController : MonoBehaviour, IInputEvents
     private Vector3 _velocity = Vector3.zero;
     private float jumpSpeed = 0.5f;
     
+    // input값 저장, 전달 
+    private Vector2 _currentMoveInput;
+    public Vector2 CurrentMoveInput => _currentMoveInput;
+    
     // --------
     // 상태 관련
     [Header("FSM")]
     private PlayerFSM<MovementState> _movementFsm;
     private PlayerFSM<PostureState> _postureFsm;
     private PlayerFSM<ActionState> _actionFsm;
-    [SerializeField]
-    private string defaultState;
+    [SerializeField] private string defaultState;
     
     // --------
     // 카메라 관련
@@ -91,6 +90,13 @@ public class PlayerController : MonoBehaviour, IInputEvents
         InputManager.instance.Register(this);
 
         Init();
+    }
+
+    private void Update()
+    {
+        _movementFsm.CurrentStateUpdate();
+        _postureFsm.CurrentStateUpdate();
+        _actionFsm.CurrentStateUpdate();
     }
 
     private void Init()
@@ -146,17 +152,23 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public void OnMove(Vector2 input)
     {
         // 이동 
-        // todo : 상태패턴으로 적용 
         if (input != Vector2.zero)
         {
-            Animator.SetBool(IsMoving, true);
-            Animator.SetFloat("MoveX", input.x);
-            Animator.SetFloat("MoveZ", input.y);
+            if (_movementFsm.CurrentState != MovementState.Walk)
+            {
+
+                SetMovementState("Walk");
+            }
+            _currentMoveInput = input;
         }
         else
         {
-            Animator.SetBool(IsMoving, false);
+            if (_movementFsm.CurrentState != MovementState.Idle)
+            {
+                SetMovementState("Idle");
+            }
         }
+        
     }
 
     public void OnLook(Vector2 delta)
@@ -180,8 +192,8 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public void OnJumpPressed()
     {
         // 점프 
-        // todo : 상태패턴으로 적용 
-        Animator.SetTrigger(Jump);
+        // todo : 착지 타이밍과 상태 전환 타이밍 동기화 필요 
+        SetMovementState("Jump");
         _velocity.y = Mathf.Sqrt(jumpSpeed * -2f * _gravity);
     }
 
@@ -193,9 +205,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public void OnCrouchPressed()
     {
         // 앉기 
-        // todo : 상태패턴으로 적용 
-        var isCrouch = Animator.GetBool(IsCrouch);
-        Animator.SetBool(IsCrouch, !isCrouch);
+        SetPostureState(_postureFsm.CurrentState == PostureState.Idle ? "Crouch" : "Idle");
     }
     
     #endregion

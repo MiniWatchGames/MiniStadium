@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CrouchState : PlayerPostureState
 {
+    private static readonly int IsCrouch = Animator.StringToHash("isCrouch");
     private static int aniName;
 
     public CrouchState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
@@ -14,8 +15,9 @@ public class CrouchState : PlayerPostureState
     }
     public override void Enter(PlayerController playerController)
     {
-        playerController.Animator.Play(aniName);
+        //playerController.Animator.Play(aniName);
         base.Enter(playerController);
+        _playerController.Animator.SetBool(IsCrouch, true);
     }
     public override void Exit()
     {

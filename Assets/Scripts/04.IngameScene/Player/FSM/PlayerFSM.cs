@@ -72,6 +72,7 @@ public class PlayerFSM<T> where T : Enum
     private Weapon _weapon;
     private PlayerAnimationStrategyFactory _playerAnimationStrategyFactory;
     private IWeaponAnimationStrategy _aniStrategy;
+    public T CurrentState { get; private set; }
 
 
     /// <summary>
@@ -112,7 +113,13 @@ public class PlayerFSM<T> where T : Enum
         T stateType = (T)(object)Enum.Parse(typeof(T), stateName);
         _currentState?.Exit();
         if (!_states.TryGetValue(stateType, out _currentState)) return;
+        CurrentState = stateType; // 현재 상태 저장
         _currentState?.Enter(playerController);
+    }
+
+    public void CurrentStateUpdate()
+    {
+        _currentState?.Update();
     }
 
     /// <summary>

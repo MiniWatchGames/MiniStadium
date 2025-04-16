@@ -11,7 +11,7 @@ public class ActionIdleState : PlayerActionState
     }
     public override void Enter(PlayerController playerController)
     {
-        playerController.Animator.Play(aniName);
+        //playerController.Animator.Play(aniName);
         base.Enter(playerController);
     }
     public override void Exit()
