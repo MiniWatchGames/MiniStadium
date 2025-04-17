@@ -15,7 +15,7 @@ public class RepairShop : MonoBehaviour
     void Start()
     {
         currentMoney = 30000;
-        currentMoneyText.text = currentMoney.ToString();
+        //currentMoneyText.text = currentMoney.ToString();
     }
 
     string SetMoneyText(int Money)

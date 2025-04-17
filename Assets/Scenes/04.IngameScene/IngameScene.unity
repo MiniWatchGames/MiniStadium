@@ -7076,6 +7076,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RepairShopUI: {fileID: 1171771854}
+  GameRoundInfoUI: {fileID: 0}
+  currentGameState: 0
+  currentWinLoseState: 0
+  currentTeam: 0
+  currentRoundState: 0
+  gameTimer: {fileID: 0}
+  currentRound: 0
+  currentGameTime: 0
 --- !u!4 &673851974
 Transform:
   m_ObjectHideFlags: 0
@@ -12976,7 +12984,7 @@ MonoBehaviour:
   - {fileID: 1189076428}
   - {fileID: 863298876}
   currentMoney: 0
-  currentMoneyText: {fileID: 0}
+  currentMoneyText: {fileID: 1382581051}
 --- !u!114 &1171771857
 MonoBehaviour:
   m_ObjectHideFlags: 0
