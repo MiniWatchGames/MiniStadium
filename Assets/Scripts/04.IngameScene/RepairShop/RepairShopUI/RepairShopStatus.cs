@@ -32,14 +32,13 @@ public class RepairShopStatus : MonoBehaviour
     
     // 마지막으로 선택한 버튼의 인덱스 값
     private List<int> _lastButtonIndexes;
-
-    public void Start()
+    
+    public void init()
     {
         _errorMessage.SetActive(false);
         SetRepairShopStatus();
     }
-
-    // 상점 스테이터스 초기화
+    // 상점 스테이터스 초기화 및 생성
     public void SetRepairShopStatus()
     {
         int row = Mathf.Min(_repairShopStatuses.Length, _targetGroupLayers.Length);
