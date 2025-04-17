@@ -1452,6 +1452,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142107353}
   m_CullTransparentMesh: 1
+--- !u!1 &148504070 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8408206433110112542, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+    type: 3}
+  m_PrefabInstance: {fileID: 39545964}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &149027291
 GameObject:
   m_ObjectHideFlags: 0
@@ -4875,6 +4881,7 @@ GameObject:
   m_Component:
   - component: {fileID: 473463925}
   - component: {fileID: 473463926}
+  - component: {fileID: 473463927}
   m_Layer: 5
   m_Name: '[GroupLayer] Timer'
   m_TagString: Untagged
@@ -4929,6 +4936,23 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &473463927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473463924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 913cf8140bc1c0f4fa4d3d4ca9df4119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timer: {fileID: 1131277808}
+  text: {fileID: 2006760631}
+  timerType: 0
+  timeLimit: 0
+  currentTime: 0
 --- !u!1 &495236772
 GameObject:
   m_ObjectHideFlags: 0
@@ -7076,12 +7100,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RepairShopUI: {fileID: 1171771854}
-  GameRoundInfoUI: {fileID: 0}
+  GameRoundInfoUI: {fileID: 148504070}
   currentGameState: 0
   currentWinLoseState: 0
   currentTeam: 0
   currentRoundState: 0
-  gameTimer: {fileID: 0}
+  gameTimer: {fileID: 473463927}
   currentRound: 0
   currentGameTime: 0
 --- !u!4 &673851974
