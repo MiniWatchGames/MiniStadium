@@ -12,6 +12,8 @@ public class BuyableObject : ScriptableObject
    public int price;
    
    public string description;
+
+   public float damage;
    
-   
+   public List<string> skills = new List<string>();
 }

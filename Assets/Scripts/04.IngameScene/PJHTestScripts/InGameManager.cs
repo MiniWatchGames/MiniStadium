@@ -83,6 +83,7 @@ public class InGameManager : MonoBehaviour
             case RoundState.RoundEnd:
                 Debug.Log("Round End");
                 currentRoundState = RoundState.RoundEnd;
+                currentRound++;
                 if (currentGameState == GameState.EndGame)
                 {
                     //TODO: 이겼는지 졌는지 UI 띄우기
@@ -149,24 +150,17 @@ public class InGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.B))
+        if(Input.GetKeyDown(KeyCode.B) && currentRoundState ==  RoundState.RoundStart)
         {
             RepairShopUI.SetActive(!RepairShopUI.activeSelf);
         }
+        
         if(currentRound == 7 && !(currentWinLoseState == WinLoseState.Duse || currentWinLoseState == WinLoseState.Draw))
         {
             SetGameState(GameState.EndGame);
         }
-        if(currentWinLoseState == WinLoseState.Duse)
-        {
-            
-        }
-
-        if (currentWinLoseState == WinLoseState.Draw)
-        {
-            
-        }
-        Debug.Log("Current Round State: " + currentRoundState);
+        
+        
     }
     
 }

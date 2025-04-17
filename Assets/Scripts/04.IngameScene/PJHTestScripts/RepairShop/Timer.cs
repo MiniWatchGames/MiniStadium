@@ -50,7 +50,7 @@ public class Timer : MonoBehaviour
             }
             
         }
-        //timer.fillAmount = currentTime/timeLimit;
+        timer.fillAmount = currentTime/timeLimit;
         text.text = FormatSeconds(currentTime);
     }
     public void ResetTimer()

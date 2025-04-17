@@ -9,6 +9,8 @@ public class RepairShop : MonoBehaviour
     [SerializeField] public List<GameObject> RepairShopUpperTabs;
     [SerializeField] public List<GameObject> RepairShopLowerTabs;
     [SerializeField] public GameObject RepairShopStatus;
+    [SerializeField] public GameObject RepairShopWeapon;
+    
     
     public int currentMoney;
     public TMP_Text currentMoneyText;
@@ -16,13 +18,15 @@ public class RepairShop : MonoBehaviour
     void Start()
     {
         currentMoney = 30000;
-        currentMoneyText.text = currentMoney.ToString();
+        currentMoneyText.text ="가격 : " + currentMoney.ToString();
         RepairShopStatus.GetComponent<RepairShopStatus>().init();
+        RepairShopWeapon.GetComponent<RepairShopWeapon>().init();
     }
 
     string SetMoneyText(int Money)
     {
-        string format = $"{currentMoney} - {Money} = {currentMoney - Money}";
+        //string format = $"가격 : {currentMoney} - {Money} = {currentMoney - Money}";
+        string format = $"가격 : {Money}/{currentMoney}";
         if (Money <= currentMoney)
         {
             return format;

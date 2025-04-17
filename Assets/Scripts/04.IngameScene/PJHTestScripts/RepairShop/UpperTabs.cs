@@ -46,7 +46,7 @@ public class UpperTabs : MonoBehaviour
     {
         for (int i = 0; i < Tabs.Count; i++)
         {
-            Debug.Log($"Button: {Tabs[i]}| Tabs: {button} ");
+            
             if(Tabs[i] == button)
             {
                 Tabs[i].GetComponent<Image>().color = Color.Lerp(selectedColor,defaultColor, 1f * Time.deltaTime);
