@@ -60,12 +60,14 @@ public class PlayerController : MonoBehaviour, IInputEvents
     // --------
     // 카메라 관련
     [Header("Camera")]
+    [SerializeField] private Transform rotationTarget;
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float minAngle;
     [SerializeField] private float maxAngle;
     private float _yaw = 0f;
     private float _pitch = 0f;
     
+
     [Header("Weapon")]
     PlayerWeapon _playerWeapon;
 
@@ -102,6 +104,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
         _movementFsm.CurrentStateUpdate();
         _postureFsm.CurrentStateUpdate();
         _actionFsm.CurrentStateUpdate();
+        DrawRay();
     }
 
     private void Init()
@@ -109,7 +112,9 @@ public class PlayerController : MonoBehaviour, IInputEvents
         // 카메라 설정
         _cameraController = Camera.main.GetComponent<CameraController>();
         _cameraController.SetTarget(transform);
-        
+        _cameraController.SetSpineTarget(rotationTarget);
+        _cameraController.IsWalking =  IsWalking;
+
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
@@ -192,12 +197,10 @@ public class PlayerController : MonoBehaviour, IInputEvents
         // 수직 회전 각도 제한
         _pitch = Mathf.Clamp(_pitch, minAngle, maxAngle);
     
-        // 캐릭터 Y축 회전 적용 (수평 회전)
-        transform.rotation = Quaternion.Euler(0, _yaw, 0);
-    
         // 카메라 Pitch 업데이트
         // 수직 회전의 일부를 상체에 적용 (전체 피치의 일정 비율)
         _cameraController.SetPitch(_pitch);
+        _cameraController.SetYaw(_yaw);
     }
 
     public void OnJumpPressed()
@@ -234,5 +237,23 @@ public class PlayerController : MonoBehaviour, IInputEvents
         {
             return maxDistance;
         }
-    }    
+    }
+
+    private void DrawRay() {
+        Vector3 origin = transform.position;
+        Vector3 direction = transform.forward;
+
+        Debug.DrawRay(origin, direction * 5f, Color.red);
+    }
+
+    public bool IsWalking() {
+        if (_movementFsm.CurrentState == MovementState.Walk)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

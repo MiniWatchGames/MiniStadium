@@ -17,7 +17,6 @@ public class WalkState : PlayerMovementState
         //playerController.Animator.Play(aniName);
         base.Enter(playerController);
         _playerController.Animator.SetBool(IsMoving, true);
-   
     }
     public override void Exit()
     {
@@ -36,6 +35,6 @@ public class WalkState : PlayerMovementState
         // 애니메이터에 스무딩된 값 전달
         _playerController.Animator.SetFloat("MoveX", _smoothedInput.x);
         _playerController.Animator.SetFloat("MoveZ", _smoothedInput.y);
-       
+        
     }
 }

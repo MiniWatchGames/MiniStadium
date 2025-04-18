@@ -1117,6 +1117,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   defaultState: 
+  rotationTarget: {fileID: 0}
   rotationSpeed: 2
   minAngle: -60
   maxAngle: 40
