@@ -12,7 +12,6 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform Hips;
     [SerializeField] private float _yaw = 0f;
     [SerializeField] private Transform focus;
-    [SerializeField] private Animator animator;
 
     private Transform _target;
     private Transform _Spinetarget;
@@ -21,8 +20,10 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float accumulatedYaw = 0f;
     private bool isAlreadyPlay = false;
     private Vector3 LastTargetRotation;
-    
-    public Func<bool> IsWalking;
+
+    public delegate bool WalkingChecker(out Action turningStep, float accumulatedYaw);
+    public WalkingChecker IsWalking;
+    public Action TurningStep;
     
     
 
@@ -49,11 +50,9 @@ public class CameraController : MonoBehaviour
         float deltaYaw = Mathf.DeltaAngle(passyaw, _yaw);
         accumulatedYaw += deltaYaw;
         passyaw = _yaw;
-        if (!IsWalking()) {
+       TurningStep?.Invoke();
+        if (!IsWalking(out TurningStep,accumulatedYaw)) {
             // 회전 제한 처리
-            animator.SetLayerWeight(1, 0.35f);
-            animator.SetBool("IsRightTurn", false);
-            animator.SetBool("IsLeftTurn", false);
             if (accumulatedYaw < -30f || accumulatedYaw > 90f)
             {
                 isAlreadyPlay = false;
@@ -64,24 +63,13 @@ public class CameraController : MonoBehaviour
                 spineEuler.y -= _yaw;
                 _Spinetarget.rotation = Quaternion.Euler(spineEuler);
                 Hips.rotation = Quaternion.Euler(hipsEuler);
-                if (accumulatedYaw > 90f)
-                {
-
-                    animator.SetBool("IsRightTurn", true);
-                }
-                else if (accumulatedYaw < -30f) { 
-                
-                    animator.SetBool("IsLeftTurn", true);
-                }
-
+                TurningStep?.Invoke();
                 accumulatedYaw = 0f; // 누적값 초기화
             }
         }
         else
         {
-            animator.SetLayerWeight(1, 0f);
-            animator.SetBool("IsLeftTurn", false);
-            animator.SetBool("IsRightTurn", false);
+            TurningStep?.Invoke();
             isAlreadyPlay = false;  
             accumulatedYaw = 0f; // 누적값 초기화
         }

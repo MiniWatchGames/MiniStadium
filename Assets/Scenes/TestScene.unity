@@ -751,13 +751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe27eeab998449d1a2abd8dff500d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 0
---- !u!95 &384610727 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 3909377691804691963, guid: 72e1acac55be246ac9671c7ac3c2f98c,
-    type: 3}
-  m_PrefabInstance: {fileID: 7267748821611594574}
-  m_PrefabAsset: {fileID: 0}
+  weaponType: 1
 --- !u!1 &512303201
 GameObject:
   m_ObjectHideFlags: 0
@@ -1233,8 +1227,7 @@ MonoBehaviour:
   cameraOffset: {x: 0, y: 0, z: 0.015}
   Hips: {fileID: 1948493532}
   _yaw: 0
-  focuse: {fileID: 1535396937}
-  animator: {fileID: 384610727}
+  focus: {fileID: 1535396937}
   accumulatedYaw: 0
 --- !u!1 &717139002
 GameObject:

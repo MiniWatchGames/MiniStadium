@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
         _cameraController = Camera.main.GetComponent<CameraController>();
         _cameraController.SetTarget(transform);
         _cameraController.SetSpineTarget(rotationTarget);
-        _cameraController.IsWalking =  IsWalking;
+        _cameraController.IsWalking = IsWalking;
 
         // 무기 설정 
         EquipWeapon(_playerWeapon);
@@ -287,6 +287,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
         }
     }
 
+    // 디버깅 용 Ray
     private void DrawRay() {
         Vector3 origin = transform.position;
         Vector3 direction = transform.forward;
@@ -294,13 +295,48 @@ public class PlayerController : MonoBehaviour, IInputEvents
         Debug.DrawRay(origin, direction * 5f, Color.red);
     }
 
-    public bool IsWalking() {
+    
+    public bool IsWalking(out Action turningStep,float accumulatedYaw) {
         if (_movementFsm.CurrentState == MovementState.Walk)
         {
+
+            turningStep = () =>
+            {
+                Animator.SetLayerWeight(1, 0f);
+                Animator.SetBool("IsRightTurn", false);
+                Animator.SetBool("IsLeftTurn", false);
+            };
             return true;
         }
         else
         {
+
+            if (accumulatedYaw > 90f)
+            {
+                turningStep = () =>
+                {
+                    Animator.SetLayerWeight(1, 0.35f);
+                    Animator.SetBool("IsRightTurn", true);
+                };
+            }
+            else if (accumulatedYaw < -30f)
+            {
+                turningStep = () =>
+                {
+                    Animator.SetLayerWeight(1, 0.35f);
+                    Animator.SetBool("IsLeftTurn", true);
+                };
+            }
+            else
+            {
+
+                turningStep = () =>
+                {
+                    Animator.SetLayerWeight(1, 0.35f);
+                    Animator.SetBool("IsRightTurn", false);
+                    Animator.SetBool("IsLeftTurn", false);
+                };
+            }
             return false;
         }
     }
