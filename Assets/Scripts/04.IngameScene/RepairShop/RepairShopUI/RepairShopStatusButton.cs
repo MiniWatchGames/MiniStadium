@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class RepairShopStatusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public BuyableObject_Status boStatus;
+    
     // 타입 0= 체력, 1= 방어력, 2= 이동속도
     public int StatusType => _statusType;
     private int _statusType;
@@ -24,16 +26,26 @@ public class RepairShopStatusButton : MonoBehaviour, IPointerEnterHandler, IPoin
     public Button button;
 
     // 정보 설정
-    public void Init(int statusType, int index, RepairShopStatus manager
-        , int originalPrice, int addtivePrice)
+    public void Init(int index, RepairShopStatus manager
+        , int originalPrice, int addtivePrice, BuyableObject_Status bo)
     {
-        this._statusType = statusType;
-        this._statusIndex = index;
-        // 업그레이드 레벨 당 가격 (addtivePrice)g증가
-        this._price = originalPrice + index * addtivePrice;
-        this._manager = manager;
-        
+        _statusIndex = index;
+        _manager = manager;
+        boStatus = bo;
         button = GetComponent<Button>();
+        _statusType = boStatus.type;
+        // 업그레이드 레벨 당 가격 (addtivePrice)g증가
+        if (index == 0)
+            _price = 0;
+        else
+            _price = originalPrice + (index - 1) * addtivePrice;
+
+        var buttonColors = button.colors;
+        buttonColors.disabledColor = boStatus.DisabledColor;
+        buttonColors.highlightedColor = boStatus.HighlightedColor;
+        buttonColors.pressedColor = boStatus.PressedColor;
+        buttonColors.selectedColor = boStatus.SelectedColor;
+        button.colors = buttonColors;
     }
 
     public void OnClick()
@@ -64,13 +76,11 @@ public class RepairShopStatusButton : MonoBehaviour, IPointerEnterHandler, IPoin
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (_manager != null)
-            _manager.HighlightSameTypeToLeft(this, true);
+        _manager.HighlightSameTypeToLeft(this, true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (_manager != null)
-            _manager.HighlightSameTypeToLeft(this, false);
+        _manager.HighlightSameTypeToLeft(this, false);
     }
 }

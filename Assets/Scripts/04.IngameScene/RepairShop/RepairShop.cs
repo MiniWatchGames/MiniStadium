@@ -9,23 +9,37 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private UpperTabs upperTabs;
     [SerializeField] public List<GameObject> RepairShopUpperTabs;
     [SerializeField] public List<GameObject> RepairShopLowerTabs;
-    [SerializeField] public RepairShopStatus RepairShopStatus;
+    [SerializeField] private RepairShopStatus RepairShopStatus;
+    [SerializeField] private RepairShopWeapon RepairShopWeapon;
     public GameObject ErrorMessage => errorMessage;
     [SerializeField] private GameObject errorMessage;
     
-    private int startingMoney = 30000;
-    private int currentMoney;
+    private int _startingMoney = 3000;
+    public int currentMoney;
     public int totalPrice = 0;
     public TMP_Text currentMoneyText;
     
     void Start()
     {
         errorMessage.SetActive(false);
-        currentMoney = startingMoney;
+        currentMoney = _startingMoney;
         UpdateMoneyText(0);
         RepairShopStatus.init();
     }
 
+    public void OnClickRefundButton()
+    {
+        if (currentMoney < 200)
+        {
+            errorMessage.SetActive(true);
+            return;
+        }
+        currentMoney -= 200;
+        RepairShopStatus.StatusReset(true);
+        RepairShopWeapon.WeaponShopReset(true);
+        UpdateMoneyText(0);
+    }
+    
     public void ResetPrice()
     {
         totalPrice = 0;
@@ -49,9 +63,12 @@ public class RepairShop : MonoBehaviour
             totalPrice = 0;
             UpdateMoneyText(0);
 
-            // 스테이터스 창이 열린 경우
+            // 스테이터스 탭이 열린 경우
             if (RepairShopUpperTabs[1].activeSelf)
                 RepairShopStatus.StatusPurchasing();
+            // 무기 탭이 열린 경우
+            if (RepairShopUpperTabs[2].activeSelf)
+                RepairShopWeapon.BuyingWeapon();
         }
         // 실패
         else

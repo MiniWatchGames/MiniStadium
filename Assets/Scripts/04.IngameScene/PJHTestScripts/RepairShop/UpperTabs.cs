@@ -65,7 +65,7 @@ public class UpperTabs : MonoBehaviour
             return;
         SetSeletectColor(button, upperTabs);
         WeaponTab.SetActive(true);
-        StatusTab.GetComponent<RepairShopStatus>().StatusReset();
+        StatusTab.GetComponent<RepairShopStatus>().StatusReset(false);
         StatusTab.SetActive(false);
         SkillTab.SetActive(false);
         currentTab = 0;
@@ -76,6 +76,7 @@ public class UpperTabs : MonoBehaviour
         if (currentTab == 1)
             return;
         SetSeletectColor(button, upperTabs);
+        WeaponTab.GetComponent<RepairShopWeapon>().WeaponShopReset(false);
         WeaponTab.SetActive(false);
         StatusTab.SetActive(true);
         SkillTab.SetActive(false);
@@ -87,8 +88,9 @@ public class UpperTabs : MonoBehaviour
         if (currentTab == 2)
             return;
         SetSeletectColor(button, upperTabs);
+        WeaponTab.GetComponent<RepairShopWeapon>().WeaponShopReset(false);
         WeaponTab.SetActive(false);
-        StatusTab.GetComponent<RepairShopStatus>().StatusReset();
+        StatusTab.GetComponent<RepairShopStatus>().StatusReset(false);
         StatusTab.SetActive(false);
         SkillTab.SetActive(true);
         currentTab = 2;
