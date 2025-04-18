@@ -1709,7 +1709,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1535396937}
   m_Layer: 0
-  m_Name: CameraFocuse
+  m_Name: CameraFocus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

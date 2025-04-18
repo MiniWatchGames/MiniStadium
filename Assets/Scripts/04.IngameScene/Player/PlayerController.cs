@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
     private CameraController _cameraController;
     private const float _gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
-    private float jumpSpeed = 0.5f;
+    private float _jumpSpeed = 0.5f;
     
     // input값 저장, 전달 
     private Vector2 _currentMoveInput;
@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
     {
         get
         {
-            return GetDistanceToGround() < 0.2f;
+            return GetDistanceToGround() <= 0.2f;
         }
     }
     
@@ -105,6 +105,8 @@ public class PlayerController : MonoBehaviour, IInputEvents
 
     private void Update()
     {
+        Debug.Log(IsGrounded);
+        
         _movementFsm.CurrentStateUpdate();
         _postureFsm.CurrentStateUpdate();
         _actionFsm.CurrentStateUpdate();
@@ -146,6 +148,9 @@ public class PlayerController : MonoBehaviour, IInputEvents
     
     private void EquipWeapon(PlayerWeapon weapon)
     {
+        // 무기 메쉬 교체 (구현 예정)
+        
+        // 애니메이터 교체 
         ApplyAnimatorController(weapon.WeaponType);
     }
 
@@ -175,26 +180,29 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public void OnMove(Vector2 input)
     {
         // 이동 
-        if (input != Vector2.zero)
+        if (IsGrounded)
         {
-            _lastInputTime = Time.time;
-            if (_movementFsm.CurrentState != MovementState.Walk)
+            if (input != Vector2.zero)
             {
-                SetMovementState("Walk");
-            }
-            _currentMoveInput = input;
-        }
-        else
-        {
-            // 버퍼 시간 내에 입력이 없으면 Idle로 전환
-            if (Time.time - _lastInputTime > _inputBufferTime)
-            {
-                if (_movementFsm.CurrentState != MovementState.Idle)
+                _lastInputTime = Time.time;
+                if (_movementFsm.CurrentState != MovementState.Walk)
                 {
-                    SetMovementState("Idle");
+                    SetMovementState("Walk");
                 }
+                _currentMoveInput = input;
             }
-            // 버퍼 시간 내에는 이전 입력 유지
+            else
+            {
+                // 버퍼 시간 내에 입력이 없으면 Idle로 전환
+                if (Time.time - _lastInputTime > _inputBufferTime)
+                {
+                    if (_movementFsm.CurrentState != MovementState.Idle)
+                    {
+                        SetMovementState("Idle");
+                    }
+                }
+                // 버퍼 시간 내에는 이전 입력 유지
+            }
         }
         
     }
@@ -221,7 +229,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
         if (IsGrounded)
         {
             SetMovementState("Jump");
-            _velocity.y = Mathf.Sqrt(jumpSpeed * -2f * _gravity);
+            _velocity.y = Mathf.Sqrt(_jumpSpeed * -2f * _gravity);
         }
     }
 
@@ -242,7 +250,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public float GetDistanceToGround()
     {
         float maxDistance = 10f;
-        if (Physics.Raycast(transform.position + new Vector3(0,0.1f,0), 
+        if (Physics.Raycast(transform.position + new Vector3(0,0.2f,0), 
                 Vector3.down, out RaycastHit hit, maxDistance, groundLayer))
         {
             return hit.distance;
