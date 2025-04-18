@@ -6,9 +6,9 @@ using UnityEngine.Rendering;
 using UnityEngine.UI;
 public class UpperTabs : MonoBehaviour
 {
-    
     public delegate Button TabDelegate(Button button);
     public TabDelegate tabButtonDelegate;
+    [SerializeField] private RepairShop repairShop;
     [SerializeField] private GameObject WeaponTab;
     [SerializeField] private GameObject StatusTab;
     [SerializeField] private GameObject SkillTab;
@@ -17,6 +17,7 @@ public class UpperTabs : MonoBehaviour
     [SerializeField] private List<GameObject> SkillLowerTabs2 = new List<GameObject>();
     private List<Button> skillTabs;
     private List<Button> upperTabs;
+    public int currentTab;
     Color selectedColor = new Color(0.623f, 0.623f, 0.623f);
     Color defaultColor = new Color(1f, 1f, 1f);
     void Start()
@@ -41,6 +42,7 @@ public class UpperTabs : MonoBehaviour
         WeaponTab.SetActive(true);
         StatusTab.SetActive(false);
         SkillTab.SetActive(false);
+        currentTab = 0;
     }
     void SetSeletectColor(Button button, List<Button> Tabs)
     {
@@ -59,26 +61,40 @@ public class UpperTabs : MonoBehaviour
     }
     public void OnWeaponTabClick(Button button)
     {
+        if (currentTab == 0)
+            return;
         SetSeletectColor(button, upperTabs);
         WeaponTab.SetActive(true);
+        StatusTab.GetComponent<RepairShopStatus>().StatusReset();
         StatusTab.SetActive(false);
         SkillTab.SetActive(false);
+        currentTab = 0;
+        repairShop.ResetPrice();
     }
     public void OnStatusTabClick(Button button)
     {
+        if (currentTab == 1)
+            return;
         SetSeletectColor(button, upperTabs);
         WeaponTab.SetActive(false);
         StatusTab.SetActive(true);
         SkillTab.SetActive(false);
+        currentTab = 1;
+        repairShop.ResetPrice();
     }
     public void OnSkillTabClick(Button button)
     {
+        if (currentTab == 2)
+            return;
         SetSeletectColor(button, upperTabs);
-
         WeaponTab.SetActive(false);
+        StatusTab.GetComponent<RepairShopStatus>().StatusReset();
         StatusTab.SetActive(false);
         SkillTab.SetActive(true);
+        currentTab = 2;
+        repairShop.ResetPrice();
     }
+    
     public void OnSkillLowerTabClick(int index)
     {
         //SetSeletectColor(skillTabs[index], skillTabs);

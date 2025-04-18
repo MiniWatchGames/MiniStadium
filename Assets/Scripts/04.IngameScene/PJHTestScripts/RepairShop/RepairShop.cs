@@ -6,30 +6,57 @@ using TMPro;
 public class RepairShop : MonoBehaviour
 {
     [SerializeField] private GameObject RepairShopUI;
+    [SerializeField] private UpperTabs upperTabs;
     [SerializeField] public List<GameObject> RepairShopUpperTabs;
     [SerializeField] public List<GameObject> RepairShopLowerTabs;
-    [SerializeField] public GameObject RepairShopStatus;
+    [SerializeField] public RepairShopStatus RepairShopStatus;
+    public GameObject ErrorMessage => errorMessage;
+    [SerializeField] private GameObject errorMessage;
     
-    public int currentMoney;
+    private int startingMoney = 30000;
+    private int currentMoney;
+    public int totalPrice = 0;
     public TMP_Text currentMoneyText;
-    // Start is called before the first frame update
+    
     void Start()
     {
-        currentMoney = 30000;
-        currentMoneyText.text = currentMoney.ToString();
-        RepairShopStatus.GetComponent<RepairShopStatus>().init();
+        errorMessage.SetActive(false);
+        currentMoney = startingMoney;
+        UpdateMoneyText(0);
+        RepairShopStatus.init();
     }
 
-    string SetMoneyText(int Money)
+    public void ResetPrice()
     {
-        string format = $"{currentMoney} - {Money} = {currentMoney - Money}";
-        if (Money <= currentMoney)
-        {
-            return format;
-        }
-        return currentMoney.ToString();
-        
+        totalPrice = 0;
+        UpdateMoneyText(0);
     }
-    // Update is called once per frame
-   
+    
+    public void UpdateMoneyText(int price)
+    {
+        string format = $"가격 : {price}g / {currentMoney}g";
+        currentMoneyText.text = format;
+    }
+    
+    // 구매
+    public void PurchaseItem()
+    {
+        // 성공
+        if (currentMoney >= totalPrice)
+        {
+            errorMessage.SetActive(false);
+            currentMoney -= totalPrice;
+            totalPrice = 0;
+            UpdateMoneyText(0);
+
+            // 스테이터스 창이 열린 경우
+            if (RepairShopUpperTabs[1].activeSelf)
+                RepairShopStatus.StatusPurchasing();
+        }
+        // 실패
+        else
+        {
+            errorMessage.SetActive(true);
+        }
+    }
 }

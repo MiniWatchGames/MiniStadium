@@ -2413,6 +2413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abc8b8a6fd199424dba32418677ae671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  repairShop: {fileID: 166702749}
   WeaponTab: {fileID: 962348822}
   StatusTab: {fileID: 799243224}
   SkillTab: {fileID: 1898484102}
@@ -2422,6 +2423,7 @@ MonoBehaviour:
   - {fileID: 1718489338}
   - {fileID: 284783217}
   - {fileID: 592788875}
+  currentTab: 0
 --- !u!114 &59422869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9252,6 +9254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RepairShopUI: {fileID: 166702747}
+  upperTabs: {fileID: 59422868}
   RepairShopUpperTabs:
   - {fileID: 1960370597}
   - {fileID: 250573788}
@@ -9260,8 +9263,9 @@ MonoBehaviour:
   - {fileID: 603483394}
   - {fileID: 1643660673}
   - {fileID: 2091451082}
-  RepairShopStatus: {fileID: 799243224}
-  currentMoney: 0
+  RepairShopStatus: {fileID: 799243228}
+  errorMessage: {fileID: 277789350}
+  totalPrice: 0
   currentMoneyText: {fileID: 2129342394}
 --- !u!114 &166702750
 MonoBehaviour:
@@ -14745,10 +14749,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: failed
+  m_text: "\uACE8\uB4DC\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4!"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1da2a4b181d710e49819532d05b40bf5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 88f43ee7fba196c4da6e1c31664dd3d5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -14772,15 +14776,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64
-  m_fontSizeBase: 64
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -15661,7 +15665,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 10
+  m_Spacing: 4
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -41110,7 +41114,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 10
+  m_Spacing: 4
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -42241,7 +42245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5292ec3d5080b6c40ae299e308b3b227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _repairShop: {fileID: 0}
+  _repairShop: {fileID: 166702749}
   _repairShopStatuses:
   - {fileID: 2860442263994008382, guid: ad9cb9ef9da12cf459051acb3e164559, type: 3}
   - {fileID: 2860442263994008382, guid: 8ef5094b6c6747345bd2cc74ccb4adc3, type: 3}
@@ -42258,7 +42262,6 @@ MonoBehaviour:
   - {fileID: 341921559}
   _priviewPrefab: {fileID: 5256223768004525494, guid: 6f88b9908e311b24bbd576ee8c407c7c,
     type: 3}
-  _errorMessage: {fileID: 277789350}
 --- !u!1 &811756018
 GameObject:
   m_ObjectHideFlags: 0
@@ -48132,7 +48135,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 905494769}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 166702749}
+        m_TargetAssemblyTypeName: RepairShop, Assembly-CSharp
+        m_MethodName: PurchaseItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &905494769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50253,7 +50268,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 10
+  m_Spacing: 4
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -60328,6 +60343,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[Button] PlayerHealthSlot'
       objectReference: {fileID: 0}
+    - target: {fileID: 5357360543503894620, guid: ad9cb9ef9da12cf459051acb3e164559,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0d2a4085a39cc9046a87b6da66a88777,
+        type: 3}
     - target: {fileID: 7912334234260293222, guid: ad9cb9ef9da12cf459051acb3e164559,
         type: 3}
       propertyPath: m_Pivot.x
@@ -65266,7 +65287,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 0d2a4085a39cc9046a87b6da66a88777, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -72569,7 +72590,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 0d2a4085a39cc9046a87b6da66a88777, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -90103,6 +90124,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[Button] PlayerMovementSlot'
       objectReference: {fileID: 0}
+    - target: {fileID: 5357360543503894620, guid: 7b6c43ae802ee7f41ab89d42ad235ca8,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0d2a4085a39cc9046a87b6da66a88777,
+        type: 3}
     - target: {fileID: 7912334234260293222, guid: 7b6c43ae802ee7f41ab89d42ad235ca8,
         type: 3}
       propertyPath: m_Pivot.x
@@ -91143,7 +91170,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 0d2a4085a39cc9046a87b6da66a88777, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
