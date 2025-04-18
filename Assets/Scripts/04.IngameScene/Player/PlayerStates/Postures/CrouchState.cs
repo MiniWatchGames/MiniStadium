@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CrouchState : PlayerPostureState
-{
-    private static readonly int IsCrouch = Animator.StringToHash("IsCrouch");
+{ 
     private static int aniName;
 
     public CrouchState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)

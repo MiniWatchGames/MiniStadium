@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerPostureState : IPlayerState
 {
+    protected static readonly int IsCrouch = Animator.StringToHash("IsCrouch");
     protected PlayerController _playerController;
     protected IWeaponAnimationStrategy _aniStrategy;
     public virtual void Enter(PlayerController playerController)

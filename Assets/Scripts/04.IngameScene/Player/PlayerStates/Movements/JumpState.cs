@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class JumpState : PlayerMovementState
 {
-    private static readonly int Jump = Animator.StringToHash("Jump");
     private static int aniName;
     public JumpState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
     {

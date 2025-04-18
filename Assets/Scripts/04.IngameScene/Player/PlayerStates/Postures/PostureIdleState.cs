@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PostureIdleState : PlayerPostureState
 {
-    private static readonly int IsCrouch = Animator.StringToHash("IsCrouch");
-
     private static int aniName ; 
     public PostureIdleState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
     {

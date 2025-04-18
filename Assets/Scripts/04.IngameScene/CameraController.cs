@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Vector3 cameraOffset = new Vector3(0, 0, 0); // 머리 위치에서의 카메라 오프셋
     [SerializeField] private Transform Hips;
     [SerializeField] private float _yaw = 0f;
-    [SerializeField] private Transform focuse;
+    [SerializeField] private Transform focus;
     [SerializeField] private Animator animator;
 
     private Transform _target;
@@ -87,7 +87,7 @@ public class CameraController : MonoBehaviour
         }
         // 카메라 회전 적용
         //transform.rotation = Quaternion.Euler(_pitch, _yaw, 0);
-        transform.LookAt(focuse.position);
+        transform.LookAt(focus.position);
     }
 
     public void SetTarget(Transform target)

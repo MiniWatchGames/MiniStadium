@@ -71,6 +71,10 @@ public class PlayerController : MonoBehaviour, IInputEvents
     [Header("Weapon")]
     PlayerWeapon _playerWeapon;
 
+    // --------
+    // 애니메이션 관련 
+    [SerializeField] private RuntimeAnimatorController swordController;
+    [SerializeField] private RuntimeAnimatorController gunController;
     public Animator Animator { get; private set; }
     public bool IsGrounded
     {
@@ -115,6 +119,9 @@ public class PlayerController : MonoBehaviour, IInputEvents
         _cameraController.SetSpineTarget(rotationTarget);
         _cameraController.IsWalking =  IsWalking;
 
+        // 무기 설정 
+        EquipWeapon(_playerWeapon);
+        
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
@@ -135,6 +142,11 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public void SetActionState(string stateName)
     {
         _actionFsm.ChangeState(stateName, this);
+    }
+    
+    private void EquipWeapon(PlayerWeapon weapon)
+    {
+        ApplyAnimatorController(weapon.WeaponType);
     }
 
     private void OnAnimatorMove()
@@ -206,9 +218,11 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public void OnJumpPressed()
     {
         // 점프 
-        // todo : 착지 타이밍과 상태 전환 타이밍 동기화 필요 
-        SetMovementState("Jump");
-        _velocity.y = Mathf.Sqrt(jumpSpeed * -2f * _gravity);
+        if (IsGrounded)
+        {
+            SetMovementState("Jump");
+            _velocity.y = Mathf.Sqrt(jumpSpeed * -2f * _gravity);
+        }
     }
 
     public void OnFirePressed()
@@ -236,6 +250,40 @@ public class PlayerController : MonoBehaviour, IInputEvents
         else
         {
             return maxDistance;
+        }
+    }
+    
+    // 현재 무기 타입에 맞는 애니메이터 컨트롤러 적용
+    public void ApplyAnimatorController(WeaponType weaponType)
+    {
+        if (Animator == null)
+        {
+            Debug.LogError("Player Animator not found!");
+            return;
+        }
+        
+        // 무기 타입에 따라 컨트롤러 선택
+        RuntimeAnimatorController controllerToApply = null;
+        
+        switch (weaponType)
+        {
+            case WeaponType.Sword:
+                controllerToApply = swordController;
+                break;
+            case WeaponType.Gun:
+                controllerToApply = gunController;
+                break;
+        }
+        
+        // 컨트롤러 적용
+        if (controllerToApply != null)
+        {
+            Animator.runtimeAnimatorController = controllerToApply;
+            Debug.Log($"Applied {weaponType} animator controller");
+        }
+        else
+        {
+            Debug.LogWarning($"No animator controller assigned for weapon type: {weaponType}");
         }
     }
 

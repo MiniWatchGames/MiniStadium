@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WalkState : PlayerMovementState
 {
-    private static readonly int IsMoving = Animator.StringToHash("isMoving");
     private Vector2 _smoothedInput = Vector2.zero;
     private float _smoothingSpeed = 10f;
     private static int aniName;

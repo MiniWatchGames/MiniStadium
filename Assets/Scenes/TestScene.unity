@@ -751,7 +751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe27eeab998449d1a2abd8dff500d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 1
+  weaponType: 0
 --- !u!95 &384610727 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 3909377691804691963, guid: 72e1acac55be246ac9671c7ac3c2f98c,
@@ -1779,9 +1779,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
+      propertyPath: gunController
+      value: 
+      objectReference: {fileID: 9100000, guid: 7d752a938992a43bd9f56abe328d736e, type: 2}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
       propertyPath: rotationTarget
       value: 
       objectReference: {fileID: 560831382}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
+      propertyPath: swordController
+      value: 
+      objectReference: {fileID: 9100000, guid: ef346e066ab4a41d2bf197b1c172ff3d, type: 2}
     - target: {fileID: 2087848492479048663, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
       propertyPath: m_Enabled
@@ -1852,6 +1862,11 @@ PrefabInstance:
       propertyPath: m_Avatar
       value: 
       objectReference: {fileID: 9000000, guid: 09f1791f994594469896d8b47866a754, type: 3}
+    - target: {fileID: 3909377691804691963, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7d752a938992a43bd9f56abe328d736e, type: 2}
     - target: {fileID: 3909377691804691963, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
       propertyPath: m_UpdateMode

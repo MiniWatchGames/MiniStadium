@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class MovementIdleState : PlayerMovementState
 {
-    private static readonly int IsMoving = Animator.StringToHash("isMoving");
-
     private static int aniName;
     public MovementIdleState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
     {
