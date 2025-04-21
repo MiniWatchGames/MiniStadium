@@ -4,20 +4,21 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RepairShopWeaponSlot : MonoBehaviour
+public class RepairShopSkillSlot : MonoBehaviour
 {
-    [SerializeField] private RepairShopWeapon _manager;
+    [SerializeField] private RepairShopSkill _manager;
     [SerializeField] private GameObject checkbox;
     
     [SerializeField] public Image iconImage;
     [SerializeField] public TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI priceText;
-    [SerializeField] public int type;
+    [SerializeField] public int skillType;
+    [SerializeField] public int weaponType;
     [SerializeField] public int index;
     [SerializeField] public int price;
     [SerializeField] private string description;
     
-    public void Init(BuyableObject_Weapon BOdata, RepairShopWeapon manager, int _index)
+    public void Init(BuyableObject_Skill BOdata, RepairShopSkill manager)
     {
         _manager = manager;
         iconImage.sprite = BOdata.icon;
@@ -25,10 +26,10 @@ public class RepairShopWeaponSlot : MonoBehaviour
         price = BOdata.price;
         priceText.text = $"{BOdata.price.ToString()}g";
         description = BOdata.description;
-        type = BOdata.type;   // 0=None 1=Ranged 2=Melee
-        index = _index;
+        weaponType = BOdata.weaponType;   // 0=None 1=Ranged 2=Melee
+        skillType = BOdata.skillType;   // 0=MoveSkill 1=WeaponSkill 2=Passive
     }
-
+    
     public void Selected(bool selected)
     {
         checkbox.SetActive(selected);
@@ -36,6 +37,6 @@ public class RepairShopWeaponSlot : MonoBehaviour
 
     public void OnClick()
     {
-        _manager.ReadWeaponInfo(this);
+        
     }
 }

@@ -5,8 +5,9 @@ using UnityEngine;
 public class RepairShopWeapon : MonoBehaviour
 {
     [SerializeField] private RepairShop RepairShop;
-    [SerializeField] private List<BuyableObject_Weapon> BOweaponList;
-    [SerializeField] private List<RepairShopWeaponSlot> RepairShopWeapons;
+    [SerializeField] private RepairShopReceipt Receipt;
+    private List<BuyableObject_Weapon> BOweaponList;
+    private List<RepairShopWeaponSlot> RepairShopWeapons;
     [SerializeField] private GameObject weaponSlotPrefab;
     [SerializeField] private Transform weaponSlotParent;
     public int weaponIndex;
@@ -14,6 +15,8 @@ public class RepairShopWeapon : MonoBehaviour
 
     void Start()
     {
+        weaponIndex = -1;
+        RepairShopWeapons = new List<RepairShopWeaponSlot>();
         GenerateWeaponUI();
     }
 
@@ -21,13 +24,13 @@ public class RepairShopWeapon : MonoBehaviour
     {
         LoadWeaponList();
         int i = 0;
+        
         foreach (var bo in BOweaponList)
         {
             var slot = Instantiate(weaponSlotPrefab, weaponSlotParent);
             var script = slot.GetComponent<RepairShopWeaponSlot>();
-            script.Init(bo, this, i);
+            script.Init(bo, this, i++);
             RepairShopWeapons.Add(script);
-            i++;
         }
     }
     
@@ -37,21 +40,34 @@ public class RepairShopWeapon : MonoBehaviour
         BuyableObject_Weapon[] weapons
             = Resources.LoadAll<BuyableObject_Weapon>("ScriptableObejct/Weapon");
         
-        BOweaponList.Clear();
         BOweaponList.AddRange(weapons);
     }
 
     public void BuyingWeapon()
     {
+        // 인덱스가 유효한지 먼저 확인
+        if (weaponIndex < 0 || weaponIndex >= RepairShopWeapons.Count)
+        {
+            Debug.LogWarning($"잘못된 weaponIndex 접근 시도: {weaponIndex}");
+            return;
+        }
+        
         if (currentWeapon == null)
+        {
             currentWeapon = RepairShopWeapons[weaponIndex];
+            Receipt.ReceiptBuyWeapon();
+        }
     }
     
     public void WeaponShopReset(bool refunding)
     {
         if (refunding)
+        {
             currentWeapon = null;
+            Receipt.ReceiptRefund();
+        }
         if (currentWeapon != null) return;
+        
         foreach (var slot in RepairShopWeapons)
             slot.Selected(false);
         weaponIndex = -1;

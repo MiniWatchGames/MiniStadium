@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RepairShopStatus : MonoBehaviour
 {
-    [SerializeField] private RepairShop _repairShop;
+    [SerializeField] private RepairShop RepairShop;
+    [SerializeField] private RepairShopReceipt Receipt;
     public List<BuyableObject_Status> types;
     
     // 스테이터스 최대 업그레이드 수
@@ -29,10 +29,7 @@ public class RepairShopStatus : MonoBehaviour
     [SerializeField] private Transform statusPreviewParent;
     [SerializeField] private GameObject statusNamePrefab;
     [SerializeField] private GameObject pricePrefab;
-    [SerializeField] private GameObject priviewPrefab;
-    [SerializeField] private GameObject priviewGroupPrefab;
     private RepairShopStatusButton[,] _buttonsInRows;
-    private Image[,] _previewsInRows;
     
     // 마지막으로 선택한 버튼의 인덱스 값
     private List<int> _lastButtonIndexes;
@@ -49,7 +46,7 @@ public class RepairShopStatus : MonoBehaviour
         int col = _maxUpgradeCount + 1;
         
         _buttonsInRows = new RepairShopStatusButton[row, col];
-        _previewsInRows = new Image[row, col];
+        Receipt.previewsInRows = new Image[row, col];
         _priceTags = new List<GameObject>(row);
         _lastButtonIndexes = new List<int>(row);
         
@@ -59,9 +56,9 @@ public class RepairShopStatus : MonoBehaviour
             _lastButtonIndexes.Add(-1);
             
             var group = Instantiate(statusGroupPrefab, statusGroupParent);
-            var previewGroup = Instantiate(priviewGroupPrefab, statusPreviewParent);
-            var name = Instantiate(statusNamePrefab, group.transform);
-            name.GetComponent<TextMeshProUGUI>().text = types[i].name;
+            var previewGroup = Instantiate(Receipt.statusGroup, statusPreviewParent);
+            var _name = Instantiate(statusNamePrefab, group.transform);
+            _name.GetComponent<TextMeshProUGUI>().text = types[i].name;
             
             // 버튼 생성, 초기화
             for (int j = 0; j < col; j++)
@@ -72,13 +69,13 @@ public class RepairShopStatus : MonoBehaviour
                 _buttonsInRows[i, j] = newButtonData;
                 
                 // 미리보기 생성
-                var preview = Instantiate(priviewPrefab, previewGroup.transform);
-                _previewsInRows[i, j] = preview.GetComponent<Image>();
+                var preview = Instantiate(Receipt.status, previewGroup.transform);
+                Receipt.previewsInRows[i, j] = preview.GetComponent<Image>();
 
                 if (j == 0)
                 {
                     newButtonData.button.interactable = false;
-                    _previewsInRows[i, j].color = types[i].DisabledColor;
+                    Receipt.previewsInRows[i, j].color = types[i].DisabledColor;
                 }
             }
             // 가격 텍스트UI 생성
@@ -90,7 +87,7 @@ public class RepairShopStatus : MonoBehaviour
     // 버튼 선택
     public void SelectSameTypeToLeft(RepairShopStatusButton clickedButton)
     {
-        _repairShop.ErrorMessage.SetActive(false);
+        RepairShop.ErrorMessage.SetActive(false);
         
         int row = clickedButton.StatusType;
         int col = clickedButton.StatusIndex;
@@ -117,8 +114,8 @@ public class RepairShopStatus : MonoBehaviour
         // 가격 갱신
         _statusTotalPrice += CalculateRowTotal(row);
         StatusSetPrice(CalculateRowTotal(row), _priceTags[row]);
-        _repairShop.totalPrice = _statusTotalPrice;
-        _repairShop.UpdateMoneyText(_statusTotalPrice);
+        RepairShop.totalPrice = _statusTotalPrice;
+        RepairShop.UpdateMoneyText(_statusTotalPrice);
     }
         
     // 탭을 닫았을 때 리셋
@@ -126,7 +123,7 @@ public class RepairShopStatus : MonoBehaviour
     {
         if (refunding) // 환불 버튼을 눌렀을 때
         {
-            _repairShop.currentMoney += _totalWorth;
+            RepairShop.currentMoney += _totalWorth;
             _totalWorth = 0;
         }
         
@@ -139,7 +136,7 @@ public class RepairShopStatus : MonoBehaviour
                 {
                     button.isBought = false;
                     button.button.interactable = true;
-                    _previewsInRows[i, j].color = Color.white;
+                    Receipt.ChangeStatusColor(i, j, Color.white);
                 }
                 button.SetSelected(false);
             }
@@ -167,7 +164,7 @@ public class RepairShopStatus : MonoBehaviour
                     
                     // 미리보기 색상 적용
                     var color = button.button.colors.disabledColor;
-                    _previewsInRows[i, j].color = color;
+                    Receipt.ChangeStatusColor(i, j, color);
                 }
             }
             StatusSetPrice(0, _priceTags[i]);

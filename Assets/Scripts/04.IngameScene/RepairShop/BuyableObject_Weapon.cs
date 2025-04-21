@@ -13,6 +13,6 @@ public class BuyableObject_Weapon : ScriptableObject
    
    public string description;
 
-   // 0=Ranged 1=Melee
+   // 0=None 1=Ranged 2=Melee
    public int type;
 }
