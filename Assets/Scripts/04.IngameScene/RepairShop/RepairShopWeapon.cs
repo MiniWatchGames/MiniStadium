@@ -47,10 +47,7 @@ public class RepairShopWeapon : MonoBehaviour
     {
         // 인덱스가 유효한지 먼저 확인
         if (weaponIndex < 0 || weaponIndex >= RepairShopWeapons.Count)
-        {
-            Debug.LogWarning($"잘못된 weaponIndex 접근 시도: {weaponIndex}");
             return;
-        }
         
         if (currentWeapon == null)
         {
@@ -64,7 +61,7 @@ public class RepairShopWeapon : MonoBehaviour
         if (refunding)
         {
             currentWeapon = null;
-            Receipt.ReceiptRefund();
+            Receipt.ReceiptRefundWeapon();
         }
         if (currentWeapon != null) return;
         

@@ -11,6 +11,7 @@ public class RepairShop : MonoBehaviour
     [SerializeField] public List<GameObject> RepairShopLowerTabs;
     [SerializeField] private RepairShopStatus RepairShopStatus;
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
+    [SerializeField] private RepairShopSkill RepairShopSkill;
     public GameObject ErrorMessage => errorMessage;
     [SerializeField] private GameObject errorMessage;
     
@@ -37,6 +38,7 @@ public class RepairShop : MonoBehaviour
         currentMoney -= 200;
         RepairShopStatus.StatusReset(true);
         RepairShopWeapon.WeaponShopReset(true);
+        RepairShopSkill.SkillShopReset(true);
         UpdateMoneyText(0);
     }
     
@@ -63,12 +65,15 @@ public class RepairShop : MonoBehaviour
             totalPrice = 0;
             UpdateMoneyText(0);
 
+            // 무기 탭이 열린 경우
+            if (RepairShopUpperTabs[0].activeSelf)
+                RepairShopWeapon.BuyingWeapon();
             // 스테이터스 탭이 열린 경우
             if (RepairShopUpperTabs[1].activeSelf)
                 RepairShopStatus.StatusPurchasing();
-            // 무기 탭이 열린 경우
+            // 스킬 탭이 열린 경우
             if (RepairShopUpperTabs[2].activeSelf)
-                RepairShopWeapon.BuyingWeapon();
+                RepairShopSkill.BuyingSkill();
         }
         // 실패
         else
