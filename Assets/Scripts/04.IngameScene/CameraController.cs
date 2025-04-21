@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
     private Vector3 LastTargetRotation;
 
     public delegate bool WalkingChecker(out Action turningStep, float accumulatedYaw);
-    public WalkingChecker IsWalking;
+    public WalkingChecker IsIdle;
     public Action TurningStep;
     
     
@@ -51,7 +51,7 @@ public class CameraController : MonoBehaviour
         accumulatedYaw += deltaYaw;
         passyaw = _yaw;
        TurningStep?.Invoke();
-        if (!IsWalking(out TurningStep,accumulatedYaw)) {
+        if (!IsIdle(out TurningStep,accumulatedYaw)) {
             // 회전 제한 처리
             if (accumulatedYaw < -30f || accumulatedYaw > 90f)
             {

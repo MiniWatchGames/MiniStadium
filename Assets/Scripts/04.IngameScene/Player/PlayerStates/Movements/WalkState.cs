@@ -19,7 +19,6 @@ public class WalkState : PlayerMovementState
     }
     public override void Exit()
     {
-        _playerController.Animator.SetBool(IsMoving, false);
         base.Exit();    
     }
     public override void Update()

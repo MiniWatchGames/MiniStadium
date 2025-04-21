@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
         _cameraController = Camera.main.GetComponent<CameraController>();
         _cameraController.SetTarget(transform);
         _cameraController.SetSpineTarget(rotationTarget);
-        _cameraController.IsWalking = IsWalking;
+        _cameraController.IsIdle = IsIdle;
 
         // 무기 설정 
         EquipWeapon(_playerWeapon);
@@ -127,10 +127,6 @@ public class PlayerController : MonoBehaviour, IInputEvents
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
-
-        SetMovementState("Idle");
-        SetPostureState("Idle");
-        SetActionState("Idle");
     }
 
     public void SetMovementState(string stateName)
@@ -179,9 +175,9 @@ public class PlayerController : MonoBehaviour, IInputEvents
     
     public void OnMove(Vector2 input)
     {
-        // 이동 
         if (IsGrounded)
         {
+            // 이동 
             if (input != Vector2.zero)
             {
                 _lastInputTime = Time.time;
@@ -203,8 +199,8 @@ public class PlayerController : MonoBehaviour, IInputEvents
                 }
                 // 버퍼 시간 내에는 이전 입력 유지
             }
+
         }
-        
     }
 
     public void OnLook(Vector2 delta)
@@ -228,8 +224,8 @@ public class PlayerController : MonoBehaviour, IInputEvents
         // 점프 
         if (IsGrounded)
         {
-            SetMovementState("Jump");
             _velocity.y = Mathf.Sqrt(_jumpSpeed * -2f * _gravity);
+            SetMovementState("Jump");
         }
     }
 
@@ -295,17 +291,9 @@ public class PlayerController : MonoBehaviour, IInputEvents
         }
     }
 
-    // 디버깅 용 Ray
-    private void DrawRay() {
-        Vector3 origin = transform.position;
-        Vector3 direction = transform.forward;
-
-        Debug.DrawRay(origin, direction * 5f, Color.red);
-    }
-
-    
-    public bool IsWalking(out Action turningStep,float accumulatedYaw) {
-        if (_movementFsm.CurrentState == MovementState.Walk)
+    #region 상태 체크 메소드 
+    public bool IsIdle(out Action turningStep,float accumulatedYaw) {
+        if (_movementFsm.CurrentState != MovementState.Idle)
         {
 
             turningStep = () =>
@@ -348,4 +336,29 @@ public class PlayerController : MonoBehaviour, IInputEvents
             return false;
         }
     }
+    public bool IsWalking()
+    {
+        if (_movementFsm.CurrentState == MovementState.Walk)
+        {
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    #endregion
+
+
+
+    // 디버깅 용 Ray
+    private void DrawRay()
+    {
+        Vector3 origin = transform.position;
+        Vector3 direction = transform.forward;
+
+        Debug.DrawRay(origin, direction * 5f, Color.red);
+    }
+
 }

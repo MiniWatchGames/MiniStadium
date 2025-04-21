@@ -11,8 +11,8 @@ public class JumpState : PlayerMovementState
     }
     public override void Enter(PlayerController playerController)
     {
-        //playerController.Animator.Play(aniName);
         base.Enter(playerController);
+
         _playerController.Animator.SetTrigger(Jump);
     }
     public override void Exit()
