@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1728f4069ade7348b48c231255a7bed, type: 3}
+  m_Name: SwordSkills
+  m_EditorClassIdentifier: 
+  skills:
+  - skillName: Slash
+    description: You moves straight and kills everything on the ways
+    skillType: 1
+    damage: 50
+    cooldown: 10
+    range: 10
+    duration: 0.7
+    price: 300
+  - skillName: parry
+    description: You blocks every attack you gets and returns where you aims
+    skillType: 1
+    damage: 255
+    cooldown: 10
+    range: 0
+    duration: 3
+    price: 300
+  - skillName: Stomping
+    description: Stomping ground spread shockwave around causing stuns
+    skillType: 4
+    damage: 0
+    cooldown: 20
+    range: 5
+    duration: 5
+    price: 300

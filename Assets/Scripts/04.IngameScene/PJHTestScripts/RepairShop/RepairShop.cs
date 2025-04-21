@@ -10,7 +10,7 @@ public class RepairShop : MonoBehaviour
     [SerializeField] public List<GameObject> RepairShopLowerTabs;
     [SerializeField] public GameObject RepairShopStatus;
     [SerializeField] public GameObject RepairShopWeapon;
-    
+    [SerializeField] public List<GameObject> RepairShopWeaponList = new List<GameObject>();
     
     public int currentMoney;
     public TMP_Text currentMoneyText;
@@ -31,7 +31,10 @@ public class RepairShop : MonoBehaviour
         {
             return format;
         }
-        return currentMoney.ToString();
+        else
+        {
+            return "가격이 현재 가진 금액보다 많습니다.";
+        }
         
     }
     // Update is called once per frame

@@ -10,12 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1728f4069ade7348b48c231255a7bed, type: 3}
-  m_Name: SwordSkill1
+  m_Name: Movement
   m_EditorClassIdentifier: 
-  skillName: 
-  buyableObject: {fileID: 0}
-  description: 
-  damage: 0
-  cooldown: 0
-  range: 0
-  duration: 0
+  skills: []
