@@ -8,5 +8,6 @@ public interface IInputEvents
     void OnLook(Vector2 delta);
     void OnJumpPressed();
     void OnFirePressed();
+    void OnFireReleased();
     void OnCrouchPressed();
 }

@@ -68,8 +68,12 @@ public class PlayerController : MonoBehaviour, IInputEvents
     private float _pitch = 0f;
     
 
-    [Header("Weapon")]
-    PlayerWeapon _playerWeapon;
+    [Header("Weapon")] 
+    private PlayerWeapon _playerWeapon;
+    
+    [Header("Combat")]
+    [SerializeField] private CombatManager combatManager;
+    public CombatManager CombatManager { get => combatManager; }
 
     // --------
     // 애니메이션 관련 
@@ -80,7 +84,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
     {
         get
         {
-            return GetDistanceToGround() <= 0.2f;
+            return GetDistanceToGround() <= 0.03f;
         }
     }
     
@@ -105,8 +109,6 @@ public class PlayerController : MonoBehaviour, IInputEvents
 
     private void Update()
     {
-        Debug.Log(IsGrounded);
-        
         _movementFsm.CurrentStateUpdate();
         _postureFsm.CurrentStateUpdate();
         _actionFsm.CurrentStateUpdate();
@@ -148,6 +150,8 @@ public class PlayerController : MonoBehaviour, IInputEvents
         
         // 애니메이터 교체 
         ApplyAnimatorController(weapon.WeaponType);
+        // 무기별 전략 결정 
+        combatManager.SetWeaponType(weapon.WeaponType);
     }
 
     private void OnAnimatorMove()
@@ -231,7 +235,19 @@ public class PlayerController : MonoBehaviour, IInputEvents
 
     public void OnFirePressed()
     {
-        // 공격
+        // 공격 (마우스 다운)
+        combatManager.StartAttack();
+        SetActionState("Attack");
+    }
+
+    public void OnFireReleased()
+    {
+        // 공격 (마우스 업)
+        if (_actionFsm.CurrentState == ActionState.Attack)
+        {
+            combatManager.ProcessInput(false, false);
+            SetActionState("Idle");
+        }
     }
 
     public void OnCrouchPressed()
@@ -246,7 +262,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public float GetDistanceToGround()
     {
         float maxDistance = 10f;
-        if (Physics.Raycast(transform.position + new Vector3(0,0.2f,0), 
+        if (Physics.Raycast(_characterController.transform.position, 
                 Vector3.down, out RaycastHit hit, maxDistance, groundLayer))
         {
             return hit.distance;

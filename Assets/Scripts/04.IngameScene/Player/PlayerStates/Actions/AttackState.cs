@@ -12,15 +12,17 @@ public class AttackState : PlayerActionState
     }
     public override void Enter(PlayerController playerController)
     {
-        //playerController.Animator.Play(aniName);
         base.Enter(playerController);
+        // todo : Set Animator Parameter
     }
     public override void Exit()
     {
+        _playerController.CombatManager.EndAttack();
         base.Exit();
     }
     public override void Update()
     {
         base.Update();
+        _playerController.CombatManager.UpdateAttack();
     }
 }

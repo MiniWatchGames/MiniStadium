@@ -11,14 +11,14 @@ public class MovementIdleState : PlayerMovementState
     }
     public override void Enter(PlayerController playerController)
     {
-        playerController.Animator.SetBool(IsMoving, false);
+        base.Enter(playerController);
+        _playerController.Animator.SetBool(IsMoving, false);
         
         // 움직임 관련 파라미터 초기화
-        playerController.Animator.SetFloat("MoveX", 0f);
-        playerController.Animator.SetFloat("MoveZ", 0f);
+        _playerController.Animator.SetFloat("MoveX", 0f);
+        _playerController.Animator.SetFloat("MoveZ", 0f);
         
         //playerController.Animator.Play(aniName);
-        base.Enter(playerController);
     }
     public override void Exit()
     {
