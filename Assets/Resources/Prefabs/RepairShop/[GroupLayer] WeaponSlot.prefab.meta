@@ -1,9 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 <<<<<<< HEAD:Assets/Resources/Prefabs/IngameScene/RepairShop/[GroupLayer] WeaponSlot.prefab.meta
 guid: fd23dfd26dcb6a641bee1d17ee84ba1d
 =======
 guid: d9e3598e0be4e884dbfdea7fb0d0ba7e
 >>>>>>> 0c5834eb0fa84398d77736a8054dd3d4e83350a9:Assets/Resources/Prefabs/RepairShop/[GroupLayer] WeaponSlot.prefab.meta
+=======
+guid: 1a8ecc715ee63ab4a8334748b228e294
+>>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성)
 PrefabImporter:
   externalObjects: {}
   userData: 
