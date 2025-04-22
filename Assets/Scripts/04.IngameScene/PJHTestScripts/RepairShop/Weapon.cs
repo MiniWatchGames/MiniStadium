@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 public class Weapon : MonoBehaviour
 {
-    public Items buyableWeapon;
+    public BuyableObject buyableWeapon;
 
     private GameObject _weapon;
     
@@ -17,18 +17,18 @@ public class Weapon : MonoBehaviour
         
         foreach(Transform UI in _weapon.GetComponentsInChildren<Transform>())
         {
-            // if (UI.name.Contains("Icon"))
-            // {
-            //     UI.GetComponent<Image>().sprite = buyableWeapon.icon;
-            // }
-            // if (UI.name.Contains("Name"))
-            // {
-            //     UI.GetComponent<TMP_Text>().text = buyableWeapon.name;
-            // }
-            // if (UI.name.Contains("Price"))
-            // {
-            //     UI.GetComponent<TMP_Text>().text = buyableWeapon.price.ToString();
-            // }
+            if (UI.name.Contains("Icon"))
+            {
+                UI.GetComponent<Image>().sprite = buyableWeapon.icon;
+            }
+            if (UI.name.Contains("Name"))
+            {
+                UI.GetComponent<TMP_Text>().text = buyableWeapon.name;
+            }
+            if (UI.name.Contains("Price"))
+            {
+                UI.GetComponent<TMP_Text>().text = buyableWeapon.price.ToString();
+            }
         }
         
     }
