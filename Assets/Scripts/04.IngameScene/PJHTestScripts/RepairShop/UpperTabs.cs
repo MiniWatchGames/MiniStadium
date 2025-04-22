@@ -65,41 +65,32 @@ public class UpperTabs : MonoBehaviour
             return;
         SetSeletectColor(button, upperTabs);
         WeaponTab.SetActive(true);
-        StatusTab.GetComponent<RepairShopStatus>().StatusReset(false);
         StatusTab.SetActive(false);
-        SkillTab.GetComponent<RepairShopSkill>().SkillShopReset(false);
         SkillTab.SetActive(false);
         
         currentTab = 0;
-        repairShop.ResetPrice();
     }
     public void OnStatusTabClick(Button button)
     {
         if (currentTab == 1)
             return;
         SetSeletectColor(button, upperTabs);
-        WeaponTab.GetComponent<RepairShopWeapon>().WeaponShopReset(false);
         WeaponTab.SetActive(false);
         StatusTab.SetActive(true);
-        SkillTab.GetComponent<RepairShopSkill>().SkillShopReset(false);
         SkillTab.SetActive(false);
         
         currentTab = 1;
-        repairShop.ResetPrice();
     }
     public void OnSkillTabClick(Button button)
     {
         if (currentTab == 2)
             return;
         SetSeletectColor(button, upperTabs);
-        WeaponTab.GetComponent<RepairShopWeapon>().WeaponShopReset(false);
         WeaponTab.SetActive(false);
-        StatusTab.GetComponent<RepairShopStatus>().StatusReset(false);
         StatusTab.SetActive(false);
         SkillTab.SetActive(true);
         
         currentTab = 2;
-        repairShop.ResetPrice();
     }
     
     public void OnSkillLowerTabClick(int index)

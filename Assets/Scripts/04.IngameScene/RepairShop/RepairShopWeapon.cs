@@ -6,12 +6,12 @@ public class RepairShopWeapon : MonoBehaviour
 {
     [SerializeField] private RepairShop RepairShop;
     [SerializeField] private RepairShopReceipt Receipt;
-    private List<BuyableObject_Weapon> BOweaponList;
-    private List<RepairShopWeaponSlot> RepairShopWeapons;
     [SerializeField] private GameObject weaponSlotPrefab;
     [SerializeField] private Transform weaponSlotParent;
-    public int weaponIndex;
+    private List<BuyableObject_Weapon> BOweaponList;
+    private List<RepairShopWeaponSlot> RepairShopWeapons;
     public RepairShopWeaponSlot currentWeapon;
+    public RepairShopWeaponSlot selectedWeapon;
 
     public void init()
     {
@@ -20,7 +20,6 @@ public class RepairShopWeapon : MonoBehaviour
     
     void GenerateWeaponUI()
     {
-        weaponIndex = -1;
         RepairShopWeapons = new List<RepairShopWeaponSlot>();
         
         LoadWeaponList();
@@ -46,40 +45,65 @@ public class RepairShopWeapon : MonoBehaviour
 
     public void BuyingWeapon()
     {
-        // 인덱스가 유효한지 먼저 확인
-        if (weaponIndex < 0 || weaponIndex >= RepairShopWeapons.Count)
-            return;
+        foreach (var slot in RepairShopWeapons)
+            slot.Selected(false);
         
-        if (currentWeapon == null)
+        if (selectedWeapon != null)
         {
-            currentWeapon = RepairShopWeapons[weaponIndex];
-            Receipt.ReceiptBuyWeapon();
+            currentWeapon = selectedWeapon;
+            currentWeapon.Selected(true);
         }
     }
     
     public void WeaponShopReset(bool refunding)
     {
-        if (refunding)
+        if (refunding && currentWeapon != null)
         {
+            RepairShop.currentMoney += currentWeapon.price;
             currentWeapon = null;
-            Receipt.ReceiptRefundWeapon();
         }
-        if (currentWeapon != null) return;
+        
+        selectedWeapon = null;
         
         foreach (var slot in RepairShopWeapons)
+        {
+            if(slot == currentWeapon)
+                continue;
             slot.Selected(false);
-        weaponIndex = -1;
+        }
     }
 
     public void ReadWeaponInfo(RepairShopWeaponSlot ClickedWeapon)
     {
-        if (currentWeapon != null)
+        if (ClickedWeapon == currentWeapon)
             return;
-        RepairShop.totalPrice = ClickedWeapon.price;
-        weaponIndex = ClickedWeapon.index;
-        foreach (var slot in RepairShopWeapons)
-            slot.Selected(false);
-        ClickedWeapon.Selected(true);
+        
+        // 이전에 선택 한 미구매 무기가 있을 시
+        if (selectedWeapon != null && selectedWeapon != currentWeapon)
+        {
+            RepairShop.totalPrice -= selectedWeapon.price;
+
+            if (selectedWeapon == ClickedWeapon)
+            {
+                ClickedWeapon.Selected(false);
+                selectedWeapon = null;
+            }
+            else
+            {
+                selectedWeapon.Selected(false);
+                ClickedWeapon.Selected(true);
+                selectedWeapon = ClickedWeapon;
+                RepairShop.totalPrice += ClickedWeapon.price;
+            }
+        }
+        else // 이전에 선택한 무기가 없거나, 구매된 무기인 경우
+        {
+            ClickedWeapon.Selected(true);
+            selectedWeapon = ClickedWeapon;
+            RepairShop.totalPrice += ClickedWeapon.price;
+        }
+        Receipt.ReceiptUpdateSkill(false);
         RepairShop.UpdateMoneyText(RepairShop.totalPrice);
+        RepairShop.ErrorMessage.SetActive(false);
     }
 }

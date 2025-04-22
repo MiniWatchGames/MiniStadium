@@ -1,0 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public class ReceiptSlot : MonoBehaviour
+{
+    [SerializeField] public Image _icon;
+    [SerializeField] public TextMeshProUGUI _name;
+    [SerializeField] public GameObject _checkbox;
+    
+    public void OnClick()
+    {
+        // 유니티 기본 선택 기능 해제
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+}
+

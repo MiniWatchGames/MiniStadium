@@ -3,7 +3,16 @@ guid: a360a7ab79c84ee46830598e61de2dd2
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - playerName: {instanceID: 0}
+  - Weapon: {instanceID: 0}
+  - weaponText: {instanceID: 0}
+  - weaponImage: {instanceID: 0}
+  - noneSprite: {fileID: 21300000, guid: bec9c5b461f77f649bb970a80ef70e38, type: 3}
+  - skill: {instanceID: 0}
+  - skillParent: {instanceID: 0}
+  - status: {instanceID: 0}
+  - statusGroup: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

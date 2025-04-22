@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class RepairShopSkillSlot : MonoBehaviour
 {
     [SerializeField] private RepairShopSkill _manager;
-    [SerializeField] private GameObject checkbox;
+    [SerializeField] public GameObject checkbox;
     
     [SerializeField] public Image iconImage;
     [SerializeField] public TextMeshProUGUI nameText;
@@ -39,6 +39,8 @@ public class RepairShopSkillSlot : MonoBehaviour
 
     public void OnClick()
     {
+        if (isBought)
+            return;
         _manager.ReadSkillInfo(this);
     }
 }
