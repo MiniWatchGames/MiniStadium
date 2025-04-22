@@ -26,6 +26,8 @@ public class RepairShop : MonoBehaviour
         currentMoney = _startingMoney;
         UpdateMoneyText(0);
         RepairShopStatus.init();
+        RepairShopSkill.init();
+        RepairShopWeapon.init();
     }
 
     public void OnClickRefundButton()

@@ -13,15 +13,16 @@ public class RepairShopWeapon : MonoBehaviour
     public int weaponIndex;
     public RepairShopWeaponSlot currentWeapon;
 
-    void Start()
+    public void init()
+    {
+        GenerateWeaponUI();
+    }
+    
+    void GenerateWeaponUI()
     {
         weaponIndex = -1;
         RepairShopWeapons = new List<RepairShopWeaponSlot>();
-        GenerateWeaponUI();
-    }
-
-    void GenerateWeaponUI()
-    {
+        
         LoadWeaponList();
         int i = 0;
         
