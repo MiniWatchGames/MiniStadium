@@ -6,7 +6,6 @@ using UnityEngine.Rendering;
 using UnityEngine.UI;
 public class UpperTabs : MonoBehaviour
 {
-    
     public delegate Button TabDelegate(Button button);
     public TabDelegate tabButtonDelegate;
     [SerializeField] private GameObject WeaponTab;
