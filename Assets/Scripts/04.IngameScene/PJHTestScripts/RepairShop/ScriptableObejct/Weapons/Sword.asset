@@ -9,6 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
+<<<<<<< HEAD
   m_Script: {fileID: 11500000, guid: 974cd1eb3ca91a94ba84d27d7db8f914, type: 3}
 <<<<<<< HEAD
   m_Name: Sword
@@ -52,6 +53,22 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: 
 >>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성)
+=======
+<<<<<<<< HEAD:Assets/Resources/ScriptableObejct/Skill/0MoveSkill/001 MoveSkill1.asset
+  m_Script: {fileID: 11500000, guid: e20a02ee738b049428e49ef6a1768425, type: 3}
+  m_Name: 001 MoveSkill1
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: ad53cd0fe3a08294b985fed6bca2039c, type: 3}
+  name: "\uC774\uB3D9\uAE301"
+  price: 300
+  description: 
+  skillType: 0
+  weaponType: 0
+========
+  m_Script: {fileID: 11500000, guid: 974cd1eb3ca91a94ba84d27d7db8f914, type: 3}
+  m_Name: Sword
+  m_EditorClassIdentifier: 
+>>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성)
   icon: {fileID: 21300000, guid: 76e86a351b89a4a4088d6ebd9eacab13, type: 3}
   name: Sword
   price: 300
@@ -59,7 +76,11 @@ MonoBehaviour:
   damage: 0
   skills: []
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성):Assets/Scripts/04.IngameScene/PJHTestScripts/RepairShop/ScriptableObejct/Weapons/Sword.asset
+=======
+>>>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성):Assets/Scripts/04.IngameScene/PJHTestScripts/RepairShop/ScriptableObejct/Weapons/Sword.asset
+>>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성)
 =======
 >>>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성):Assets/Scripts/04.IngameScene/PJHTestScripts/RepairShop/ScriptableObejct/Weapons/Sword.asset
 >>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성)

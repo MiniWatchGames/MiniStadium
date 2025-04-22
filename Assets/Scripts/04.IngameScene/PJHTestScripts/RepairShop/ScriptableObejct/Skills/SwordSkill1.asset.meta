@@ -1,4 +1,5 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 <<<<<<<< HEAD:Assets/Scripts/04.IngameScene/PJHTestScripts/RepairShop/ScriptableObejct/Skills/SwordSkill1.asset.meta
 guid: 78cc058074d695246ac76f818515f00c
 ========
@@ -7,6 +8,12 @@ guid: 1041ea0494f95e1409bc0ada4e0d3dea
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
+=======
+guid: 38b6c2b3ac5cf62429f068db9c50a437
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+>>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성)
   userData: 
   assetBundleName: 
   assetBundleVariant: 
