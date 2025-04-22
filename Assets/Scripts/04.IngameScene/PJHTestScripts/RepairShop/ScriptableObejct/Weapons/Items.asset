@@ -12,4 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 974cd1eb3ca91a94ba84d27d7db8f914, type: 3}
   m_Name: Items
   m_EditorClassIdentifier: 
-  slotInfos: []
+  slotInfos:
+  - name: "\uAC80"
+    icon: {fileID: 21300000, guid: bec9c5b461f77f649bb970a80ef70e38, type: 3}
+    prefab: {fileID: 0}
+    WeaponType: 0
+    WeaponRange: 0
+    damage: 10
+    price: 200
+    description: 
+    skills: {fileID: 11400000, guid: 78cc058074d695246ac76f818515f00c, type: 2}
+  - name: "\uCD1D"
+    icon: {fileID: 21300000, guid: 76e86a351b89a4a4088d6ebd9eacab13, type: 3}
+    prefab: {fileID: 0}
+    WeaponType: 2
+    WeaponRange: 1
+    damage: 20
+    price: 300
+    description: 
+    skills: {fileID: 11400000, guid: a93f4016f54753844a1818bac91d4c1e, type: 2}
