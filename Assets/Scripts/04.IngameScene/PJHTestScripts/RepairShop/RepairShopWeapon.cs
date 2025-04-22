@@ -7,7 +7,7 @@ public class RepairShopWeapon : MonoBehaviour
 {
    [SerializeField] private GameObject weaponSlotPrefab;
    [SerializeField] private List<Weapon> weapons = new List<Weapon>();
-   [SerializeField] private Items buyableWeapons;
+   [SerializeField] private List<Items> buyableWeapons = new List<Items>();
 
    delegate void OnWeaponDelegate();
    OnWeaponDelegate onWeaponClickedDelegate;
@@ -15,18 +15,17 @@ public class RepairShopWeapon : MonoBehaviour
    //TODO: 아이콘 클릭식 예약된 함수 실행.
    public void init()
    {
-      for (int i = 0; i < buyableWeapons.slotInfos.Count; i++)
+      for (int i = 0; i < buyableWeapons.Count; i++)
       {
          GameObject weaponSlot = Instantiate(weaponSlotPrefab, transform);
          weaponSlot.name = "WeaponSlot " + i;
          
          Weapon weapon = weaponSlot.GetComponent<Weapon>();
          
-         weapon.init(buyableWeapons.slotInfos[i]);
+         weapon.buyableWeapon = buyableWeapons[i];
+         weapon.init();
          weapons.Add(weapon);
          //onWeaponClickedAction = weaponClicked;
       }
    }
-
-  
 }

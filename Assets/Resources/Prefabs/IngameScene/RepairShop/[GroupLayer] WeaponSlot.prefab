@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03759dc7777475d49978cbe68f65f8a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buyableWeapon: {fileID: 11400000, guid: 246646830d6fbf448a7af0b87854c48e, type: 2}
+  buyableWeapon: {fileID: 0}
 --- !u!1 &2033058243427884999
 =======
   m_GameObject: {fileID: 79753713223618416}

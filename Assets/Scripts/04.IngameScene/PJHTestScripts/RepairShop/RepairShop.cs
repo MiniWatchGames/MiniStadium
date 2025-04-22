@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using TMPro;
 public class RepairShop : MonoBehaviour
 {
@@ -11,10 +11,9 @@ public class RepairShop : MonoBehaviour
     [SerializeField] public GameObject RepairShopStatus;
     [SerializeField] public GameObject RepairShopWeapon;
     [SerializeField] public List<GameObject> RepairShopWeaponList = new List<GameObject>();
-    public Sprite EmptyImage;
+    
     public int currentMoney;
     public TMP_Text currentMoneyText;
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -38,11 +37,6 @@ public class RepairShop : MonoBehaviour
         }
         
     }
-
-    public void RemoveImage(Image image)
-    {
-        image.sprite = EmptyImage;
-    }
-    
-    
+    // Update is called once per frame
+   
 }
