@@ -11,34 +11,25 @@ public class RepairShopSkill : MonoBehaviour
     [SerializeField] private Transform moveSkillT;
     [SerializeField] private Transform weaponSkillT;
     [SerializeField] private Transform passiveSkillT;
-    private List<RepairShopSkillSlot>[] repairShopSkills;
-    private BuyableObject_Skill[] BOmoveSkills;
-    private BuyableObject_Skill[] BOweaponSkills;
-    private BuyableObject_Skill[] BOpassiveSkills;
+    public List<RepairShopSkillSlot>[] repairShopSkills;
+    public BuyableObject_Skill[] BOmoveSkills;
+    public BuyableObject_Skill[] BOweaponSkills;
+    public BuyableObject_Skill[] BOpassiveSkills;
     public int selectedSkillIndex = -1;
     public int selectedSkillType = -1;
     public List<RepairShopSkillSlot> currentSkills;
     
-    void Start()
+    public void init()
     {
         GenerateSkillUI();
-    }
-    
-    void LoadSkillList()
-    {
-        repairShopSkills = new List<RepairShopSkillSlot>[3];
-        for (int i = 0; i < repairShopSkills.Length; i++)
-            repairShopSkills[i] = new List<RepairShopSkillSlot>();
-        
-        BOmoveSkills = Resources.LoadAll<BuyableObject_Skill>($"ScriptableObejct/Skill/0MoveSkill");
-        BOweaponSkills = Resources.LoadAll<BuyableObject_Skill>($"ScriptableObejct/Skill/1WeaponSkill");
-        BOpassiveSkills = Resources.LoadAll<BuyableObject_Skill>($"ScriptableObejct/Skill/2PassiveSkill");
     }
     
     void GenerateSkillUI()
     {
         LoadSkillList();
-    
+        
+        currentSkills = new List<RepairShopSkillSlot>();
+        
         Transform[] targets = { moveSkillT, weaponSkillT, passiveSkillT };
         BuyableObject_Skill[][] skillGroups = { BOmoveSkills, BOweaponSkills, BOpassiveSkills };
 
@@ -53,6 +44,17 @@ public class RepairShopSkill : MonoBehaviour
                 repairShopSkills[i].Add(script);
             }
         }
+    }
+    
+    void LoadSkillList()
+    {
+        repairShopSkills = new List<RepairShopSkillSlot>[3];
+        for (int i = 0; i < repairShopSkills.Length; i++)
+            repairShopSkills[i] = new List<RepairShopSkillSlot>();
+        
+        BOmoveSkills = Resources.LoadAll<BuyableObject_Skill>($"ScriptableObejct/Skill/0MoveSkill");
+        BOweaponSkills = Resources.LoadAll<BuyableObject_Skill>($"ScriptableObejct/Skill/1WeaponSkill");
+        BOpassiveSkills = Resources.LoadAll<BuyableObject_Skill>($"ScriptableObejct/Skill/2PassiveSkill");
     }
 
     public void BuyingSkill()
@@ -73,9 +75,9 @@ public class RepairShopSkill : MonoBehaviour
             Receipt.ReceiptRefundSkill();
         }
         
-        for (int i = 0; i < repairShopSkills.Length; i++)
+        foreach (var list in repairShopSkills)
         {
-            foreach (var slot in repairShopSkills[i])
+            foreach (var slot in list)
             {
                 if (refunding)
                 {

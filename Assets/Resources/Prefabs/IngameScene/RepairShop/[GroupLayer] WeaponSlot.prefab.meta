@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/Resources/Prefabs/IngameScene/RepairShop/[GroupLayer] WeaponSlot.prefab.meta
-guid: fd23dfd26dcb6a641bee1d17ee84ba1d
-=======
-guid: d9e3598e0be4e884dbfdea7fb0d0ba7e
->>>>>>> 0c5834eb0fa84398d77736a8054dd3d4e83350a9:Assets/Resources/Prefabs/RepairShop/[GroupLayer] WeaponSlot.prefab.meta
+guid: 9a3667a47236fd84887dbd1474c6d529
 PrefabImporter:
   externalObjects: {}
   userData: 
