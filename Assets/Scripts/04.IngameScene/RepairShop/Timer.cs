@@ -94,7 +94,7 @@ public class Timer : MonoBehaviour
         int seconds = (int)(elapsed % 60);
             
         
-        if (elapsed < 60)
+        if (5< elapsed && elapsed < 60)
         {
             minutes = 0;
             seconds = (int)(elapsed % 60);

@@ -162,5 +162,20 @@ public class InGameManager : MonoBehaviour
         
         
     }
+
+    public void NextRound(TestStat player)
+    {
+        currentRound++;
+        switch (player.team)
+        {
+            case Team.Blue:
+                Debug.Log("Blue Team");
+                
+                break;
+            case Team.Red:
+                Debug.Log("Red Team");
+                break;
+        }
+    }
     
 }
