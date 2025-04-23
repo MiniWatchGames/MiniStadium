@@ -128,6 +128,9 @@ public class RepairShopStatus : MonoBehaviour
         {
             RepairShop.currentMoney += _totalWorth;
             _totalWorth = 0;
+            Receipt.Count_HP = 0;
+            Receipt.Count_AR = 0;
+            Receipt.Count_MV = 0;
         }
         
         for(int i = 0; i < _statusKinds; i++)
@@ -151,6 +154,7 @@ public class RepairShopStatus : MonoBehaviour
     // 구매
     public void StatusPurchasing()
     {
+        
         for (int i = 0; i < _statusKinds; i++)
         {
             for (int j = 0; j < _maxUpgradeCount + 1; j++)
@@ -158,6 +162,13 @@ public class RepairShopStatus : MonoBehaviour
                 var button = _buttonsInRows[i, j];
                 if (!button.isBought && button.isSelected)
                 {
+                    switch (i)
+                    {
+                        case 0: Receipt.Count_HP++; break;
+                        case 1: Receipt.Count_AR++; break;
+                        case 2: Receipt.Count_MV++; break;
+                    }
+
                     _totalWorth += button.StatusPrice;
                     
                     // 구매 된 버튼 비활성화

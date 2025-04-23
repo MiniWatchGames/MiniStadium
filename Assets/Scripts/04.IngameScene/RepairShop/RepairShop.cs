@@ -18,10 +18,11 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private RepairShopSkill RepairShopSkill;
     [SerializeField] private RepairShopReceipt RepairShopReceipt;
     
-    private int _startingMoney = 3000;
-    public int currentMoney;
-    public int totalPrice = 0;
-    public TMP_Text currentMoneyText;
+    // 금액
+    [SerializeField] private int _startingMoney = 3000;
+    [SerializeField] public int currentMoney;
+    [SerializeField] public int totalPrice = 0;
+    [SerializeField] public TMP_Text currentMoneyText;
     
     void Start()
     {
@@ -75,13 +76,11 @@ public class RepairShop : MonoBehaviour
             RepairShopStatus.StatusPurchasing();
             RepairShopSkill.BuyingSkill();
             RepairShopReceipt.ReceiptUpdateSkill(true);
+            RepairShopReceipt.SetPlayerItems();
             
             ResetPrice();
         }
-        // 실패
-        else
-        {
+        else // 실패
             errorMessage.SetActive(true);
-        }
     }
 }

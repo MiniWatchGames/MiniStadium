@@ -7,17 +7,18 @@ using UnityEngine.UI;
 public class RepairShopSkillSlot : MonoBehaviour
 {
     [SerializeField] private RepairShopSkill _manager;
-    [SerializeField] public GameObject checkbox;
     
     [SerializeField] public Image iconImage;
     [SerializeField] public TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] public int skillType;
-    [SerializeField] public bool isBought = false;
     [SerializeField] public int weaponType;
     [SerializeField] public int index;
     [SerializeField] public int price;
     [SerializeField] private string description;
+    
+    [SerializeField] public GameObject checkbox;
+    [SerializeField] public bool isBought = false;
     
     public void Init(BuyableObject_Skill BOdata, RepairShopSkill manager, int _index)
     {

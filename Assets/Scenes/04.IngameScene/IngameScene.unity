@@ -60115,6 +60115,9 @@ MonoBehaviour:
   status: {fileID: 5256223768004525494, guid: 6f88b9908e311b24bbd576ee8c407c7c, type: 3}
   statusGroup: {fileID: 3549640501646963342, guid: 2cf5f13d0cd86064e87755223d6aed2b,
     type: 3}
+  Count_HP: 0
+  Count_AR: 0
+  Count_MV: 0
 --- !u!1 &1303005292
 GameObject:
   m_ObjectHideFlags: 0
@@ -60182,6 +60185,7 @@ MonoBehaviour:
   RepairShopWeapon: {fileID: 130993873}
   RepairShopSkill: {fileID: 940028364}
   RepairShopReceipt: {fileID: 1296170055}
+  _startingMoney: 3000
   currentMoney: 0
   totalPrice: 0
   currentMoneyText: {fileID: 1851820142}
