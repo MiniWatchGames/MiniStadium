@@ -19,7 +19,6 @@ public class RepairShopStatus : MonoBehaviour
     private List<GameObject> _priceTags;
     private int _statusOriginalPrice = 100;
     private int _statusAddtivePrice = 100;
-    private int _statusTotalPrice = 0;
     private int _totalWorth = 0;
     
     // 스테이터스 버튼
@@ -46,7 +45,7 @@ public class RepairShopStatus : MonoBehaviour
         int col = _maxUpgradeCount + 1;
         
         _buttonsInRows = new RepairShopStatusButton[row, col];
-        Receipt.previewsInRows = new Image[row, col];
+        Receipt.PreviewsInRows = new Image[row, col];
         _priceTags = new List<GameObject>(row);
         _lastButtonIndexes = new List<int>(row);
         
@@ -70,12 +69,12 @@ public class RepairShopStatus : MonoBehaviour
                 
                 // 미리보기 생성
                 var preview = Instantiate(Receipt.status, previewGroup.transform);
-                Receipt.previewsInRows[i, j] = preview.GetComponent<Image>();
+                Receipt.PreviewsInRows[i, j] = preview.GetComponent<Image>();
 
                 if (j == 0)
                 {
                     newButtonData.button.interactable = false;
-                    Receipt.previewsInRows[i, j].color = types[i].DisabledColor;
+                    Receipt.PreviewsInRows[i, j].color = types[i].DisabledColor;
                 }
             }
             // 가격 텍스트UI 생성
@@ -88,37 +87,41 @@ public class RepairShopStatus : MonoBehaviour
     public void SelectSameTypeToLeft(RepairShopStatusButton clickedButton)
     {
         RepairShop.ErrorMessage.SetActive(false);
-        
+
         int row = clickedButton.StatusType;
         int col = clickedButton.StatusIndex;
         int lastIndex = _lastButtonIndexes[row];
+
+        // 금액 반환 및 클릭된 row 초기화
+        int value = CalculateRowTotal(row);
+        RepairShop.totalPrice -= value;
         
-        // 초기화
-        _statusTotalPrice -= CalculateRowTotal(row);
         for (int i = 0; i < _maxUpgradeCount + 1; i++)
             _buttonsInRows[row, i].SetSelected(false);
-        
+
         // 같은 버튼 다시 클릭 시 위치 정보 삭제
         if (col == lastIndex)
         {
             _lastButtonIndexes[row] = -1;
-            HighlightSameTypeToLeft(_buttonsInRows[row, col],true);
+            HighlightSameTypeToLeft(_buttonsInRows[row, col], true);
         }
         else
         {
-            // 재선택
             for (int i = 1; i <= col; i++)
                 _buttonsInRows[row, i].SetSelected(true);
-            _lastButtonIndexes[row] = col; // 위치 정보 저장
+            _lastButtonIndexes[row] = col;
         }
-        // 가격 갱신
-        _statusTotalPrice += CalculateRowTotal(row);
-        StatusSetPrice(CalculateRowTotal(row), _priceTags[row]);
-        RepairShop.totalPrice = _statusTotalPrice;
-        RepairShop.UpdateMoneyText(_statusTotalPrice);
+
+        // 가격 취합
+        value = CalculateRowTotal(row);
+        RepairShop.totalPrice += value;
+    
+        // 가격 정보 갱신
+        StatusSetPrice(value, _priceTags[row]);
+        RepairShop.UpdateMoneyText(RepairShop.totalPrice);
     }
         
-    // 탭을 닫았을 때 리셋
+    // 리셋
     public void StatusReset(bool refunding)
     {
         if (refunding) // 환불 버튼을 눌렀을 때
@@ -143,7 +146,6 @@ public class RepairShopStatus : MonoBehaviour
             _lastButtonIndexes[i] = -1;  // 위치 정보 삭제
             StatusSetPrice(0, _priceTags[i]); // 가격표 갱신
         }
-        _statusTotalPrice = 0;
     }
 
     // 구매
@@ -169,8 +171,6 @@ public class RepairShopStatus : MonoBehaviour
             }
             StatusSetPrice(0, _priceTags[i]);
         }
-        // 가격 초기화
-        _statusTotalPrice = 0;
     }
     
     // 가격표 갱신
@@ -210,12 +210,4 @@ public class RepairShopStatus : MonoBehaviour
             }
         }
     }
-
-    #region 미사용
-
-    /*
-     
-     */
-
-    #endregion
 }

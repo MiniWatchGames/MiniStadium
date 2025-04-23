@@ -9,11 +9,14 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private UpperTabs upperTabs;
     [SerializeField] public List<GameObject> RepairShopUpperTabs;
     [SerializeField] public List<GameObject> RepairShopLowerTabs;
+    public GameObject ErrorMessage => errorMessage;
+    [SerializeField] private GameObject errorMessage;
+    
+    // 하위 탭
     [SerializeField] private RepairShopStatus RepairShopStatus;
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
-    public GameObject ErrorMessage => errorMessage;
-    [SerializeField] private GameObject errorMessage;
+    [SerializeField] private RepairShopReceipt RepairShopReceipt;
     
     private int _startingMoney = 3000;
     public int currentMoney;
@@ -30,6 +33,7 @@ public class RepairShop : MonoBehaviour
         RepairShopWeapon.init();
     }
 
+    // 리셋 버튼 클릭 시 환불 절차
     public void OnClickRefundButton()
     {
         if (currentMoney < 200)
@@ -41,7 +45,8 @@ public class RepairShop : MonoBehaviour
         RepairShopStatus.StatusReset(true);
         RepairShopWeapon.WeaponShopReset(true);
         RepairShopSkill.SkillShopReset(true);
-        UpdateMoneyText(0);
+        RepairShopReceipt.ReceiptRefundAll();
+        ResetPrice();
     }
     
     public void ResetPrice()
@@ -50,6 +55,7 @@ public class RepairShop : MonoBehaviour
         UpdateMoneyText(0);
     }
     
+    // 가격 및 보유금액 갱신
     public void UpdateMoneyText(int price)
     {
         string format = $"가격 : {price}g / {currentMoney}g";
@@ -64,18 +70,13 @@ public class RepairShop : MonoBehaviour
         {
             errorMessage.SetActive(false);
             currentMoney -= totalPrice;
-            totalPrice = 0;
-            UpdateMoneyText(0);
 
-            // 무기 탭이 열린 경우
-            if (RepairShopUpperTabs[0].activeSelf)
-                RepairShopWeapon.BuyingWeapon();
-            // 스테이터스 탭이 열린 경우
-            if (RepairShopUpperTabs[1].activeSelf)
-                RepairShopStatus.StatusPurchasing();
-            // 스킬 탭이 열린 경우
-            if (RepairShopUpperTabs[2].activeSelf)
-                RepairShopSkill.BuyingSkill();
+            RepairShopWeapon.BuyingWeapon();
+            RepairShopStatus.StatusPurchasing();
+            RepairShopSkill.BuyingSkill();
+            RepairShopReceipt.ReceiptUpdateSkill(true);
+            
+            ResetPrice();
         }
         // 실패
         else
