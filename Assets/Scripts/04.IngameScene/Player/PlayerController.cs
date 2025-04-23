@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum ActionState { 
@@ -27,6 +28,14 @@ public enum MovementState
     None
 }
 
+public enum StatType
+{
+    MaxHp,
+    Defence,
+    MoveSpeed,
+    JumpPower
+}
+
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, IInputEvents
@@ -44,7 +53,46 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public Vector2 CurrentMoveInput => _currentMoveInput;
     private float _lastInputTime;
     private float _inputBufferTime = 0.1f; // 100ms의 버퍼 타임
+
+
+
+
+    // --------
+    // 스탯 관련
+    [Header("Stat")]
+    [SerializeField] private float fixedFirstMaxHp;
+    [SerializeField] private float fixedFirstDefence;
+    [SerializeField] private float fixedFirstMoveSpeed;
+    [SerializeField] private float fixedFirstJumpPower;
+
+    private Stat baseMaxHp;
+    private Stat baseDefence;
+    private Stat baseMoveSpeed;
+    private Stat baseJumpPower;
     
+    public Stat BaseMaxHp => baseMaxHp;
+    public Stat BaseDefence => baseDefence;
+    public Stat BaseMoveSpeed => baseMoveSpeed;
+    public Stat BaseJumpPower => baseJumpPower;
+
+
+    private Dictionary<StatType,Stat> statDictionary;
+    
+    private float currentHp;
+    public float CurrentHp
+    {
+        get => currentHp;
+        set
+        {
+            currentHp = value;
+            if (currentHp <= 0)
+            {
+                Debug.Log("주금..");
+            }
+        }
+    }
+
+
     // --------
     // 상태 관련
     [Header("FSM")]
@@ -105,10 +153,24 @@ public class PlayerController : MonoBehaviour, IInputEvents
         InputManager.instance.Register(this);
 
         Init();
+        Debug.Log(baseMaxHp.Value);
+
+        IPassive passive = this.AddComponent<HpRegenerationPassive>();
+
+        passive.ApplyPassive(this);
+
+        AddStatDecorate(StatType.MaxHp, 3);
+
+        CurrentHp -= 4;
+        RemoveStatDecorate(StatType.MaxHp);
+        CurrentHp -= 4;
     }
 
     private void Update()
-    {
+    {        
+        Debug.Log(CurrentHp);
+        //RemoveStatAllDecorate(StatType.Hp);
+
         _movementFsm.CurrentStateUpdate();
         _postureFsm.CurrentStateUpdate();
         _actionFsm.CurrentStateUpdate();
@@ -122,6 +184,19 @@ public class PlayerController : MonoBehaviour, IInputEvents
         _cameraController.SetTarget(transform);
         _cameraController.SetSpineTarget(rotationTarget);
         _cameraController.IsIdle = IsIdle;
+
+        //플레이어 스텟 설정
+        statDictionary = new Dictionary<StatType, Stat>();
+        baseMaxHp = new Stat(fixedFirstMaxHp);
+        statDictionary.Add(StatType.MaxHp, baseMaxHp);
+        baseDefence = new Stat(fixedFirstDefence);
+        statDictionary.Add(StatType.Defence, baseDefence);
+        baseMoveSpeed = new Stat(fixedFirstMoveSpeed);
+        statDictionary.Add(StatType.MoveSpeed, baseMoveSpeed);
+        baseJumpPower = new Stat(fixedFirstJumpPower);
+        statDictionary.Add(StatType.JumpPower, baseJumpPower);
+        CurrentHp = baseMaxHp.Value;
+        // 구매내역에 따른 스텟 분배
 
         // 무기 설정 
         EquipWeapon(_playerWeapon);
@@ -367,6 +442,66 @@ public class PlayerController : MonoBehaviour, IInputEvents
     #endregion
 
 
+    #region 스텟 관련 메소드
+
+    /// <summary>
+    /// 지정 스탯에 데코레이터 메소드 추가
+    /// </summary>
+    /// <param name="stat">증가시킬 변수</param>
+    /// <param name="additionalValue">증가시킬 양</param>
+    public void AddStatDecorate(StatType stat, float additionalValue)
+    {
+        if (statDictionary.TryGetValue(stat, out var target))
+        {
+            target.AddDecorate(((value) => value + additionalValue));
+        }
+        if(stat == StatType.MaxHp)
+        {
+            CurrentHp = baseMaxHp.Value;
+            Debug.Log($"버프 적용 현재 체력{CurrentHp}");
+        }
+    }
+    /// <summary>
+    /// 지정 인덱스의 가장 마지막에 추가된 데코레이트 삭제
+    /// </summary>
+    /// <param name="stat">삭제시킬 변수</param>
+    public void RemoveStatDecorate(StatType stat)
+    {
+        if (statDictionary.TryGetValue(stat, out var target))
+        {
+            target.RemoveModifiers();
+        }
+        if (stat == StatType.MaxHp)
+        {
+            CurrentHp = baseMaxHp.Value;
+        }
+        Debug.Log($"버프 적용 현재 체력{CurrentHp}");
+    }
+    /// <summary>
+    /// 지정 인덱스의 모든 데코레이트 삭제
+    /// </summary>
+    /// <param name="stat">삭제할 func의 인덱스</param>
+    public void RemoveStatAllDecorate(StatType stat)
+    {
+        if (statDictionary.TryGetValue(stat, out var target))
+        {
+            target.RemoveAllModifiers();
+        }
+        if (stat == StatType.MaxHp)
+        {
+            CurrentHp = baseMaxHp.Value;
+        }
+        Debug.Log($"버프 적용 현재 체력{CurrentHp}");
+    }
+
+    //구매 내역 에 따른 스탯 분배 메소드 필요
+    //구매 내역에 따른 Passive 생성, 스킬 생성도 필요
+    // 너무 커질 것 같으니 PurchaseManager에서 관리하는 것도 좋을듯
+
+    //정비소 측에서 구매내역을 넘겨받는 메소드 구현 필요
+
+    #endregion
+
 
     // 디버깅 용 Ray
     private void DrawRay()
@@ -376,5 +511,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
 
         Debug.DrawRay(origin, direction * 5f, Color.red);
     }
+
+    
 
 }

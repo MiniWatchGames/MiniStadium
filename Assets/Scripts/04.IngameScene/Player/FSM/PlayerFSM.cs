@@ -11,7 +11,7 @@ using UnityEngine;
 public enum StateType { 
     Action,
     Posture,
-    Move
+    Move,
 }
 
 public static class StateFactory

@@ -751,7 +751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe27eeab998449d1a2abd8dff500d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 0
+  weaponType: 1
 --- !u!1 &512303201
 GameObject:
   m_ObjectHideFlags: 0
@@ -1797,6 +1797,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
+      propertyPath: fixedHp
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
       propertyPath: maxAngle
       value: 50
       objectReference: {fileID: 0}
@@ -1812,8 +1817,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
+      propertyPath: fixedMaxHp
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
       propertyPath: defaultState
       value: Idle
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
+      propertyPath: fixedDefence
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
@@ -1827,14 +1842,44 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 7d752a938992a43bd9f56abe328d736e, type: 2}
     - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
+      propertyPath: fixedJumpPower
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
+      propertyPath: fixedMoveSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
       propertyPath: rotationTarget
       value: 
       objectReference: {fileID: 560831382}
     - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
+      propertyPath: fixedFirstMaxHp
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
       propertyPath: swordController
       value: 
       objectReference: {fileID: 9100000, guid: ef346e066ab4a41d2bf197b1c172ff3d, type: 2}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
+      propertyPath: fixedFirstDefence
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
+      propertyPath: fixedFirstJumpPower
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
+      propertyPath: fixedFirstMoveSpeed
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2087848492479048663, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
       propertyPath: m_Enabled
