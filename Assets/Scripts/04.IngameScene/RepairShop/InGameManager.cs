@@ -21,6 +21,7 @@ public class InGameManager : MonoBehaviour
     }
     public enum WinLoseState
     {
+        Default,
         Win,
         Lose,
         Duse,
@@ -42,7 +43,7 @@ public class InGameManager : MonoBehaviour
 
     [SerializeField] private Timer gameTimer;
     
-    [SerializeField] private int currentRound = 0;
+    [SerializeField] public int currentRound = 0;
     [SerializeField] private int currentGameTime = 0;
     
     void SetGameState(GameState state)
@@ -97,6 +98,10 @@ public class InGameManager : MonoBehaviour
     {
         switch (state)
         {
+            case WinLoseState.Default:
+                Debug.Log("Default");
+                currentWinLoseState = WinLoseState.Default;
+                break;
             case WinLoseState.Win:
                 Debug.Log("Win");
                 currentWinLoseState = WinLoseState.Win;
@@ -166,16 +171,7 @@ public class InGameManager : MonoBehaviour
     public void NextRound(TestStat player)
     {
         currentRound++;
-        switch (player.team)
-        {
-            case Team.Blue:
-                Debug.Log("Blue Team");
-                
-                break;
-            case Team.Red:
-                Debug.Log("Red Team");
-                break;
-        }
+        
     }
     
 }
