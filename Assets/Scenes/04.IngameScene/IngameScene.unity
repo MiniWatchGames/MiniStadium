@@ -24374,7 +24374,7 @@ MonoBehaviour:
   playerSkill3: {fileID: 1895380894}
   playerWeapon: {fileID: 595680723}
   playerWeaponAmmo: {fileID: 657370822}
-  playerStat: {fileID: 0}
+  playerStat: {fileID: 1938681132}
 --- !u!222 &560846256
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -85491,9 +85491,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1938681130}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 612203f2b67351943adc2001c645f1f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b8d576cc5e08eb4aa1c990e7632193c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 100
+  maxHealth: 100
+  winCount: 0
+  team: 0
+  inGameManager_obj: {fileID: 0}
 --- !u!136 &1938681133
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -87089,9 +87094,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1993856898}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 612203f2b67351943adc2001c645f1f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b8d576cc5e08eb4aa1c990e7632193c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 100
+  maxHealth: 100
+  winCount: 0
+  team: 0
+  inGameManager_obj: {fileID: 0}
 --- !u!136 &1993856901
 CapsuleCollider:
   m_ObjectHideFlags: 0
