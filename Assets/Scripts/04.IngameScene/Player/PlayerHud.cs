@@ -19,12 +19,12 @@ public class PlayerHud : MonoBehaviour
     [SerializeField] private GameObject playerWeapon;
     [SerializeField] private GameObject playerWeaponAmmo;
     
-    private DetectInGameInfoChanged _detectStat;
+    private DetectPlayerStateChanged _detectStat;
     public TestStat playerStat;
     // Start is called before the first frame update
     void Start()
     {
-        _detectStat = new DetectInGameInfoChanged(playerStat);
+        _detectStat = new DetectPlayerStateChanged(playerStat);
         UpdateUI();
         _detectStat.PropertyChanged += OnDetectPlayerStatChanged;
     }

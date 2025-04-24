@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class DetectInGameInfoChanged : INotifyPropertyChanged
+public class DetectPlayerStateChanged : INotifyPropertyChanged
 {
     //이 인터페이스를 상속받는 클래스는 StatUpdate와 StatReset 메소드를 구현해야 한다.
     //StatUpdate는 캐릭터의 스텟이 변경될 때 호출된다.
@@ -14,7 +14,7 @@ public class DetectInGameInfoChanged : INotifyPropertyChanged
     //StatUpdate와 StatReset 메소드는 TestStat을 매개변수로 받아서 캐릭터의 스텟을 업데이트하거나 초기화한다.
     private TestStat playerStat;
     
-    public DetectInGameInfoChanged(TestStat stat)
+    public DetectPlayerStateChanged(TestStat stat)
     {
         playerStat = stat;
         playerName_Base = playerStat.name;
