@@ -168,10 +168,13 @@ public class InGameManager : MonoBehaviour
         
     }
 
-    public void NextRound(TestStat player)
+    public void LoseRound(TestStat player)
     {
         currentRound++;
         
     }
-    
+    public void WinRound(TestStat player)
+    {
+        
+    }
 }
