@@ -7,10 +7,11 @@ public class WalkState : PlayerMovementState
     private Vector2 _smoothedInput = Vector2.zero;
     private float _smoothingSpeed = 10f;
     private static int aniName;
-    public WalkState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
-    {
-        aniName = Animator.StringToHash(_aniStrategy.GetAnimationName("Walk"));
-    }
+    public WalkState() : base() { }
+    //public WalkState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
+    //{
+    //    aniName = Animator.StringToHash(_aniStrategy.GetAnimationName("Walk"));
+    //}
     public override void Enter(PlayerController playerController)
     {
         //playerController.Animator.Play(aniName);

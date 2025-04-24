@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.IO.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.Rendering;
 using UnityEngine;
+using static SkillFactory;
 
 public enum StateType { 
     Action,
@@ -16,46 +13,46 @@ public enum StateType {
 
 public static class StateFactory
 {    
-    public static List<(T, IPlayerState)> CreateStates<T>(this PlayerFSM<T> fsm, IWeaponAnimationStrategy _aniStrategy) where T : Enum
+    public static List<(T, IPlayerState)> CreateStates<T>(this PlayerFSM<T> fsm/*, IWeaponAnimationStrategy _aniStrategy*/) where T : Enum
     {
         if (typeof(T) == typeof(ActionState))
         {
-            var list = (fsm as PlayerFSM<ActionState>).CreateStates(_aniStrategy);
+            var list = (fsm as PlayerFSM<ActionState>).CreateStates(/*_aniStrategy*/);
             return list.Select(tuple => ((T)(object)tuple.Item1, tuple.Item2)).ToList();
         }
         else if (typeof(T) == typeof(MovementState))
         {
-            var list = (fsm as PlayerFSM<MovementState>).CreateStates(_aniStrategy);
+            var list = (fsm as PlayerFSM<MovementState>).CreateStates(/*_aniStrategy*/);
             return list.Select(tuple => ((T)(object)tuple.Item1, tuple.Item2)).ToList();
         }
         else if (typeof(T) == typeof(PostureState)) {
 
-            var list = (fsm as PlayerFSM<PostureState>).CreateStates(_aniStrategy);
+            var list = (fsm as PlayerFSM<PostureState>).CreateStates(/*_aniStrategy*/);
             return list.Select(tuple => ((T)(object)tuple.Item1, tuple.Item2)).ToList();
         }
         return null;
     }
 
-    public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm, IWeaponAnimationStrategy _aniStrategy) => new()
+    public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm /*, IWeaponAnimationStrategy _aniStrategy*/) => new()
     {
-        (ActionState.Idle, new ActionIdleState(_aniStrategy)),
-        (ActionState.Attack, new AttackState(_aniStrategy)),
-        (ActionState.Hit, new HitState(_aniStrategy)),
-        (ActionState.Dead, new DeadState(_aniStrategy)),
-        (ActionState.MovementSkills, new MovementSkillsState(_aniStrategy)),
-        (ActionState.WeaponSkills, new WeaponSkillsState(_aniStrategy))
+        (ActionState.Idle, new ActionIdleState(/*_aniStrategy*/)),
+        (ActionState.Attack, new AttackState(/*_aniStrategy*/)),
+        (ActionState.Hit, new HitState(/*_aniStrategy*/)),
+        (ActionState.Dead, new DeadState(/*_aniStrategy*/)),
+        //(ActionState.MovementSkills, new MovementSkillsState(/*_aniStrategy*/)),
+        //(ActionState.WeaponSkills, new WeaponSkillsState(/*_aniStrategy*/))
     };
 
-    public static List<(MovementState, IPlayerState)> CreateStates(this PlayerFSM<MovementState> fsm, IWeaponAnimationStrategy _aniStrategy) => new()
+    public static List<(MovementState, IPlayerState)> CreateStates(this PlayerFSM<MovementState> fsm/*, IWeaponAnimationStrategy _aniStrategy*/) => new()
     {
-        (MovementState.Walk, new WalkState(_aniStrategy)),
-        (MovementState.Jump, new JumpState(_aniStrategy)),
-        (MovementState.Idle, new MovementIdleState(_aniStrategy))
+        (MovementState.Walk, new WalkState(/*_aniStrategy*/)),
+        (MovementState.Jump, new JumpState(/*_aniStrategy*/)),
+        (MovementState.Idle, new MovementIdleState(/*_aniStrategy*/))
     }; 
-    public static List<(PostureState, IPlayerState)> CreateStates(this PlayerFSM<PostureState> fsm, IWeaponAnimationStrategy _aniStrategy) => new()
+    public static List<(PostureState, IPlayerState)> CreateStates(this PlayerFSM<PostureState> fsm/*, IWeaponAnimationStrategy _aniStrategy*/) => new()
     {
-        (PostureState.Idle, new PostureIdleState(_aniStrategy)),
-        (PostureState.Crouch, new CrouchState(_aniStrategy))
+        (PostureState.Idle, new PostureIdleState(/*_aniStrategy*/)),
+        (PostureState.Crouch, new CrouchState(/*_aniStrategy*/))
     };
 }
 
@@ -70,8 +67,8 @@ public class PlayerFSM<T> where T : Enum
     private Dictionary<Enum, IPlayerState> _states = new();
     private StateType _stateType;
     private PlayerWeapon _playerWeapon;
-    private PlayerAnimationStrategyFactory _playerAnimationStrategyFactory;
-    private IWeaponAnimationStrategy _aniStrategy;
+    //private PlayerAnimationStrategyFactory _playerAnimationStrategyFactory;
+    //private IWeaponAnimationStrategy _aniStrategy;
     public T CurrentState { get; private set; }
 
 
@@ -84,19 +81,31 @@ public class PlayerFSM<T> where T : Enum
         _defaultState = defaultState;
         _stateType = value;
         _playerWeapon = playerWeapon;
-        _playerAnimationStrategyFactory = new PlayerAnimationStrategyFactory();
-        _aniStrategy = _playerAnimationStrategyFactory.CreateStrategy(playerWeapon);
+        //_playerAnimationStrategyFactory = new PlayerAnimationStrategyFactory();
+        //_aniStrategy = _playerAnimationStrategyFactory.CreateStrategy(playerWeapon);
     }  
 
     public void Run(PlayerController playerController) 
     {
-        List<(T, IPlayerState)> list = this.CreateStates(_aniStrategy);
+        List<(T, IPlayerState)> list = this.CreateStates(/*_aniStrategy*/);
         foreach (var state in list)
         {
             AddState(state.Item1, state.Item2);
         }
 
         ChangeState(_defaultState, playerController);
+    }
+
+    public void AddSkillState(List<string> skillNames)
+    {
+        if (typeof(T) == typeof(ActionState)) {
+            
+            List<(ActionState, IPlayerState)> list = ((PlayerFSM<ActionState>)(object)this).CreateStates(skillNames);
+            foreach (var state in list)
+            {
+                AddState((T)(object)state.Item1, state.Item2);
+            }
+        }
     }
 
     public void AddState(T stateType, IPlayerState state)
@@ -125,12 +134,12 @@ public class PlayerFSM<T> where T : Enum
     /// <summary>
     /// 무기 변경시 새 전략으로 바꾸기위해 호출해줘야 함
     /// </summary>
-    public void ChangeWeapon(PlayerWeapon playerWeapon, PlayerController playerController) {
-        _playerWeapon = playerWeapon;
-        _states.Clear();
-        _states = null;
-        _aniStrategy = _playerAnimationStrategyFactory.CreateStrategy(_playerWeapon);
-        ChangeState(_defaultState, playerController);
-    }
+    //public void ChangeWeapon(PlayerWeapon playerWeapon, PlayerController playerController) {
+    //    _playerWeapon = playerWeapon;
+    //    _states.Clear();
+    //    _states = null;
+    //    _aniStrategy = _playerAnimationStrategyFactory.CreateStrategy(_playerWeapon);
+    //    ChangeState(_defaultState, playerController);
+    //}
    
 }

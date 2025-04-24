@@ -5,10 +5,11 @@ using UnityEngine;
 public class JumpState : PlayerMovementState
 {
     private static int aniName;
-    public JumpState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
-    {
-        aniName = Animator.StringToHash(_aniStrategy.GetAnimationName("Jump"));
-    }
+    public JumpState() : base() { }
+    //public JumpState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
+    //{
+    //    aniName = Animator.StringToHash(_aniStrategy.GetAnimationName("Jump"));
+    //}
     public override void Enter(PlayerController playerController)
     {
         base.Enter(playerController);

@@ -5,10 +5,11 @@ using UnityEngine;
 public class MovementIdleState : PlayerMovementState
 {
     private static int aniName;
-    public MovementIdleState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
-    {
-        aniName = Animator.StringToHash(_aniStrategy.GetAnimationName("MovementIdle"));
-    }
+    public MovementIdleState() : base() { }
+    //public MovementIdleState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
+    //{
+    //    aniName = Animator.StringToHash(_aniStrategy.GetAnimationName("MovementIdle"));
+    //}
     public override void Enter(PlayerController playerController)
     {
         base.Enter(playerController);

@@ -1873,7 +1873,7 @@ PrefabInstance:
     - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
       propertyPath: fixedFirstJumpPower
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
