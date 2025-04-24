@@ -10,6 +10,7 @@ public class ReceiptSlot : MonoBehaviour
     [SerializeField] public Image _icon;
     [SerializeField] public TextMeshProUGUI _name;
     [SerializeField] public GameObject _checkbox;
+    [SerializeField] public int Index = -1;
     
     public void OnClick()
     {

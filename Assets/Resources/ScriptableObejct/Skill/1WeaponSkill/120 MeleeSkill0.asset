@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 120 MeleeSkill0
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: ad53cd0fe3a08294b985fed6bca2039c, type: 3}
-  name: "\uC6D0\uAC70\uB9AC\uC2A4\uD0AC0"
+  name: "\uADFC\uAC70\uB9AC\uC2A4\uD0AC0"
   price: 300
   description: 
   skillType: 1
