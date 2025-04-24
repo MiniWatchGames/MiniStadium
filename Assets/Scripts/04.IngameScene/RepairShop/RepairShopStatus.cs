@@ -128,9 +128,6 @@ public class RepairShopStatus : MonoBehaviour
         {
             RepairShop.currentMoney += _totalWorth;
             _totalWorth = 0;
-            Receipt.Count_HP = 0;
-            Receipt.Count_AR = 0;
-            Receipt.Count_MV = 0;
         }
         
         for(int i = 0; i < _statusKinds; i++)

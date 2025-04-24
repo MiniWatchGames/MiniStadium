@@ -70,6 +70,10 @@ public class RepairShopReceipt : MonoBehaviour
     // 모두 초기화
     public void ReceiptRefundAll()
     {
+        Count_HP = 0;
+        Count_AR = 0;
+        Count_MV = 0;
+        
         for (int i = 0; i < receiptSlots.Count; i++)
         {
             var target = receiptSlots[i];
