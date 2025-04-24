@@ -4,6 +4,7 @@ using System.Net;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class RepairShopSkill : MonoBehaviour
 {
@@ -77,11 +78,13 @@ public class RepairShopSkill : MonoBehaviour
             {
                 if (boughtSkills[i] != null)
                 {
+                    CheckboxAlpha(false, i);
                     boughtSkills[i].isBought = false;
                     boughtSkills[i].Selected(false);
                 }
                 boughtSkills[i] = selectedSkills[i];
                 boughtSkills[i].isBought = true;
+                CheckboxAlpha(true, i);
             }
         }
     }
@@ -102,6 +105,9 @@ public class RepairShopSkill : MonoBehaviour
                 {
                     if (slot.isBought)
                     {
+                        var color = slot.checkbox.GetComponent<Image>().color;
+                        color.a = 0.5f;
+                        slot.checkbox.GetComponent<Image>().color = color;
                         RepairShop.currentMoney += slot.price;
                         slot.isBought = false;
                     }
@@ -116,9 +122,21 @@ public class RepairShopSkill : MonoBehaviour
         }
     }
     
+    public void CheckboxAlpha(bool buying, int i)
+    {
+        var color = boughtSkills[i].checkbox.GetComponent<Image>().color;
+        if (buying)
+            color.a = 1f;
+        else
+            color.a = 0.5f;
+        boughtSkills[i].checkbox.GetComponent<Image>().color = color;
+    }
+    
     // 스킬 클릭 시
     public void ReadSkillInfo(RepairShopSkillSlot ClickedSkill)
     {
+        if (ClickedSkill == null) return;
+        
         int type = ClickedSkill.skillType;
         var prevSkill = selectedSkills[type];
 
@@ -129,6 +147,7 @@ public class RepairShopSkill : MonoBehaviour
 
             if (prevSkill == ClickedSkill)
             {
+                Receipt.ResetTargetSlot(type);
                 ClickedSkill.Selected(false);
                 selectedSkills[type] = null;
             }
@@ -146,7 +165,7 @@ public class RepairShopSkill : MonoBehaviour
             selectedSkills[type] = ClickedSkill;
             RepairShop.totalPrice += ClickedSkill.price;
         }
-        Receipt.ReceiptUpdateSkill(false);
+        Receipt.ReceiptUpdateSkill(false, type);
         RepairShop.UpdateMoneyText(RepairShop.totalPrice);
         RepairShop.ErrorMessage.SetActive(false);
     }

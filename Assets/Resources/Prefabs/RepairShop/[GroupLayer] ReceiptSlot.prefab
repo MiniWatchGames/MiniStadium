@@ -53,6 +53,7 @@ MonoBehaviour:
   _icon: {fileID: 7784286200582180060}
   _name: {fileID: 1811575029835331632}
   _checkbox: {fileID: 5112023302849128879}
+  Index: -1
 --- !u!1 &1719348606636948463
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,6 +266,7 @@ MonoBehaviour:
   _icon: {fileID: 7784286200582180060}
   _name: {fileID: 1811575029835331632}
   _checkbox: {fileID: 0}
+  Index: -1
 --- !u!1 &5112023302849128879
 GameObject:
   m_ObjectHideFlags: 0

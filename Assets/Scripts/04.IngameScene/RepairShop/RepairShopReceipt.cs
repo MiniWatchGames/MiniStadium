@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -96,21 +97,13 @@ public class RepairShopReceipt : MonoBehaviour
             return;
         }
         
-        var target = receiptSlots[type];
-        
         // 반환 유효 체크 (임시)
-        if (target._icon.sprite == noneSprite)
+        if (receiptSlots[type]._icon.sprite == noneSprite)
             return;
         
         // 항목 초기화
-        if (type < _defaultNames.Length)
-            target._name.text = _defaultNames[type];
-        else
-            target._name.text = "?";
+        ResetTargetSlot(type);
         
-        target._icon.sprite = noneSprite;
-        target.Index = -1;
-
         // 무기 선택 해제
         if (type == 3)
             RepairShopWeapon.ReadWeaponInfo(RepairShopWeapon.selectedWeapon);
@@ -118,48 +111,97 @@ public class RepairShopReceipt : MonoBehaviour
         else
             RepairShopSkill.ReadSkillInfo(RepairShopSkill.selectedSkills[type]);
     }
-    
-    // 항목 갱신 및 구매
-    public void ReceiptUpdateSkill(bool buying)
-    {
-        RepairShopSkillSlot[] skills;
-        RepairShopWeaponSlot weapon;
 
-        if (buying)
+    // 항목 초기화
+    public void ResetTargetSlot(int type)
+    {
+        var target = receiptSlots[type];
+        
+        if (type == 3)
+        {       // 무기
+            var weapon = RepairShopWeapon.currentWeapon;
+            
+            if (weapon != null)
+            {   // 구매 된 항목으로 되돌리기
+                target._name.text = weapon.nameText.text;
+                target._icon.sprite = weapon.iconImage.sprite;
+                target.Index = weapon.index;
+                target._checkbox.SetActive(true);
+                target._icon.GetComponent<Button>().interactable = false;
+                return;
+            }
+        }
+        else
+        {       // 스킬
+            var skills = RepairShopSkill.boughtSkills;
+
+            if (type < skills.Length && skills[type] != null)
+            {   // 구매 된 항목으로 되돌리기
+                target._name.text = skills[type].nameText.text;
+                target._icon.sprite = skills[type].iconImage.sprite;
+                target.Index = skills[type].index;
+                target._checkbox.SetActive(true);
+                target._icon.GetComponent<Button>().interactable = false;
+                return;
+            }
+        }
+        
+        if (type < _defaultNames.Length)
+            target._name.text = _defaultNames[type];
+        else
+            target._name.text = "?";
+        
+        target._icon.sprite = noneSprite;
+        target.Index = -1;
+    }
+
+
+    // 항목 갱신
+    public void ReceiptUpdateSkill(bool buying, int type)
+    {
+        var skills = buying ? RepairShopSkill.boughtSkills : RepairShopSkill.selectedSkills;
+        var weapon = buying ? RepairShopWeapon.currentWeapon : RepairShopWeapon.selectedWeapon;
+
+        // 무기 처리
+        if (weapon != null && (buying || type == 3))
         {
-            skills = RepairShopSkill.boughtSkills;
-            weapon = RepairShopWeapon.currentWeapon;
+            var slot = receiptSlots[3];
+            slot._name.text = weapon.nameText.text;
+            slot._icon.sprite = weapon.iconImage.sprite;
+
+            slot._checkbox.SetActive(buying);
+            slot._icon.GetComponent<Button>().interactable = !buying;
+        }
+
+        // 스킬 처리
+        if (buying || type != 3)
+        {
+            for (int i = 0; i < receiptSlots.Count - 1; i++)
+            {
+                if (i >= skills.Length || skills[i] == null) continue;
+                
+                if (!buying && RepairShopSkill.boughtSkills[i] != null) continue;
+
+                var slot = receiptSlots[i];
+                slot._name.text = skills[i].nameText.text;
+                slot._icon.sprite = skills[i].iconImage.sprite;
+                slot.Index = skills[i].index;
+
+                slot._checkbox.SetActive(buying);
+                slot._icon.GetComponent<Button>().interactable = !buying;
+            }
         }
         else
         {
-            skills = RepairShopSkill.selectedSkills;
-            weapon = RepairShopWeapon.selectedWeapon;
-        }
-        
-        for (int i = 0; i < receiptSlots.Count; i++)
-        {
-            var slotName = receiptSlots[i]._name;
-            var slotIcon = receiptSlots[i]._icon;
-            
-            // 무기 처리
-            if (i == 3 && weapon != null)
-            {
-                slotName.text = weapon.nameText.text;
-                slotIcon.sprite = weapon.iconImage.sprite;
-                // 구매 처리
-                if (!buying) continue;
-                receiptSlots[i]._checkbox.SetActive(true);
-                slotIcon.GetComponent<Button>().interactable = false;
-            }
-            // 스킬 처리
-            if (i >= skills.Length || skills[i] == null) continue;
-            slotName.text = skills[i].nameText.text;
-            slotIcon.sprite = skills[i].iconImage.sprite;
-            receiptSlots[i].Index = skills[i].index;
-            // 구매 처리
-            if (!buying) continue;
-            receiptSlots[i]._checkbox.SetActive(true);
-            slotIcon.GetComponent<Button>().interactable = false;
+            if (type >= skills.Length || skills[type] == null) return;
+
+            var slot = receiptSlots[type];
+            slot._name.text = skills[type].nameText.text;
+            slot._icon.sprite = skills[type].iconImage.sprite;
+            slot.Index = skills[type].index;
+
+            slot._checkbox.SetActive(false);
+            slot._icon.GetComponent<Button>().interactable = true;
         }
     }
 }

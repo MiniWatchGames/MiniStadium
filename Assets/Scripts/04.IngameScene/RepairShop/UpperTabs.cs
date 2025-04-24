@@ -43,6 +43,7 @@ public class UpperTabs : MonoBehaviour
         WeaponTab.SetActive(true);
         StatusTab.SetActive(false);
         SkillTab.SetActive(false);
+        OnSkillLowerTabClick(0);
         currentTab = 0;
     }
     void SetSeletectColor(Button button, List<Button> Tabs)

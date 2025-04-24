@@ -75,7 +75,7 @@ public class RepairShop : MonoBehaviour
             RepairShopWeapon.BuyingWeapon();
             RepairShopStatus.StatusPurchasing();
             RepairShopSkill.BuyingSkill();
-            RepairShopReceipt.ReceiptUpdateSkill(true);
+            RepairShopReceipt.ReceiptUpdateSkill(true, -1);
             RepairShopReceipt.SetPlayerItems();
             
             ResetPrice();

@@ -248,7 +248,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _manager: {fileID: 0}
-  checkbox: {fileID: 4213524460701631044}
   iconImage: {fileID: 774347649416665865}
   nameText: {fileID: 1818491586787149925}
   priceText: {fileID: 5590454500324865046}
@@ -257,6 +256,8 @@ MonoBehaviour:
   index: 0
   price: 0
   description: 
+  checkbox: {fileID: 4213524460701631044}
+  isBought: 0
 --- !u!1 &2511179111582441341
 GameObject:
   m_ObjectHideFlags: 0
@@ -450,8 +451,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

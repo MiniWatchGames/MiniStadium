@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RepairShopWeapon : MonoBehaviour
 {
@@ -38,21 +39,38 @@ public class RepairShopWeapon : MonoBehaviour
     {
         BOweaponList = new List<BuyableObject_Weapon>();
         BuyableObject_Weapon[] weapons
-            = Resources.LoadAll<BuyableObject_Weapon>("ScriptableObejct/Weapon");
+            = Resources.LoadAll<BuyableObject_Weapon>("ScriptableObejct/Weapons");
         
         BOweaponList.AddRange(weapons);
     }
 
     public void BuyingWeapon()
     {
-        foreach (var slot in RepairShopWeapons)
-            slot.Selected(false);
-        
         if (selectedWeapon != null)
         {
+            if (currentWeapon != null)
+            {
+                CheckboxAlpha(false);
+            }
             currentWeapon = selectedWeapon;
             currentWeapon.Selected(true);
+            CheckboxAlpha(true);
         }
+        foreach (var slot in RepairShopWeapons)
+        {
+            if (slot == currentWeapon) continue;
+            slot.Selected(false);
+        }
+    }
+
+    public void CheckboxAlpha(bool buying)
+    {
+        var color = currentWeapon.checkbox.GetComponent<Image>().color;
+        if (buying)
+            color.a = 1f;
+        else
+            color.a = 0.5f;
+        currentWeapon.checkbox.GetComponent<Image>().color = color;
     }
     
     public void WeaponShopReset(bool refunding)
@@ -60,6 +78,8 @@ public class RepairShopWeapon : MonoBehaviour
         if (refunding && currentWeapon != null)
         {
             RepairShop.currentMoney += currentWeapon.price;
+            
+            CheckboxAlpha(false);
             currentWeapon = null;
         }
         
@@ -85,6 +105,7 @@ public class RepairShopWeapon : MonoBehaviour
 
             if (selectedWeapon == ClickedWeapon)
             {
+                Receipt.ResetTargetSlot(3);
                 ClickedWeapon.Selected(false);
                 selectedWeapon = null;
             }
@@ -102,7 +123,7 @@ public class RepairShopWeapon : MonoBehaviour
             selectedWeapon = ClickedWeapon;
             RepairShop.totalPrice += ClickedWeapon.price;
         }
-        Receipt.ReceiptUpdateSkill(false);
+        Receipt.ReceiptUpdateSkill(false, 3);
         RepairShop.UpdateMoneyText(RepairShop.totalPrice);
         RepairShop.ErrorMessage.SetActive(false);
     }
