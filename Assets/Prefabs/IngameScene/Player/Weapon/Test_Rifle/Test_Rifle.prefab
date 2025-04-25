@@ -52,7 +52,7 @@ MonoBehaviour:
   firePoint: {fileID: 2183246324417870781}
   targetMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 64
   bulletTrailPrefab: {fileID: 7217896055414789263}
   bulletSpeed: 50
   trailDuration: 0.2

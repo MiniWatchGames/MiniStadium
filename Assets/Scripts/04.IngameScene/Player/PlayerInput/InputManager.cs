@@ -39,6 +39,6 @@ public class InputManager : MonoBehaviour
         if (Input.GetButtonDown("Jump")) _listener?.OnJumpPressed();
         if (Input.GetButtonDown("Fire1")) _listener?.OnFirePressed();
         if (Input.GetButtonUp("Fire1")) _listener?.OnFireReleased();
-        if (Input.GetKeyDown(KeyCode.LeftShift)) _listener?.OnCrouchPressed();
+        if (Input.GetKeyDown(KeyCode.C)) _listener?.OnCrouchPressed();
     }
 }

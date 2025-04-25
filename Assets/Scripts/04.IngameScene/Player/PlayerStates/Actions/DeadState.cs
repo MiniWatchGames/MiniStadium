@@ -5,6 +5,7 @@ using UnityEngine;
 public class DeadState : PlayerActionState
 {
     private static int aniName;
+    private static readonly int Dead = Animator.StringToHash("Dead");
 
     public DeadState() : base() { }
     //public DeadState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
@@ -13,8 +14,13 @@ public class DeadState : PlayerActionState
     //}
     public override void Enter(PlayerController playerController)
     {
-        //playerController.Animator.Play(aniName);
         base.Enter(playerController);
+        
+        InputManager.instance.Unregister(_playerController);
+        
+        _playerController.Animator.SetLayerWeight(1, 0f);
+        _playerController.Animator.SetLayerWeight(2, 0f);
+        _playerController.Animator.SetTrigger(Dead);
     }
     public override void Exit()
     {

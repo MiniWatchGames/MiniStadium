@@ -44,21 +44,10 @@ public class GunController : MonoBehaviour
             // }
             
             // 데미지 적용
-            IDamageable target = _hitInfo.collider.GetComponent<IDamageable>();
-            if (target != null)
-            {
-                DamageInfo damageInfo = new DamageInfo
-                {
-                    attacker = gameObject,
-                    damage = damage,
-                    hitPoint = _hitInfo.point,
-                    hitDirection = firePoint.forward
-                };
-                
-                target.TakeDamage(damageInfo);
-                Debug.Log($"Hit {_hitInfo.collider.name} for {damage} damage");
-            }
-            
+                hitPosition = _hitInfo.point;
+                hitTarget = true;
+
+                ApplyDamage(_hitInfo.collider.gameObject, _hitInfo.point, firePoint.forward);
         }
         // 총알 궤적 시뮬레이션
         if (bulletTrailPrefab != null)
@@ -66,6 +55,26 @@ public class GunController : MonoBehaviour
             StartCoroutine(SimulateBulletTrail(firePoint.position, hitPosition));
         }
     }
+    
+    private void ApplyDamage(GameObject target, Vector3 hitPoint, Vector3 hitDirection)
+    {
+        IDamageable damageable = target.GetComponentInParent<IDamageable>();
+        if (damageable != null)
+        {
+            DamageInfo damageInfo = new DamageInfo
+            {
+                attacker = gameObject,
+                damage = damage,
+                hitPoint = hitPoint,
+                hitDirection = hitDirection
+            };
+
+            damageable.TakeDamage(damageInfo);
+
+            //Debug.Log($"Hit {target.name} for {damage} damage at {hitPoint}");
+        }
+    }
+    
     private IEnumerator SimulateBulletTrail(Vector3 startPos, Vector3 endPos)
     {
         // 트레일 생성

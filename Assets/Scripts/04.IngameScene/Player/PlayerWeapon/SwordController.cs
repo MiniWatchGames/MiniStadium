@@ -86,7 +86,7 @@ public class SwordController : MonoBehaviour
     private void ApplyDamage(GameObject target, Vector3 hitPoint)
     {
         // IDamageable 인터페이스 구현체 확인
-        IDamageable damageable = target.GetComponent<IDamageable>();
+        IDamageable damageable = target.GetComponentInParent<IDamageable>();
         if (damageable != null)
         {
             // 데미지 정보 생성
@@ -107,7 +107,7 @@ public class SwordController : MonoBehaviour
             // 시각 효과 생성
             // EffectManager.Instance.CreateEffect("SwordHitSpark", hitPoint, Quaternion.LookRotation(damageInfo.hitDirection));
 
-            Debug.Log($"Hit {target.name} for {attackPower} damage at {hitPoint}");
+            //Debug.Log($"Hit {target.name} for {attackPower} damage at {hitPoint}");
         }
     }
 #if UNITY_EDITOR

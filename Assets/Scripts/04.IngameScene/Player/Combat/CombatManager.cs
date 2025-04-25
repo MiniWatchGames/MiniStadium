@@ -11,7 +11,6 @@ public class CombatManager : MonoBehaviour
     public GameObject CurrentWeapon { get; set; }
 
     private int _upperBodyLayerIndex = 2;
-    private float _layerTransitionSpeed = 10f;
     private float attackStartTransitionTime = 0.15f; // 공격 시작 시 전환 시간
     private float attackEndTransitionTime = 0.3f;   // 공격 종료 시 전환 시간
     private Coroutine _layerTransitionCoroutine; // 레이어 전환 코루틴

@@ -138,4 +138,4 @@ MonoBehaviour:
   attackPower: 10
   targetLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 64

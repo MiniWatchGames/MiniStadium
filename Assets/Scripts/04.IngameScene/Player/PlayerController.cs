@@ -42,7 +42,7 @@ public enum StatType
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
+public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatObserver
 {
     [SerializeField] private LayerMask groundLayer;
 
@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
     private CameraController _cameraController;
     private const float _gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
+    private bool _isDead = false;
 
 
     // input값 저장, 전달 
@@ -86,9 +87,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
         set
         {
             currentHp.Value = value;
-            if (currentHp.Value <= 0)
+            if (currentHp.Value <= 0 && !_isDead)
             {
                 Debug.Log("주금..");
+                _isDead = true;
+                SetMovementState("Idle");
+                SetPostureState("Idle");
+                SetActionState("Dead");
             }
         }
     }
@@ -126,13 +131,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
 
     [Header("Weapon")]
     private PlayerWeapon _playerWeapon;
-
-
     public PlayerWeapon PlayerWeapon { get => _playerWeapon; }
 
     [Header("Combat")]
-    [SerializeField] private CombatManager combatManager;
-    public CombatManager CombatManager { get => combatManager; }
+    private CombatManager _combatManager;
+    public CombatManager CombatManager { get => _combatManager; }
 
     // --------
     // 애니메이션 관련 
@@ -152,6 +155,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
     {
         Animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
+        _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
 
         _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
@@ -161,14 +165,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
 
     private void Start()
     {
-        // InputManager 구독 
-        InputManager.instance.Register(this);
-
         Init();
 
-
         Debug.Log(baseMaxHp.Value);
-
 
         AddStatDecorate(StatType.MoveSpeed, 1f);
 
@@ -188,6 +187,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
 
     private void Init()
     {
+        // InputManager 구독 
+        InputManager.instance.Register(this);
+        
         // 카메라 설정
         _cameraController = Camera.main.GetComponent<CameraController>();
         _cameraController.SetTarget(transform);
@@ -243,6 +245,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
         //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
         //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
         ActionFsm.AddSkillState(new List<string> { "MovementSkills" });
+        
+        _isDead = false;
     }
 
     public void SetMovementState(string stateName)
@@ -265,9 +269,24 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
         // 무기에 맞는 애니메이터로 교체 
         ApplyAnimatorController(weapon.WeaponType);
         // 무기별 전략 결정 
-        combatManager.SetWeaponType(weapon.WeaponType);
+        _combatManager.SetWeaponType(weapon.WeaponType);
 
-        combatManager.CurrentWeapon = _playerWeapon.CurrentWeapon;
+        _combatManager.CurrentWeapon = _playerWeapon.CurrentWeapon;
+    }
+    
+    // 데이지 계산
+    public void TakeDamage(DamageInfo damageInfo)
+    {
+        // todo : 데미지 적용 식 정해야 함
+        
+        // 자기 자신이면 데미지 입지 않음
+        var rootTransform = damageInfo.attacker.transform.root;
+        var rootObject = rootTransform.gameObject;
+        if (rootObject == gameObject) return;
+        
+        var damage = damageInfo.damage;
+        currentHp.Value -= damage;
+        Debug.Log($"current Hp = {currentHp.Value}");
     }
 
     private void OnAnimatorMove()
@@ -358,7 +377,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
         }
         else
         {
-            combatManager.ProcessInput(true, false);
+            _combatManager.ProcessInput(true, false);
         }
     }
 
@@ -367,7 +386,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
         // 공격 (마우스 업)
         if (_actionFsm.CurrentState == ActionState.Attack)
         {
-            combatManager.ProcessInput(false, false);
+            _combatManager.ProcessInput(false, false);
         }
     }
 
@@ -431,6 +450,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
     #region 상태 체크 메소드 
     public bool IsIdle(out Action turningStep, float accumulatedYaw)
     {
+        if (_actionFsm.CurrentState == ActionState.Dead)
+        {
+            turningStep = () => {Animator.SetLayerWeight(1, 0f); };
+            return true;
+        }
         if (_movementFsm.CurrentState != MovementState.Idle)
         {
 

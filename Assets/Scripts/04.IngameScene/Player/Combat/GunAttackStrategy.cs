@@ -59,7 +59,5 @@ public class GunAttackStrategy : IAttackStrategy
         
             // 발사 시간 기록
             _lastFireTime = Time.time;
-        
-            Debug.Log("Gun fired a bullet");
         }
     }
