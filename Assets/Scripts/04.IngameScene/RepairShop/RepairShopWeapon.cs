@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class RepairShopWeapon : MonoBehaviour
 {
     [SerializeField] private RepairShop RepairShop;
+    [SerializeField] private RepairShopSkill RepairShopSkill;
     [SerializeField] private RepairShopReceipt Receipt;
     [SerializeField] private GameObject weaponSlotPrefab;
     [SerializeField] private Transform weaponSlotParent;
@@ -19,6 +20,7 @@ public class RepairShopWeapon : MonoBehaviour
         GenerateWeaponUI();
     }
     
+    // 무기 탭 UI 초기화
     void GenerateWeaponUI()
     {
         RepairShopWeapons = new List<RepairShopWeaponSlot>();
@@ -35,6 +37,7 @@ public class RepairShopWeapon : MonoBehaviour
         }
     }
     
+    // 구현된 무기 정보 로드
     private void LoadWeaponList()
     {
         BOweaponList = new List<BuyableObject_Weapon>();
@@ -44,6 +47,7 @@ public class RepairShopWeapon : MonoBehaviour
         BOweaponList.AddRange(weapons);
     }
 
+    // 무기 구매 처리
     public void BuyingWeapon()
     {
         if (selectedWeapon != null)
@@ -55,14 +59,17 @@ public class RepairShopWeapon : MonoBehaviour
             currentWeapon = selectedWeapon;
             currentWeapon.Selected(true);
             CheckboxAlpha(true);
+            RepairShopSkill.SetWeaponSkillUI(currentWeapon.type);
         }
         foreach (var slot in RepairShopWeapons)
         {
             if (slot == currentWeapon) continue;
             slot.Selected(false);
+            slot.iconImage.GetComponent<Button>().interactable = false;
         }
     }
 
+    // 체크 박스의 투명도 제어
     public void CheckboxAlpha(bool buying)
     {
         var color = currentWeapon.checkbox.GetComponent<Image>().color;
@@ -73,6 +80,7 @@ public class RepairShopWeapon : MonoBehaviour
         currentWeapon.checkbox.GetComponent<Image>().color = color;
     }
     
+    // 환불 및 리셋
     public void WeaponShopReset(bool refunding)
     {
         if (refunding && currentWeapon != null)
@@ -81,18 +89,22 @@ public class RepairShopWeapon : MonoBehaviour
             
             CheckboxAlpha(false);
             currentWeapon = null;
+            RepairShopSkill.SetWeaponSkillUI(-1);
         }
         
         selectedWeapon = null;
         
         foreach (var slot in RepairShopWeapons)
         {
+            if(refunding)
+                slot.iconImage.GetComponent<Button>().interactable = true;
             if(slot == currentWeapon)
                 continue;
             slot.Selected(false);
         }
     }
-
+    
+    // 무기 클릭 시 정보를 읽어들이는
     public void ReadWeaponInfo(RepairShopWeaponSlot ClickedWeapon)
     {
         if (ClickedWeapon == currentWeapon)
@@ -105,7 +117,7 @@ public class RepairShopWeapon : MonoBehaviour
 
             if (selectedWeapon == ClickedWeapon)
             {
-                Receipt.ResetTargetSlot(3);
+                Receipt.ResetTargetSlot(Receipt.receiptSlots[3][0],3);
                 ClickedWeapon.Selected(false);
                 selectedWeapon = null;
             }
@@ -123,7 +135,7 @@ public class RepairShopWeapon : MonoBehaviour
             selectedWeapon = ClickedWeapon;
             RepairShop.totalPrice += ClickedWeapon.price;
         }
-        Receipt.ReceiptUpdateSkill(false, 3);
+        Receipt.ReceiptUpdateSlot(false, 3);
         RepairShop.UpdateMoneyText(RepairShop.totalPrice);
         RepairShop.ErrorMessage.SetActive(false);
     }

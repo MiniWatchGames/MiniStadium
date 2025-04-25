@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+
 public class PlayerItems
 {
     // weapon
-    public int weapon_Type; // 0=None 1=Ranged 2=Melee
+    // type 0=None 1=Ranged 2=Melee
+    public int weapon_Type; 
     public int weapon_Index;
     public string weapon_Name;
     
@@ -10,15 +13,10 @@ public class PlayerItems
     public int count_AR = 0;
     public int count_MV = 0;
     
-    // skill0 = Movement skill
-    public int skill0_Index;
-    public string skill0_Name;
+    public Dictionary<int, string>[] Skills = new Dictionary<int, string>[3];
+    // int= type, string= name
+    // type0 = Movement skill
+    // type1 = Weapon skill
+    // type2 = Passive skill
     
-    // skill1 = Weapon skill
-    public int skill1_Index;
-    public string skill1_Name;
-    
-    // skill2 = Passive skill
-    public int skill2_Index;
-    public string skill2_Name;
 }
