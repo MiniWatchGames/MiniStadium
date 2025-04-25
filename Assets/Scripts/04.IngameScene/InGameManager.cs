@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 public class InGameManager : MonoBehaviour
 {
-    #region UI
+    #region States
     public enum GameState
     {
         StartGame,
@@ -33,18 +33,29 @@ public class InGameManager : MonoBehaviour
         Blue,
         Red
     }
-   
+    #endregion
+
+    #region 변수
+
     [SerializeField] private GameObject RepairShopUI;
     [SerializeField] private GameObject GameRoundInfoUI;
     [SerializeField] private GameState currentGameState;
     [SerializeField] private WinLoseState currentWinLoseState;
     [SerializeField] private Team currentTeam;
     [SerializeField] private RoundState currentRoundState;
-
-    [SerializeField] private Timer gameTimer;
     
+    
+    Dictionary<TestStat,Team> teamDictionary = new Dictionary<TestStat,Team>();
+    [SerializeField] private Timer gameTimer;
+    [SerializeField] private TestStat player;
+    [SerializeField] private TestStat Enemy;
     [SerializeField] public int currentRound = 0;
+    public int BlueWinCount = 0;
+    public int RedWinCount = 0;
     [SerializeField] private int currentGameTime = 0;
+
+    #endregion
+    #region UI
     
     void SetGameState(GameState state)
     {
@@ -96,6 +107,7 @@ public class InGameManager : MonoBehaviour
     }
     void SetWinLoseState(WinLoseState state)
     {
+        currentRound++;
         switch (state)
         {
             case WinLoseState.Default:
@@ -104,6 +116,7 @@ public class InGameManager : MonoBehaviour
                 break;
             case WinLoseState.Win:
                 Debug.Log("Win");
+                
                 currentWinLoseState = WinLoseState.Win;
                 break;
             case WinLoseState.Lose:
@@ -131,15 +144,17 @@ public class InGameManager : MonoBehaviour
             });
     }
     
-    void SetTeam(Team team)
+    void SetTeam(Team team, TestStat playerStat)
+    
     {
         switch (team)
         {
             case Team.Blue:
-                Debug.Log("Blue Team");
+                teamDictionary[playerStat] = Team.Blue;
                 break;
             case Team.Red:
                 Debug.Log("Red Team");
+                teamDictionary[playerStat] = Team.Red;
                 break;
         }
     }
@@ -148,7 +163,8 @@ public class InGameManager : MonoBehaviour
     
     // Start is called before the first frame update
     void Start()
-    {
+    { 
+        currentTeam = player.team;
        SetGameState(GameState.StartGame);
     }
 
@@ -168,13 +184,35 @@ public class InGameManager : MonoBehaviour
         
     }
 
-    public void LoseRound(TestStat player)
+    public void EndRound(TestStat player)
     {
         currentRound++;
-        
+        switch(teamDictionary[player])
+        {
+            case Team.Blue:
+                RedWinCount++;
+                break;
+            case Team.Red:
+                BlueWinCount++;
+                break;
+        }
+
+        ResetRound();
     }
-    public void WinRound(TestStat player)
+
+    public void WinRound()
     {
         
+    }
+
+    public void LoseRound()
+    {
+        
+    }
+    public void ResetRound()
+    {
+        currentRound = 0;
+        BlueWinCount = 0;
+        RedWinCount = 0;
     }
 }

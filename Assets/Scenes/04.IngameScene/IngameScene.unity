@@ -24322,6 +24322,7 @@ GameObject:
   - component: {fileID: 560846254}
   - component: {fileID: 560846256}
   - component: {fileID: 560846255}
+  - component: {fileID: 560846257}
   m_Layer: 5
   m_Name: '[Panel]PlayerHud'
   m_TagString: Untagged
@@ -24364,17 +24365,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849420fe7167bb442b7bd5a93e80c592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHPBar: {fileID: 1904971771}
-  playerHPText: {fileID: 663963589}
-  playerName: {fileID: 240515361}
+  playerHPBar: {fileID: 0}
+  playerHPText: {fileID: 0}
+  playerName: {fileID: 0}
   playerArmorBar: {fileID: 0}
   playerArmor: {fileID: 0}
-  playerSkill1: {fileID: 1246132632}
-  playerSkill2: {fileID: 2120639810}
-  playerSkill3: {fileID: 1895380894}
-  playerWeapon: {fileID: 595680723}
-  playerWeaponAmmo: {fileID: 657370822}
-  playerStat: {fileID: 1938681132}
+  playerSkill1: {fileID: 0}
+  playerSkill2: {fileID: 0}
+  playerSkill3: {fileID: 0}
+  playerWeapon: {fileID: 0}
+  playerWeaponAmmo: {fileID: 0}
+  playerStat: {fileID: 0}
 --- !u!222 &560846256
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -24383,6 +24384,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 560846253}
   m_CullTransparentMesh: 1
+--- !u!114 &560846257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560846253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0903ebe8f3af574e8e0baf60c6dff99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RoundCount: {fileID: 1885192357}
+  RoundTime: {fileID: 811303127}
+  BlueWinCount: {fileID: 1885192356}
+  RedWinCount: {fileID: 1885192355}
+  inGameManager: {fileID: 0}
 --- !u!1 &562447903
 GameObject:
   m_ObjectHideFlags: 0
@@ -55494,12 +55512,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1246132630}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1246132632 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6869227415225208487, guid: 94cb544de510a664289d35cfa09244d3,
-    type: 3}
-  m_PrefabInstance: {fileID: 1246132630}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1248530135
 GameObject:
   m_ObjectHideFlags: 0
@@ -59575,22 +59587,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85d2be6d78999c345a7cec18599230e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RepairShopUI: {fileID: 1303005292}
-  upperTabs: {fileID: 37759545}
-  RepairShopUpperTabs:
-  - {fileID: 130993869}
-  - {fileID: 1609483507}
-  - {fileID: 940028361}
+  RepairShopUI: {fileID: 0}
+  upperTabs: {fileID: 0}
+  RepairShopUpperTabs: []
   RepairShopLowerTabs: []
-  errorMessage: {fileID: 292152870}
-  RepairShopStatus: {fileID: 1609483508}
-  RepairShopWeapon: {fileID: 130993873}
-  RepairShopSkill: {fileID: 940028364}
-  RepairShopReceipt: {fileID: 1296170055}
+  errorMessage: {fileID: 0}
+  RepairShopStatus: {fileID: 0}
+  RepairShopWeapon: {fileID: 0}
+  RepairShopSkill: {fileID: 0}
+  RepairShopReceipt: {fileID: 0}
   _startingMoney: 3000
   currentMoney: 0
   totalPrice: 0
-  currentMoneyText: {fileID: 1851820142}
+  currentMoneyText: {fileID: 0}
 --- !u!114 &1303005295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83876,6 +83885,24 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &1885192355 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2356298953477994651, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+    type: 3}
+  m_PrefabInstance: {fileID: 811303125}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1885192356 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 867584536106349168, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+    type: 3}
+  m_PrefabInstance: {fileID: 811303125}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1885192357 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1538157527989372405, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+    type: 3}
+  m_PrefabInstance: {fileID: 811303125}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1885425451
 Mesh:
   m_ObjectHideFlags: 0
@@ -84162,12 +84189,6 @@ PrefabInstance:
 --- !u!224 &1895380893 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2919236726220255798, guid: 94cb544de510a664289d35cfa09244d3,
-    type: 3}
-  m_PrefabInstance: {fileID: 1895380892}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1895380894 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6869227415225208487, guid: 94cb544de510a664289d35cfa09244d3,
     type: 3}
   m_PrefabInstance: {fileID: 1895380892}
   m_PrefabAsset: {fileID: 0}
@@ -85608,7 +85629,11 @@ MonoBehaviour:
   currentTeam: 0
   currentRoundState: 0
   gameTimer: {fileID: 811303130}
+  player: {fileID: 0}
+  Enemy: {fileID: 0}
   currentRound: 0
+  BlueWinCount: 0
+  RedWinCount: 0
   currentGameTime: 0
 --- !u!4 &1940594559
 Transform:
@@ -97933,12 +97958,6 @@ PrefabInstance:
 --- !u!224 &2120639809 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2919236726220255798, guid: 94cb544de510a664289d35cfa09244d3,
-    type: 3}
-  m_PrefabInstance: {fileID: 2120639808}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2120639810 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6869227415225208487, guid: 94cb544de510a664289d35cfa09244d3,
     type: 3}
   m_PrefabInstance: {fileID: 2120639808}
   m_PrefabAsset: {fileID: 0}
