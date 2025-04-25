@@ -751,7 +751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe27eeab998449d1a2abd8dff500d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 1
+  weaponType: 0
   weaponDataList:
   - weaponPrefab: {fileID: 3204311646535937980, guid: 97d6953ce0d0b424cbb9b003d374699a,
       type: 3}
