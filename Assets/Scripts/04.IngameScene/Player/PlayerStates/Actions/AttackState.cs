@@ -13,7 +13,7 @@ public class AttackState : PlayerActionState
     public override void Enter(PlayerController playerController)
     {
         base.Enter(playerController);
-        // todo : Set Animator Parameter
+        _playerController.CombatManager.StartAttack();
     }
     public override void Exit()
     {
@@ -24,5 +24,10 @@ public class AttackState : PlayerActionState
     {
         base.Update();
         _playerController.CombatManager.UpdateAttack();
+        // 공격 완료 확인 - 여기서 IdleState로 전환
+        if (_playerController.CombatManager.IsAttackComplete())
+        {
+            _playerController.SetActionState("Idle");
+        }
     }
 }

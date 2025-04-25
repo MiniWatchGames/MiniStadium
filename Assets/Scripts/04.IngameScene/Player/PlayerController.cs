@@ -54,9 +54,6 @@ public class PlayerController : MonoBehaviour, IInputEvents
     private float _lastInputTime;
     private float _inputBufferTime = 0.1f; // 100ms의 버퍼 타임
 
-
-
-
     // --------
     // 스탯 관련
     [Header("Stat")]
@@ -92,7 +89,6 @@ public class PlayerController : MonoBehaviour, IInputEvents
         }
     }
 
-
     // --------
     // 상태 관련
     [Header("FSM")]
@@ -115,9 +111,9 @@ public class PlayerController : MonoBehaviour, IInputEvents
     private float _yaw = 0f;
     private float _pitch = 0f;
     
-
     [Header("Weapon")] 
     private PlayerWeapon _playerWeapon;
+    public PlayerWeapon PlayerWeapon;
     
     [Header("Combat")]
     [SerializeField] private CombatManager combatManager;
@@ -168,7 +164,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
 
     private void Update()
     {        
-        Debug.Log(CurrentHp);
+        //Debug.Log(CurrentHp);
         //RemoveStatAllDecorate(StatType.Hp);
 
         _movementFsm.CurrentStateUpdate();
@@ -221,12 +217,14 @@ public class PlayerController : MonoBehaviour, IInputEvents
     
     private void EquipWeapon(PlayerWeapon weapon)
     {
-        // 무기 메쉬 교체 (구현 예정)
-        
-        // 애니메이터 교체 
+        // 무기 생성 
+        _playerWeapon.CreateWeapon(weapon.WeaponType);
+        // 무기에 맞는 애니메이터로 교체 
         ApplyAnimatorController(weapon.WeaponType);
         // 무기별 전략 결정 
         combatManager.SetWeaponType(weapon.WeaponType);
+        
+        combatManager.CurrentWeapon = _playerWeapon.CurrentWeapon;
     }
 
     private void OnAnimatorMove()
@@ -311,8 +309,14 @@ public class PlayerController : MonoBehaviour, IInputEvents
     public void OnFirePressed()
     {
         // 공격 (마우스 다운)
-        combatManager.StartAttack();
-        SetActionState("Attack");
+        if (_actionFsm.CurrentState != ActionState.Attack)
+        {
+            SetActionState("Attack");
+        }
+        else
+        {
+            combatManager.ProcessInput(true, false);
+        }
     }
 
     public void OnFireReleased()
@@ -321,7 +325,6 @@ public class PlayerController : MonoBehaviour, IInputEvents
         if (_actionFsm.CurrentState == ActionState.Attack)
         {
             combatManager.ProcessInput(false, false);
-            SetActionState("Idle");
         }
     }
 
