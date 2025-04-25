@@ -22,8 +22,8 @@ public class PlayerPostureState : IPlayerState
     {
     }
 
-    public PlayerPostureState(IWeaponAnimationStrategy iWeaponAnimationStrategy)
+    public PlayerPostureState(/*IWeaponAnimationStrategy iWeaponAnimationStrategy*/)
     {
-        _aniStrategy = iWeaponAnimationStrategy;
+        //_aniStrategy = iWeaponAnimationStrategy;
     }
 }

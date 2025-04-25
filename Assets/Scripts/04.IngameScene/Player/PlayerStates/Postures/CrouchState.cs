@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CrouchState : PlayerPostureState
-{ 
+{
     private static int aniName;
 
-    public CrouchState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
+    public CrouchState() : base()
     {
-
-        aniName = Animator.StringToHash(_aniStrategy.GetAnimationName("Crouch"));
-
     }
+
+    //public CrouchState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
+    //{
+
+    //    aniName = Animator.StringToHash(_aniStrategy.GetAnimationName("Crouch"));
+
+    //}
     public override void Enter(PlayerController playerController)
     {
         //playerController.Animator.Play(aniName);

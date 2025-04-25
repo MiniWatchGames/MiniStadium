@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerActionState : IPlayerState
 {
     protected PlayerController _playerController;
-    protected IWeaponAnimationStrategy _aniStrategy;
+   // protected IWeaponAnimationStrategy _aniStrategy;
     public virtual void Enter(PlayerController playerController)
     {
         _playerController = playerController;
@@ -19,7 +19,7 @@ public class PlayerActionState : IPlayerState
     {
     }
 
-    public PlayerActionState(IWeaponAnimationStrategy iWeaponAnimationStrategy) {
-        _aniStrategy = iWeaponAnimationStrategy;
-    }
+    //public PlayerActionState(IWeaponAnimationStrategy iWeaponAnimationStrategy) {
+    //    _aniStrategy = iWeaponAnimationStrategy;
+    //}
 }

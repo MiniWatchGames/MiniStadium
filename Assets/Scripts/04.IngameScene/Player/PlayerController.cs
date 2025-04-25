@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum ActionState { 
+// 추가되는 스킬은 여기에도 추가작성 필요
+public enum ActionState
+{
     Idle,
     Attack,
     Hit,
@@ -14,7 +17,8 @@ public enum ActionState {
     None
 }
 
-public enum PostureState { 
+public enum PostureState
+{
     Idle,
     Crouch,
     None
@@ -38,16 +42,16 @@ public enum StatType
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour, IInputEvents
+public class PlayerController : MonoBehaviour, IInputEvents, IStatObserver
 {
     [SerializeField] private LayerMask groundLayer;
-    
+
     private CharacterController _characterController;
     private CameraController _cameraController;
     private const float _gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
-    private float _jumpSpeed = 0.5f;
-    
+
+
     // input값 저장, 전달 
     private Vector2 _currentMoveInput;
     public Vector2 CurrentMoveInput => _currentMoveInput;
@@ -66,28 +70,37 @@ public class PlayerController : MonoBehaviour, IInputEvents
     private Stat baseDefence;
     private Stat baseMoveSpeed;
     private Stat baseJumpPower;
-    
-    public Stat BaseMaxHp => baseMaxHp;
-    public Stat BaseDefence => baseDefence;
-    public Stat BaseMoveSpeed => baseMoveSpeed;
-    public Stat BaseJumpPower => baseJumpPower;
+
+    public float BaseMaxHp => baseMaxHp.Value;
+    public float BaseDefence => baseDefence.Value;
+    public float BaseMoveSpeed => baseMoveSpeed.Value;
+    public float BaseJumpPower => baseJumpPower.Value;
 
 
-    private Dictionary<StatType,Stat> statDictionary;
-    
-    private float currentHp;
+    private Dictionary<StatType, Stat> statDictionary;
+
+    private ObservableFloat currentHp;
     public float CurrentHp
     {
-        get => currentHp;
+        get => currentHp.Value;
         set
         {
-            currentHp = value;
-            if (currentHp <= 0)
+            currentHp.Value = value;
+            if (currentHp.Value <= 0)
             {
                 Debug.Log("주금..");
             }
         }
     }
+
+    // --------
+    // 패시브 스킬관련
+    [Header("Passive_Skill")]
+    private PassiveFactory _passiveFactory;
+    private List<IPassive> _passiveList;
+
+    public PassiveFactory PassiveFactory => _passiveFactory;
+    public List<IPassive> PassiveList => _passiveList;
 
     // --------
     // 상태 관련
@@ -110,11 +123,13 @@ public class PlayerController : MonoBehaviour, IInputEvents
     [SerializeField] private float maxAngle;
     private float _yaw = 0f;
     private float _pitch = 0f;
-    
-    [Header("Weapon")] 
+
+    [Header("Weapon")]
     private PlayerWeapon _playerWeapon;
-    public PlayerWeapon PlayerWeapon;
-    
+
+
+    public PlayerWeapon PlayerWeapon { get => _playerWeapon; }
+
     [Header("Combat")]
     [SerializeField] private CombatManager combatManager;
     public CombatManager CombatManager { get => combatManager; }
@@ -123,6 +138,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
     // 애니메이션 관련 
     [SerializeField] private RuntimeAnimatorController swordController;
     [SerializeField] private RuntimeAnimatorController gunController;
+    private readonly int MoveSpeedHash = Animator.StringToHash("MoveSpeed");
     public Animator Animator { get; private set; }
     public bool IsGrounded
     {
@@ -131,13 +147,13 @@ public class PlayerController : MonoBehaviour, IInputEvents
             return GetDistanceToGround() <= 0.03f;
         }
     }
-    
+
     private void Awake()
     {
         Animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
         _playerWeapon = GetComponent<PlayerWeapon>();
-        
+
         _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
         _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
         _actionFsm = new PlayerFSM<ActionState>(StateType.Action, _playerWeapon, defaultState);
@@ -149,24 +165,21 @@ public class PlayerController : MonoBehaviour, IInputEvents
         InputManager.instance.Register(this);
 
         Init();
+
+
         Debug.Log(baseMaxHp.Value);
 
-        IPassive passive = this.AddComponent<HpRegenerationPassive>();
 
-        passive.ApplyPassive(this);
+        AddStatDecorate(StatType.MoveSpeed, 1f);
 
         AddStatDecorate(StatType.MaxHp, 3);
 
         CurrentHp -= 4;
         RemoveStatDecorate(StatType.MaxHp);
-        CurrentHp -= 4;
     }
 
     private void Update()
-    {        
-        //Debug.Log(CurrentHp);
-        //RemoveStatAllDecorate(StatType.Hp);
-
+    {
         _movementFsm.CurrentStateUpdate();
         _postureFsm.CurrentStateUpdate();
         _actionFsm.CurrentStateUpdate();
@@ -182,24 +195,54 @@ public class PlayerController : MonoBehaviour, IInputEvents
         _cameraController.IsIdle = IsIdle;
 
         //플레이어 스텟 설정
+        currentHp = new ObservableFloat(fixedFirstMaxHp, "currentHp");
         statDictionary = new Dictionary<StatType, Stat>();
-        baseMaxHp = new Stat(fixedFirstMaxHp);
+        baseMaxHp = new Stat(fixedFirstMaxHp, "baseMaxHp");
         statDictionary.Add(StatType.MaxHp, baseMaxHp);
-        baseDefence = new Stat(fixedFirstDefence);
+        baseDefence = new Stat(fixedFirstDefence, "baseDefence");
         statDictionary.Add(StatType.Defence, baseDefence);
-        baseMoveSpeed = new Stat(fixedFirstMoveSpeed);
+        baseMoveSpeed = new Stat(fixedFirstMoveSpeed, "baseMoveSpeed");
         statDictionary.Add(StatType.MoveSpeed, baseMoveSpeed);
-        baseJumpPower = new Stat(fixedFirstJumpPower);
+        baseJumpPower = new Stat(fixedFirstJumpPower, "baseJumpPower");
         statDictionary.Add(StatType.JumpPower, baseJumpPower);
-        CurrentHp = baseMaxHp.Value;
+
+
         // 구매내역에 따른 스텟 분배
 
         // 무기 설정 
         EquipWeapon(_playerWeapon);
-        
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
+
+        // 스텟 + currentHp 옵저버 등록 
+        foreach (var stat in statDictionary)
+        {
+            stat.Value.AddObserver(this);
+        }
+
+        currentHp.AddObserver(this);
+
+
+        //구매 목록에 따른 패시브 적용
+        //Factory를 따로 두어 사용하는게 적절해 보이지만 일단 테스트를 위해 여기에 작성했음
+        _passiveFactory = new PassiveFactory();
+        _passiveList = new List<IPassive>();
+
+        //임시, 구매내역이라 치고 작성
+        List<string> passiveNames = new List<string>();
+        passiveNames.Add("HpRegenerationPassive");
+        passiveNames.Add("IncreasingRandomStatEvery20Seconds");
+        _passiveFactory.CreatePassive(this, passiveNames);
+        foreach (var passive in PassiveList)
+        {
+            passive.ApplyPassive(this);
+        }
+        //스킬 목록 적용
+        //플레이어의 ActionFsm 내에 상태를 넣어야 함
+        //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
+        //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
+        ActionFsm.AddSkillState(new List<string> { "MovementSkills" });
     }
 
     public void SetMovementState(string stateName)
@@ -214,7 +257,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
     {
         _actionFsm.ChangeState(stateName, this);
     }
-    
+
     private void EquipWeapon(PlayerWeapon weapon)
     {
         // 무기 생성 
@@ -223,7 +266,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
         ApplyAnimatorController(weapon.WeaponType);
         // 무기별 전략 결정 
         combatManager.SetWeaponType(weapon.WeaponType);
-        
+
         combatManager.CurrentWeapon = _playerWeapon.CurrentWeapon;
     }
 
@@ -241,15 +284,15 @@ public class PlayerController : MonoBehaviour, IInputEvents
         {
             movePosition = _characterController.velocity * Time.deltaTime;
         }
-        
+
         // 중력 적용
         _velocity.y += _gravity * Time.deltaTime;
         movePosition.y = _velocity.y * Time.deltaTime;
         _characterController.Move(movePosition);
     }
-    
+
     #region Input_Events
-    
+
     public void OnMove(Vector2 input)
     {
         if (IsGrounded)
@@ -286,10 +329,10 @@ public class PlayerController : MonoBehaviour, IInputEvents
         // 마우스 감도 적용
         _yaw += delta.x * rotationSpeed;
         _pitch -= delta.y * rotationSpeed;
-    
+
         // 수직 회전 각도 제한
         _pitch = Mathf.Clamp(_pitch, minAngle, maxAngle);
-    
+
         // 카메라 Pitch 업데이트
         // 수직 회전의 일부를 상체에 적용 (전체 피치의 일정 비율)
         _cameraController.SetPitch(_pitch);
@@ -301,7 +344,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
         // 점프 
         if (IsGrounded)
         {
-            _velocity.y = Mathf.Sqrt(_jumpSpeed * -2f * _gravity);
+            _velocity.y = Mathf.Sqrt(BaseJumpPower * -2f * _gravity);
             SetMovementState("Jump");
         }
     }
@@ -333,14 +376,14 @@ public class PlayerController : MonoBehaviour, IInputEvents
         // 앉기 
         SetPostureState(_postureFsm.CurrentState == PostureState.Idle ? "Crouch" : "Idle");
     }
-    
+
     #endregion
-    
+
     // 바닥과 거리를 계산하는 함수
     public float GetDistanceToGround()
     {
         float maxDistance = 10f;
-        if (Physics.Raycast(_characterController.transform.position, 
+        if (Physics.Raycast(_characterController.transform.position,
                 Vector3.down, out RaycastHit hit, maxDistance, groundLayer))
         {
             return hit.distance;
@@ -350,7 +393,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
             return maxDistance;
         }
     }
-    
+
     // 현재 무기 타입에 맞는 애니메이터 컨트롤러 적용
     public void ApplyAnimatorController(WeaponType weaponType)
     {
@@ -359,10 +402,10 @@ public class PlayerController : MonoBehaviour, IInputEvents
             Debug.LogError("Player Animator not found!");
             return;
         }
-        
+
         // 무기 타입에 따라 컨트롤러 선택
         RuntimeAnimatorController controllerToApply = null;
-        
+
         switch (weaponType)
         {
             case WeaponType.Sword:
@@ -372,7 +415,7 @@ public class PlayerController : MonoBehaviour, IInputEvents
                 controllerToApply = gunController;
                 break;
         }
-        
+
         // 컨트롤러 적용
         if (controllerToApply != null)
         {
@@ -386,7 +429,8 @@ public class PlayerController : MonoBehaviour, IInputEvents
     }
 
     #region 상태 체크 메소드 
-    public bool IsIdle(out Action turningStep,float accumulatedYaw) {
+    public bool IsIdle(out Action turningStep, float accumulatedYaw)
+    {
         if (_movementFsm.CurrentState != MovementState.Idle)
         {
 
@@ -458,9 +502,12 @@ public class PlayerController : MonoBehaviour, IInputEvents
         {
             target.AddDecorate(((value) => value + additionalValue));
         }
-        if(stat == StatType.MaxHp)
+        if (stat == StatType.MaxHp)
         {
-            CurrentHp = baseMaxHp.Value;
+            if (CurrentHp >= baseMaxHp.Value)
+            {
+                CurrentHp = baseMaxHp.Value;
+            }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
     }
@@ -476,9 +523,12 @@ public class PlayerController : MonoBehaviour, IInputEvents
         }
         if (stat == StatType.MaxHp)
         {
-            CurrentHp = baseMaxHp.Value;
+            if (CurrentHp >= baseMaxHp.Value)
+            {
+                CurrentHp = baseMaxHp.Value;
+            }
+            Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
-        Debug.Log($"버프 적용 현재 체력{CurrentHp}");
     }
     /// <summary>
     /// 지정 인덱스의 모든 데코레이트 삭제
@@ -492,10 +542,19 @@ public class PlayerController : MonoBehaviour, IInputEvents
         }
         if (stat == StatType.MaxHp)
         {
-            CurrentHp = baseMaxHp.Value;
+            if (CurrentHp >= baseMaxHp.Value)
+            {
+                CurrentHp = baseMaxHp.Value;
+            }
+            Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
-        Debug.Log($"버프 적용 현재 체력{CurrentHp}");
     }
+
+    public void ChangeMovementSpeed(float value)
+    {
+        this.Animator.SetFloat(MoveSpeedHash, value);
+    }
+
 
     //구매 내역 에 따른 스탯 분배 메소드 필요
     //구매 내역에 따른 Passive 생성, 스킬 생성도 필요
@@ -515,6 +574,16 @@ public class PlayerController : MonoBehaviour, IInputEvents
         Debug.DrawRay(origin, direction * 5f, Color.red);
     }
 
-    
-
+    #region 옵저버
+    public void WhenStatChanged((float, string) data)
+    {
+        Debug.Log($"{data.Item2}가 {data.Item1}로 변경되었습니다.");
+        switch (data.Item2)
+        {
+            case "baseMoveSpeed":
+                ChangeMovementSpeed(data.Item1);
+                break;
+        }
+    }
+    #endregion
 }

@@ -24,8 +24,8 @@ public class PlayerMovementState : IPlayerState
     {
     }
 
-    public PlayerMovementState(IWeaponAnimationStrategy iWeaponAnimationStrategy)
+    public PlayerMovementState(/*IWeaponAnimationStrategy iWeaponAnimationStrategy*/)
     {
-        _aniStrategy = iWeaponAnimationStrategy;
+       // _aniStrategy = iWeaponAnimationStrategy;
     }
 }
