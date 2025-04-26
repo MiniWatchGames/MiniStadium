@@ -64,8 +64,11 @@ public class RepairShopWeapon : MonoBehaviour
         foreach (var slot in RepairShopWeapons)
         {
             if (slot == currentWeapon) continue;
+            
             slot.Selected(false);
-            slot.iconImage.GetComponent<Button>().interactable = false;
+            
+            if(currentWeapon != null)
+                slot.iconImage.GetComponent<Button>().interactable = false;
         }
     }
 

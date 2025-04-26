@@ -56,8 +56,8 @@ public class RepairShopReceipt : MonoBehaviour
         if (weapon != null)
         {
             PlayerItems.weapon_Type = weapon.type;
-            PlayerItems.weapon_Index = weapon.index;
-            PlayerItems.weapon_Name = weapon.nameText.ToString();
+            PlayerItems.weapon_ID = weapon.index;
+            PlayerItems.weapon_Name = weapon.nameText.text;
         }
 
         // 스테이터스
@@ -68,21 +68,35 @@ public class RepairShopReceipt : MonoBehaviour
         // 스킬
         for (int i = 0; i < 3; i++)
         {
-            // Skills[i]가 null이면 초기화
-            if (PlayerItems.Skills[i] == null)
-            {
-                PlayerItems.Skills[i] = new Dictionary<int, string>();
-            }
-
+            // 3개의 Dictionary 초기화
+            PlayerItems.Skills[i] = new Dictionary<int, string>[3];
+            for (int k = 0; k < 3; k++)
+                PlayerItems.Skills[i][k] = new Dictionary<int, string>();
+            
+            var j = 0;
+            
             foreach (var slot in receiptSlots[i])
             {
-                if (slot._checkbox.activeSelf)
+                if (receiptSlots[i] != null &&  slot._checkbox.activeSelf)
                 {
-                    // 중복되지 않도록 TryAdd()를 사용
-                    PlayerItems.Skills[i].TryAdd(slot.type, slot._name.text);
+                    PlayerItems.Skills[i][j].TryAdd(slot.ID, slot._name.text);
+                    j++;
                 }
             }
         }
+        Debug.Log($"Weapon : {PlayerItems.weapon_Name}");
+        Debug.Log($"HP: {PlayerItems.count_HP} AR: {PlayerItems.count_AR} MV: {PlayerItems.count_MV}");
+        Debug.Log($"Skill 00 : {Dump(PlayerItems.Skills[0][0])}, Skill 01 : {Dump(PlayerItems.Skills[0][1])}, Skill 02 : {Dump(PlayerItems.Skills[0][2])}");
+        Debug.Log($"Skill 10 : {Dump(PlayerItems.Skills[1][0])}, Skill 11 : {Dump(PlayerItems.Skills[1][1])}, Skill 12 : {Dump(PlayerItems.Skills[1][2])}");
+        Debug.Log($"Skill 20 : {Dump(PlayerItems.Skills[2][0])}, Skill 21 : {Dump(PlayerItems.Skills[2][1])}, Skill 22 : {Dump(PlayerItems.Skills[2][2])}");
+    }
+    
+    private string Dump(Dictionary<int, string> dict)
+    {
+        if (dict == null || dict.Count == 0) return "null";
+        foreach (var kvp in dict)
+            return $"{kvp.Key}:{kvp.Value}";
+        return "empty";
     }
     
     // 스테이터스 색상 처리
@@ -94,6 +108,10 @@ public class RepairShopReceipt : MonoBehaviour
     // 모두 초기화
     public void ReceiptRefundAll()
     {
+        PlayerItems.weapon_Type = -1;
+        PlayerItems.weapon_ID = -1;
+        PlayerItems.weapon_Name = null;
+        
         Count_HP = 0;
         Count_AR = 0;
         Count_MV = 0;
@@ -101,9 +119,7 @@ public class RepairShopReceipt : MonoBehaviour
         for (int i = 0; i < receiptSlots.Length; i++)
         {
             foreach (var slot in receiptSlots[i])
-            {
                 ResetTargetSlot(slot, i);
-            }
             
             if (i >= 3) continue;
             PlayerItems.Skills[i] = null;
@@ -164,49 +180,7 @@ public class RepairShopReceipt : MonoBehaviour
             }
         }
     }
-
-    // 항목 초기화
-    /*
-    public void ResetSlot(int type, int index)
-    {
-        var slot = receiptSlots[type][index];
-
-        if (type == 3) // 무기
-        {
-            var weapon = RepairShopWeapon.currentWeapon;
-
-            if (weapon != null)
-            {
-                slot._name.text = weapon.nameText.text;
-                slot._icon.sprite = weapon.iconImage.sprite;
-                slot.Index = weapon.index;
-                slot._checkbox.SetActive(true);
-                slot._icon.GetComponent<Button>().interactable = false;
-                return;
-            }
-        }
-        else // 스킬
-        {
-            var skills = RepairShopSkill.boughtSkills;
-            var skill = skills[type][index];
-
-            if (skill != null)
-            {
-                slot._name.text = skill.nameText.text;
-                slot._icon.sprite = skill.iconImage.sprite;
-                slot.Index = skill.index;
-                slot._checkbox.SetActive(true);
-                slot._icon.GetComponent<Button>().interactable = false;
-                return;
-            }
-        }
-
-        slot._name.text = _defaultNames[type];
-        slot._icon.sprite = noneSprite;
-        slot.Index = -1;
-    }*/
-
-
+    
     // 항목 갱신
     public void ReceiptUpdateSlot(bool buying, int type)
     {
