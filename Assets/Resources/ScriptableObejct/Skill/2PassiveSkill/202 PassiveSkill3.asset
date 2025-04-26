@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3eac3f510134e57458e71407c3298bfc, type: 3}
-  m_Name: 202 PassiveSkill2
+  m_Name: 202 PassiveSkill3
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: ad53cd0fe3a08294b985fed6bca2039c, type: 3}
-  name: "\uD328\uC2DC\uBE0C\uC2A4\uD0AC2"
+  name: "\uD328\uC2DC\uBE0C\uC2A4\uD0AC3"
   price: 300
   description: 
   skillType: 2

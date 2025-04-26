@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class RepairShopWeaponSlot : MonoBehaviour
 {
     [SerializeField] private RepairShopWeapon _manager;
-    [SerializeField] private GameObject checkbox;
+    [SerializeField] public GameObject checkbox;
     
     [SerializeField] public Image iconImage;
     [SerializeField] public TextMeshProUGUI nameText;

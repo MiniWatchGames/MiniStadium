@@ -39,6 +39,7 @@ public class RepairShop : MonoBehaviour
     {
         if (currentMoney < 200)
         {
+            errorMessage.GetComponent<TextMeshProUGUI>().text = "자금이 부족합니다.";
             errorMessage.SetActive(true);
             return;
         }
@@ -75,12 +76,14 @@ public class RepairShop : MonoBehaviour
             RepairShopWeapon.BuyingWeapon();
             RepairShopStatus.StatusPurchasing();
             RepairShopSkill.BuyingSkill();
-            RepairShopReceipt.ReceiptUpdateSkill(true);
-            RepairShopReceipt.SetPlayerItems();
+            RepairShopReceipt.ReceiptUpdateSlot(true, 0);
             
             ResetPrice();
         }
         else // 실패
+        {
+            errorMessage.GetComponent<TextMeshProUGUI>().text = "자금이 부족합니다.";
             errorMessage.SetActive(true);
+        }
     }
 }
