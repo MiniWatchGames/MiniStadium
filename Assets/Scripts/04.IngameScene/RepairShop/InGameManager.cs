@@ -168,7 +168,7 @@ public class InGameManager : MonoBehaviour
         
     }
 
-    public void NextRound(/*TestStat player*/)
+    public void NextRound(TestStat player)
     {
         currentRound++;
         

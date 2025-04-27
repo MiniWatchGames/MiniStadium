@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Resources/ScriptableObejct/Skill/0MoveSkill/001 MoveSkill1.asset.meta
+guid: 47633e994590ff74f803553859860c2f
+========
+guid: 15fd62d49f35f8b4a9b5ea5310c92bb9
+>>>>>>>> parent of 36bea87 (프리팹 폴더 리소스 폴더로 이동 및 스크립터블 오브잭트로 스킬 및 무기 생성):Assets/Scripts/04.IngameScene/PJHTestScripts/RepairShop/ScriptableObejct/Weapons/Sword.asset.meta
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
