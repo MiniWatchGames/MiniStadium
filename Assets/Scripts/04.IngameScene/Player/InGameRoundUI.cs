@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class InGameRoundStateUI : MonoBehaviour
+public class InGameRoundUI : MonoBehaviour
 {
     [SerializeField] private GameObject RoundCount;
     [SerializeField] private GameObject RoundTime;
@@ -16,8 +17,21 @@ public class InGameRoundStateUI : MonoBehaviour
 
     void Start()
     {
+        inGameManager = FindObjectsByType<InGameManager>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
         inGameUIDetect = new InGameUIDetect(inGameManager);
         inGameUIDetect.PropertyChanged += OnIngameChanged;
+        inGameManager.inGameUIAction = () => UIUpdate();
+        InitUI();
+    }
+
+    public void UIUpdate()
+    {
+        
+        //inGameUIDetect.GameTime = inGameManager.timer;
+        inGameUIDetect.GameRound = inGameManager.currentRound;
+        inGameUIDetect.BlueWinCount = inGameManager.BlueWinCount;
+        inGameUIDetect.RedWinCount = inGameManager.RedWinCount;
+        Debug.Log("UIUpdate");
     }
     private void OnIngameChanged(object sender, PropertyChangedEventArgs e)
     {
@@ -34,5 +48,10 @@ public class InGameRoundStateUI : MonoBehaviour
                 RedWinCount.GetComponent<TMP_Text>().text = inGameUIDetect.RedWinCount.ToString();
                 break;
         }
+    }
+
+    private void InitUI()
+    {
+        UIUpdate();
     }
 }

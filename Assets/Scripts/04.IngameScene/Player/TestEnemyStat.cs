@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class TestStat : MonoBehaviour
+public class TestEnemyStat : MonoBehaviour
 {
     public float health;
     public float maxHealth;
@@ -12,8 +12,8 @@ public class TestStat : MonoBehaviour
     //public InGameManager.Team team;
     //public GameObject inGameManager_obj;
     public Action onStatUpdate;
-    public Action<TestStat> OnPlayerDie;// TODO:인자로 본인을 죽인 적 정보 넘기기
-    public Action<TestStat> OnEnemyKilled;
+    public Action<TestEnemyStat> OnEnemyDie;// TODO:인자로 본인을 죽인 적 정보 넘기기
+    public Action<TestEnemyStat> OnPlayerKilled;
     private float detectHpChange;
     
     public float ChangedHp
@@ -32,7 +32,7 @@ public class TestStat : MonoBehaviour
                 {
                     // TODO:인자로 본인을 죽인 적 정보 넘기기
                     //
-                    OnPlayerDie?.Invoke(this);
+                    OnEnemyDie?.Invoke(this);
                 }
                 onStatUpdate?.Invoke();
             }
@@ -45,25 +45,7 @@ public class TestStat : MonoBehaviour
         
     }
 
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                if(hit.collider.CompareTag("Enemy"))
-                {
-                    hit.collider.GetComponent<TestStat>().LoseHp();
-                    if (hit.collider.GetComponent<TestStat>().health <= 0)
-                    {
-                        hit.collider.GetComponent<TestStat>().KillEnemy();
-                    }
-                }
-            }
-            
-        }
-    }
+    
     // Update is called once per frame
     
 
@@ -78,8 +60,7 @@ public class TestStat : MonoBehaviour
             
         health -= 10;
         detectHpChange = health;
-        OnEnemyKilled?.Invoke(this);
-        Debug.Log("LoseHp"+ health + gameObject.name);
+        Debug.Log("LoseHp"+ health);
     }
 
     public void Reset()
@@ -87,8 +68,5 @@ public class TestStat : MonoBehaviour
         health = maxHealth;
         detectHpChange = health;
     }
-    public void KillEnemy()
-    {
-        OnEnemyKilled?.Invoke(GameObject.FindGameObjectWithTag("Enemy").GetComponent<TestStat>());
-    }
+    
 }

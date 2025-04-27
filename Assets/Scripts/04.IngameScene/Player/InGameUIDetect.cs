@@ -7,19 +7,34 @@ using UnityEngine;
 public class InGameUIDetect : INotifyPropertyChanged
 {
     private TestStat playerStat;
-    private InGameManager inGameManager;
+    private InGameManager _inGameManager;
     public InGameUIDetect(InGameManager inGameManager)
     {
         
-        this.inGameManager = inGameManager;
+        this._inGameManager = inGameManager;
         gameRound = inGameManager.currentRound;
-        blueWinCount = 0;
-        
+        blueWinCount = inGameManager.BlueWinCount;
+        redWinCount = inGameManager.RedWinCount;
+        //gameTime = inGameManager.timer;
     }
 
+   // private float gameTime;
     private int gameRound;
     private int blueWinCount;
     private int redWinCount;
+
+    // public float GameTime
+    // {
+    //     get => gameTime;
+    //     set
+    //     {
+    //         if (gameTime != value)
+    //         {
+    //             gameTime = value;
+    //             OnPropertyChanged("GameTime");
+    //         }
+    //     }
+    // }
     public int GameRound
     {
         get => gameRound;

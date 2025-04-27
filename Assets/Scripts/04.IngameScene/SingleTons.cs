@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public static class SingleTon<T> where T : MonoBehaviour
+public abstract class SingleTons<T> : MonoBehaviour where T : Component
 {
     private static T instance;
     public static T Instance
@@ -22,6 +24,19 @@ public static class SingleTon<T> where T : MonoBehaviour
             return instance;
         }
     }
-    
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this as T;
+            
+            DontDestroyOnLoad(gameObject);
+            
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 }
 

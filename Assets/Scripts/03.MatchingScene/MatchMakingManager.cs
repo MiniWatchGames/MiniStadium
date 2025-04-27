@@ -4,14 +4,27 @@ using UnityEngine;
 
 public class MatchMakingManager : MonoBehaviour
 {
+    public enum Team
+    {
+        Blue,
+        Red
+    }
+    public bool isMatched;
+    public bool isMatchedCanceled;
+
+    public Team playerTeam;
     // Start is called before the first frame update
-    void Start()
+    public Team SetPlayerTeam()
+    {
+        var team = Random.Range(0, 1);
+        return (Team)team;
+    }
+
+    public void OnMatchMaking()
     {
         
     }
-
-    // Update is called once per frame
-    void Update()
+    public void OnClickedButton()
     {
         
     }
