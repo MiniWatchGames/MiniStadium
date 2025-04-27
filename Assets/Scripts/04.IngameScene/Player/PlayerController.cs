@@ -194,7 +194,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private void Init()
     {
         //구매내역 가져오기
-        _playerItems = PurchaseManager.PurchasedPlayerItems;
+        //_playerItems = PurchaseManager.PurchasedPlayerItems;
 
         // InputManager 구독 
         InputManager.instance.Register(this);
@@ -221,7 +221,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
 
         // 구매내역에 따른 스텟 분배
-        DecorateStatByPlayerItems();
+        //DecorateStatByPlayerItems();
 
         // 무기 설정 
         EquipWeapon(_playerWeapon);

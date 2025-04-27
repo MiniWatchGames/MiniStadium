@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public static class PurchaseManager 
 {
+    //구매 타이머가 끝났을 때 값을 넣어주어야 함
     private static PlayerItems _purchasedPlayerItems;
     public static PlayerItems PurchasedPlayerItems
     {
