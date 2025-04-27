@@ -24,7 +24,7 @@ public class RepairShopSkillSlot : MonoBehaviour
     {
         _manager = manager;
         iconImage.sprite = BOdata.icon;
-        nameText.text = BOdata.name;
+        nameText.text = BOdata._name;
         price = BOdata.price;
         priceText.text = $"{BOdata.price.ToString()}g";
         description = BOdata.description;
