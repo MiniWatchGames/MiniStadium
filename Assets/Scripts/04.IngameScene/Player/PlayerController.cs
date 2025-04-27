@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private const float _gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
     private bool _isDead = false;
+    private PlayerItems _playerItems;
 
 
     // input값 저장, 전달 
@@ -66,6 +67,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [SerializeField] private float fixedFirstDefence;
     [SerializeField] private float fixedFirstMoveSpeed;
     [SerializeField] private float fixedFirstJumpPower;
+
+    // 스탯 증가량
+    [SerializeField] private float maxHpIncreaseAmount;
+    [SerializeField] private float defenceIncreaseAmount;
+    [SerializeField] private float moveSpeedIncreaseAmount;
 
     private Stat baseMaxHp;
     private Stat baseDefence;
@@ -187,6 +193,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     private void Init()
     {
+        //구매내역 가져오기
+        _playerItems = PurchaseManager.PurchasedPlayerItems;
+
         // InputManager 구독 
         InputManager.instance.Register(this);
         
@@ -195,6 +204,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _cameraController.SetTarget(transform);
         _cameraController.SetSpineTarget(rotationTarget);
         _cameraController.IsIdle = IsIdle;
+
+        //플레이어 무기 설정
 
         //플레이어 스텟 설정
         currentHp = new ObservableFloat(fixedFirstMaxHp, "currentHp");
@@ -210,6 +221,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
 
         // 구매내역에 따른 스텟 분배
+        DecorateStatByPlayerItems();
 
         // 무기 설정 
         EquipWeapon(_playerWeapon);
@@ -230,12 +242,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //Factory를 따로 두어 사용하는게 적절해 보이지만 일단 테스트를 위해 여기에 작성했음
         _passiveFactory = new PassiveFactory();
         _passiveList = new List<IPassive>();
-
         //임시, 구매내역이라 치고 작성
-        List<string> passiveNames = new List<string>();
-        passiveNames.Add("HpRegenerationPassive");
-        passiveNames.Add("IncreasingRandomStatEvery20Seconds");
-        _passiveFactory.CreatePassive(this, passiveNames);
+        //_passiveFactory.CreatePassive(this, _playerItems.Skills[0]);
         foreach (var passive in PassiveList)
         {
             passive.ApplyPassive(this);
@@ -244,9 +252,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //플레이어의 ActionFsm 내에 상태를 넣어야 함
         //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
         //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
-        ActionFsm.AddSkillState(new List<string> { "MovementSkills" });
+        //ActionFsm.AddSkillState(_playerItems.Skills[1]);
+        //ActionFsm.AddSkillState(_playerItems.Skills[2]);
         
         _isDead = false;
+
+        //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
+        PurchaseManager.ResetPurchasedPlayerItems();
     }
 
     public void SetMovementState(string stateName)
@@ -581,11 +593,27 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
 
     //구매 내역 에 따른 스탯 분배 메소드 필요
+    public void DecorateStatByPlayerItems() {
+        var AR = _playerItems.count_AR;
+        var mv = _playerItems.count_MV;
+        var hp = _playerItems.count_HP;
+
+        AddStatDecorates(StatType.MaxHp, hp, maxHpIncreaseAmount);
+        AddStatDecorates(StatType.Defence, AR, defenceIncreaseAmount);
+        AddStatDecorates(StatType.MoveSpeed, mv, moveSpeedIncreaseAmount);
+    }
+
+    public void AddStatDecorates(StatType statype, int count,float amount) {
+        for (int i = 0; i < count; i++)
+        {
+            AddStatDecorate(statype, amount);
+        }
+    }
+
+
     //구매 내역에 따른 Passive 생성, 스킬 생성도 필요
-    // 너무 커질 것 같으니 PurchaseManager에서 관리하는 것도 좋을듯
 
-    //정비소 측에서 구매내역을 넘겨받는 메소드 구현 필요
-
+    
     #endregion
 
 

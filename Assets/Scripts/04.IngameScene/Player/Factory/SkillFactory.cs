@@ -10,14 +10,15 @@ public static class SkillFactory
     /// <param name="_aniStrategy"></param>
     /// <param name="skillNames">스킬 이름들이 담긴 리스트</param>
     /// <returns></returns>
-    public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm, List<string> skillNames)
+    public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm, (int,string)[] skills)
     {
         List<(ActionState, IPlayerState)> states = new List<(ActionState, IPlayerState)>();
-        foreach (var skillName in skillNames)
+        foreach (var skillName in skills)
         {
-            switch (skillName)
+            switch (skillName.Item1)
             {
-                case "MovementSkills":
+                //"MovementSkills"
+                case 0:
                     states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
                     break;
             }
