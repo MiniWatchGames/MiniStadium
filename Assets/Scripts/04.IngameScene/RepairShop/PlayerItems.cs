@@ -12,11 +12,12 @@ public class PlayerItems
     public int count_HP = 0;
     public int count_AR = 0;
     public int count_MV = 0;
-    
-    public Dictionary<int, string>[][] Skills = new Dictionary<int, string>[3][];
+
+    public (int, string)[][] Skills = new (int, string)[3][];
+    //(0,"")¿œ∂ß null
     // int= ID, string= name
     // [0][] = Movement skill
     // [1][] = Weapon skill
     // [2][] = Passive skill
-    
+
 }
