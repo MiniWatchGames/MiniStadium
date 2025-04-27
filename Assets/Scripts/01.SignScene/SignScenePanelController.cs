@@ -6,10 +6,17 @@ using UnityEngine.UI;
 
 public class SignScenePanelController : PanelController
 {
+    [Header("Buttons")]
+    // 로그인 버튼
     public Button loginButton;
+    // 회원가입 버튼
     public Button signupButton;
-    public Button signinButton; // 회원가입 패널의 '회원가입' 버튼 (로그인 화면으로 돌아가기)
+    // 회원가입 버튼 (로그인 화면으로 돌아가기)
+    public Button signinButton; 
+    // 뒤로가기 버튼
     public Button backButton;
+    // 게임종료 버튼
+    public Button exitButton;
 
     private void Start()
     {
@@ -18,6 +25,7 @@ public class SignScenePanelController : PanelController
         signupButton.onClick.AddListener(OnSignupClicked);
         signinButton.onClick.AddListener(OnSigninClicked);
         backButton.onClick.AddListener(OnBackClicked);
+        exitButton.onClick.AddListener(OnExitClicked);
         
         // 로그인 패널만
         OpenPanel("[PopupPanel] Login");
@@ -45,5 +53,17 @@ public class SignScenePanelController : PanelController
     {
         // 로그인 패널로 돌아가기
         OpenPanel("[PopupPanel] Login");
+    }
+    
+    /// <summary>
+    /// 게임 종료 버튼 클릭 시 게임 종료 시키는 함수
+    /// </summary>
+    private void OnExitClicked()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }

@@ -20,14 +20,19 @@ public class PanelController : MonoBehaviour
     }
 
     /// <summary>
-    /// 모든 패널을 비활성화하는 함수
+    /// 지정한 이름의 패널만 비활성화하는 함수
     /// </summary>
-    public void CloseAllPanels()
+    public void ClosePanel(string panelName)
     {
         foreach (GameObject panel in panels)
         {
+            if (panel.name == panelName)
+            {
+                panel.SetActive(false);
+                break;
+            }
             // 전부 비활성화
-            panel.SetActive(false);
+            // panel.SetActive(false);
         }
     }
 }

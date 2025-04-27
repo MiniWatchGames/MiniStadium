@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
+    /*
     [Header("Display Settings")]
     [SerializeField] private Dropdown resolutionDropdown;
     [SerializeField] private Dropdown displayModeDropdown;
@@ -173,4 +174,5 @@ public class SettingsManager : MonoBehaviour
     {
         settingsPanel.SetActive(false);
     }
+    */
 }
