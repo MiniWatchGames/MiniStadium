@@ -155,6 +155,7 @@ sysinfo.txt
 # TestScene
 /[Aa]ssets/[Ss]cenes/TestScene.unity
 /[Aa]ssets/[Ss]cenes/TestScene.unity.meta
+/[Aa]ssets/[Rr]esources/[Tt]est*
 
 
 # End of https://www.toptal.com/developers/gitignore/api/unity,rider
