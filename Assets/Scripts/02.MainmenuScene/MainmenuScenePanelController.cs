@@ -68,6 +68,16 @@ public class MainmenuScenePanelController : PanelController
         categoryText.text = categories[currentIndex];
     }
 
+    public void CloseRankingPanel()
+    {
+        ClosePanel("[PopUpPanel] Ranking");
+    }
+
+    private void CloseSettingsPanel()
+    {
+        ClosePanel("[PopUpPanel] Settings");
+    }
+
     private void OnExitClicked()
     {
         #if UNITY_EDITOR
