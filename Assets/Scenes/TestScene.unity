@@ -1445,21 +1445,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
-        type: 3}
-      propertyPath: maxHpIncreaseAmount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
-        type: 3}
-      propertyPath: defenceIncreaseAmount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1432091758702896394, guid: 72e1acac55be246ac9671c7ac3c2f98c,
-        type: 3}
-      propertyPath: moveSpeedIncreaseAmount
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 2501152717553289656, guid: 72e1acac55be246ac9671c7ac3c2f98c,
         type: 3}
       propertyPath: m_LocalPosition.x

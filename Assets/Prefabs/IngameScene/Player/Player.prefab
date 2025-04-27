@@ -1227,6 +1227,9 @@ MonoBehaviour:
   fixedFirstDefence: 5
   fixedFirstMoveSpeed: 1
   fixedFirstJumpPower: 0.5
+  maxHpIncreaseAmount: 1
+  defenceIncreaseAmount: 1
+  moveSpeedIncreaseAmount: 0.1
   defaultState: Idle
   rotationTarget: {fileID: 7677874572980411071}
   rotationSpeed: 2
