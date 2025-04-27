@@ -69,35 +69,33 @@ public class RepairShopReceipt : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             // 3개의 Dictionary 초기화
-            PlayerItems.Skills[i] = new Dictionary<int, string>[3];
-            for (int k = 0; k < 3; k++)
-                PlayerItems.Skills[i][k] = new Dictionary<int, string>();
-            
+            PlayerItems.Skills[i] = new (int,string)[3];            
             var j = 0;
             
             foreach (var slot in receiptSlots[i])
             {
                 if (receiptSlots[i] != null &&  slot._checkbox.activeSelf)
                 {
-                    PlayerItems.Skills[i][j].TryAdd(slot.ID, slot._name.text);
+                    if(slot.ID == 0 || slot._name.text == "") continue;
+                    PlayerItems.Skills[i][j] = new (slot.ID, slot._name.text);
                     j++;
                 }
             }
         }
         Debug.Log($"Weapon : {PlayerItems.weapon_Name}");
         Debug.Log($"HP: {PlayerItems.count_HP} AR: {PlayerItems.count_AR} MV: {PlayerItems.count_MV}");
-        Debug.Log($"Skill 00 : {Dump(PlayerItems.Skills[0][0])}, Skill 01 : {Dump(PlayerItems.Skills[0][1])}, Skill 02 : {Dump(PlayerItems.Skills[0][2])}");
-        Debug.Log($"Skill 10 : {Dump(PlayerItems.Skills[1][0])}, Skill 11 : {Dump(PlayerItems.Skills[1][1])}, Skill 12 : {Dump(PlayerItems.Skills[1][2])}");
-        Debug.Log($"Skill 20 : {Dump(PlayerItems.Skills[2][0])}, Skill 21 : {Dump(PlayerItems.Skills[2][1])}, Skill 22 : {Dump(PlayerItems.Skills[2][2])}");
+        //Debug.Log($"Skill 00 : {Dump(PlayerItems.Skills[0][0])}, Skill 01 : {Dump(PlayerItems.Skills[0][1])}, Skill 02 : {Dump(PlayerItems.Skills[0][2])}");
+        //Debug.Log($"Skill 10 : {Dump(PlayerItems.Skills[1][0])}, Skill 11 : {Dump(PlayerItems.Skills[1][1])}, Skill 12 : {Dump(PlayerItems.Skills[1][2])}");
+        //Debug.Log($"Skill 20 : {Dump(PlayerItems.Skills[2][0])}, Skill 21 : {Dump(PlayerItems.Skills[2][1])}, Skill 22 : {Dump(PlayerItems.Skills[2][2])}");
     }
     
-    private string Dump(Dictionary<int, string> dict)
-    {
-        if (dict == null || dict.Count == 0) return "null";
-        foreach (var kvp in dict)
-            return $"{kvp.Key}:{kvp.Value}";
-        return "empty";
-    }
+    //private string Dump((Dictionary<int, string>) dict)
+    //{
+    //    if (dict == null || dict.Count == 0) return "null";
+    //    foreach (var kvp in dict)
+    //        return $"{kvp.Key}:{kvp.Value}";
+    //    return "empty";
+    //}
     
     // 스테이터스 색상 처리
     public void ChangeStatusColor(int i, int j, Color color)
