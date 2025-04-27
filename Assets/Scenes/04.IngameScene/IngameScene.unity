@@ -14761,6 +14761,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972a19fe4fcb4634599d196b1afd3962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &326478356 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
+    type: 3}
+  m_PrefabInstance: {fileID: 2572676397780974904}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bdddfd5e975e4041b4029faa7d5180b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &333613690
 GameObject:
   m_ObjectHideFlags: 0
@@ -104448,6 +104460,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -206307999972883445, guid: e87be18839d122145aeff1791262d599,
+        type: 3}
+      propertyPath: inGameManager
+      value: 
+      objectReference: {fileID: 326478356}
     - target: {fileID: 1954570115969710883, guid: e87be18839d122145aeff1791262d599,
         type: 3}
       propertyPath: m_Name
@@ -118232,6 +118249,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4012582964062246863, guid: a09fabd0489250245b17ee4ce5c9e8d7,
+        type: 3}
+      propertyPath: inGameManager
+      value: 
+      objectReference: {fileID: 326478356}
     - target: {fileID: 8159238914127399582, guid: a09fabd0489250245b17ee4ce5c9e8d7,
         type: 3}
       propertyPath: m_LocalPosition.x

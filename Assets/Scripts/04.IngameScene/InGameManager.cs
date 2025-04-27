@@ -56,7 +56,7 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private WinLoseState currentWinLoseState;
     [SerializeField] private Team currentTeam;
     [SerializeField] private RoundState currentRoundState;
-    
+    [SerializeField] private GameObject Damagefield;
     Dictionary<GameObject, List<Spawner>> mapSpawners = new Dictionary<GameObject, List<Spawner>>();
     Dictionary<TestStat,Team> teamDictionary = new Dictionary<TestStat,Team>();
     [SerializeField] private Timer gameTimer;
@@ -69,6 +69,7 @@ public class InGameManager : MonoBehaviour
     private List<GameObject> maps = new List<GameObject>();
     public Action inGameUIAction;
     public float timer{get => gameTimer.currentTime;}
+    public RoundState roundstate{get => currentRoundState;}
     #endregion
     #region StateChangeFunction
     
@@ -101,12 +102,12 @@ public class InGameManager : MonoBehaviour
             case RoundState.RoundStart:
                 Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
-                SetGameTime(40, RoundState.InRound);
+                SetGameTime(20, RoundState.InRound);
                 break;
             case RoundState.InRound:
                 Debug.Log("In Round");
                 currentRoundState = RoundState.InRound;
-                SetGameTime(120, RoundState.RoundEnd);
+                SetGameTime(20, RoundState.RoundEnd);
                 break;
             case RoundState.RoundEnd:
                 Debug.Log("Round End");
@@ -123,7 +124,6 @@ public class InGameManager : MonoBehaviour
     }
     void SetWinLoseState(WinLoseState state)
     {
-        currentRound++;
         switch (state)
         {
             case WinLoseState.Default:
@@ -151,12 +151,26 @@ public class InGameManager : MonoBehaviour
     }
     void SetGameTime(float time, RoundState state)
     {
+        if (currentWinLoseState == WinLoseState.Draw)
+        {
+            SetWinLoseState(WinLoseState.Duse);
+        }
+        if (currentWinLoseState == WinLoseState.Default && currentRoundState == RoundState.InRound)
+        {
+            SetWinLoseState(WinLoseState.Draw);
+            time = 10;
+        }
         
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
             {
                 Debug.Log("Game Time End");
+                if (currentWinLoseState == WinLoseState.Draw)
+                {
+                    SetRoundState(currentRoundState);
+                    return;
+                }
                 SetRoundState(state);
-              
+                SetWinLoseState(WinLoseState.Default);
             });
     }
     
@@ -183,13 +197,13 @@ public class InGameManager : MonoBehaviour
         currentRound = 0;
         BlueWinCount = 0;
         RedWinCount = 0;
+        
         TestStat playerStat = GameObject.FindWithTag("Player").GetComponent<TestStat>();
         List<Spawner> countSpanwer = new List<Spawner>
             (FindObjectsByType<Spawner>(FindObjectsInactive.Include, FindObjectsSortMode.None));
        
         for (int i = 0; i < countSpanwer.Count; i++)
         {
-            Debug.Log(countSpanwer[i].gameObject.transform.parent.name);
             if (mapSpawners.ContainsKey(countSpanwer[i].transform.parent.gameObject))
             {
                 mapSpawners[countSpanwer[i].transform.parent.gameObject].Add(countSpanwer[i]);
@@ -199,8 +213,6 @@ public class InGameManager : MonoBehaviour
                 mapSpawners.Add(countSpanwer[i].transform.parent.gameObject, new List<Spawner>());
                 mapSpawners[countSpanwer[i].transform.parent.gameObject].Add(countSpanwer[i]);
             }
-            
-            Debug.Log(mapSpawners[countSpanwer[i].transform.parent.gameObject].Count);
         }
         SetPlayerTeam(playerStat);
         SetGameState(GameState.StartGame);
@@ -247,11 +259,21 @@ public class InGameManager : MonoBehaviour
         
         
         teamDictionary[playerStat] = (Team)tmpRandom;
+        playerStat.team = (Team)tmpRandom;
         teamDictionary[EnemyPlayer.GetComponent<TestStat>()] = (Team)Enemy;
+        EnemyPlayer.GetComponent<TestStat>().team = (Team)Enemy;
         //플레이어가 죽었을때 패배 표시
-        playerStat.OnPlayerDie = (player) => EndRound(player);
-        playerStat.OnEnemyKilled = (enemy) => EndRound(enemy);
+        playerStat.OnPlayerDie = (player) =>
+        {
+            LoseRound(player);
+            SetWinLoseState(WinLoseState.Lose);
+        };
         
+        EnemyPlayer.GetComponent<TestStat>().OnPlayerDie = (player) =>
+        {
+            LoseRound(player);
+            SetWinLoseState(WinLoseState.Lose);
+        };
 
     }
     public void WinRound(TestStat Enemy)

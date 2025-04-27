@@ -39,7 +39,7 @@ public class InGameRoundUI : MonoBehaviour
         switch (e.PropertyName)
         {
             case "GameRound":
-                RoundCount.GetComponent<TMP_Text>().text = inGameUIDetect.GameRound.ToString();
+                RoundCount.GetComponent<TMP_Text>().text = inGameUIDetect.GameRound.ToString() + "R";
                 break;
             case "BlueWinCount":
                 BlueWinCount.GetComponent<TMP_Text>().text = inGameUIDetect.BlueWinCount.ToString();
@@ -52,6 +52,9 @@ public class InGameRoundUI : MonoBehaviour
 
     private void InitUI()
     {
+        RoundCount.GetComponent<TMP_Text>().text = inGameUIDetect.GameRound.ToString() + "R";
+        BlueWinCount.GetComponent<TMP_Text>().text = inGameUIDetect.BlueWinCount.ToString();
+        RedWinCount.GetComponent<TMP_Text>().text = inGameUIDetect.RedWinCount.ToString();
         UIUpdate();
     }
 }
