@@ -32,18 +32,18 @@ public class RepairShopSkill : MonoBehaviour
     private int[] maxPerType = { 1, 2, 3 }; // 스킬 타입에 따른 최대 구매 량
     public int[] remainingSkillsToBuy = { 1, 2, 3 }; // 각 타입별 남은 선택 가능 횟수
     
-    public void init()
+    public void init(RepairShop _repairShop)
     {
-        GenerateSkillUI();
+        GenerateSkillUI(_repairShop);
     }
     
     // 스킬 탭 UI 초기화
-    void GenerateSkillUI()
+    void GenerateSkillUI(RepairShop _repairShop)
     {
         selectedSkills = new RepairShopSkillSlot[3][];
         boughtSkills = new RepairShopSkillSlot[3][];
         repairShopSkills = new GameObject[3][];
-
+        RepairShop = _repairShop;
         for (int i = 0; i < 3; i++)
         {
             selectedSkills[i] = new RepairShopSkillSlot[maxPerType[i]];
