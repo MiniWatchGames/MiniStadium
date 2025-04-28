@@ -33,17 +33,17 @@ public class RepairShopStatus : MonoBehaviour
     // 마지막으로 선택한 버튼의 인덱스 값
     private List<int> _lastButtonIndexes;
     
-    public void init()
+    public void init(RepairShop _repairShop)
     {
-        SetRepairShopStatus();
+        SetRepairShopStatus(_repairShop);
     }
 
     // 상점 스테이터스 초기화 및 생성
-    public void SetRepairShopStatus()
+    public void SetRepairShopStatus(RepairShop _repairShop)
     {
         int row = _statusKinds;
         int col = _maxUpgradeCount + 1;
-        
+        RepairShop = _repairShop;
         _buttonsInRows = new RepairShopStatusButton[row, col];
         Receipt.PreviewsInRows = new Image[row, col];
         _priceTags = new List<GameObject>(row);
