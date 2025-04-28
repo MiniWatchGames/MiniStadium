@@ -218,16 +218,16 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         statDictionary.Add(StatType.MoveSpeed, baseMoveSpeed);
         baseJumpPower = new Stat(fixedFirstJumpPower, "baseJumpPower");
         statDictionary.Add(StatType.JumpPower, baseJumpPower);
-
-
-        // 구매내역에 따른 스텟 분배
-        //DecorateStatByPlayerItems();
-
+        
         // 무기 설정 
         EquipWeapon(_playerWeapon);
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
+
+        // 구매내역에 따른 스텟 분배
+        //DecorateStatByPlayerItems();
+
 
         // 스텟 + currentHp 옵저버 등록 
         foreach (var stat in statDictionary)

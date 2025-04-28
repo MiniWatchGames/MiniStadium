@@ -12,6 +12,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform Hips;
     [SerializeField] private float _yaw = 0f;
     [SerializeField] private Transform focus;
+    [SerializeField] private float xRotation;
+    [SerializeField] private float yRotation;
 
     private Transform _target;
     private Transform _Spinetarget;
@@ -42,9 +44,9 @@ public class CameraController : MonoBehaviour
         }
 
         // 상체 회전 적용
-        _target.rotation = Quaternion.Euler(0, _yaw, 0);
+        _target.rotation = Quaternion.Euler(0, _yaw-22.5f, 0);
         Hips.rotation = Quaternion.Euler(LastTargetRotation);
-        _Spinetarget.rotation = Quaternion.Euler(_pitch, _yaw, 0);
+        _Spinetarget.rotation = Quaternion.Euler(_pitch, _yaw+22.5f, 0);
 
         // 회전 누적값 계산
         float deltaYaw = Mathf.DeltaAngle(passyaw, _yaw);
@@ -76,6 +78,10 @@ public class CameraController : MonoBehaviour
         // 카메라 회전 적용
         //transform.rotation = Quaternion.Euler(_pitch, _yaw, 0);
         transform.LookAt(focus.position);
+        Vector3 euler = transform.eulerAngles;
+        euler.y -= yRotation;
+        euler.x += xRotation;
+        transform.eulerAngles = euler;
     }
 
     public void SetTarget(Transform target)
