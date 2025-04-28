@@ -7,108 +7,58 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private Transform head; // 플레이어의 머리 
+    [SerializeField] private Transform playerBody; // 플레이어 전체 몸통
+    [SerializeField] private Transform head; // 플레이어의 머리
     [SerializeField] private Vector3 cameraOffset = new Vector3(0, 0, 0); // 머리 위치에서의 카메라 오프셋
-    [SerializeField] private Transform Hips;
-    [SerializeField] private float _yaw = 0f;
-    [SerializeField] private Transform focus;
-    [SerializeField] private float xRotation;
-    [SerializeField] private float yRotation;
 
-    private Transform _target;
-    private Transform _Spinetarget;
+    [SerializeField] private float positionSmoothSpeed = 12f; // 위치 부드러움 정도
+    [SerializeField] private float rotationSmoothSpeed = 10f; // 회전 부드러움 정도
+    
     private float _pitch = 0f;
-    private float passyaw = 0f;
-    [SerializeField] private float accumulatedYaw = 0f;
-    private bool isAlreadyPlay = false;
-    private Vector3 LastTargetRotation;
-
-    public delegate bool WalkingChecker(out Action turningStep, float accumulatedYaw);
-    public WalkingChecker IsIdle;
-    public Action TurningStep;
+    private float _yaw = 0f;
+    private Vector3 _currentVelocity; // 위치 스무딩용 속도 변수
+    private Quaternion _targetRotation;
     
+    private void Start()
+    {
+        // 초기 카메라 위치 설정
+        if (head != null)
+        {
+            transform.position = head.position + cameraOffset;
+        }
+    }
     
-
     private void LateUpdate()
     {
-        if (!_Spinetarget || !_target)
+        if (playerBody == null || head == null)
             return;
-
-        // 카메라를 머리 위치로 이동
-        transform.position = head.position + _target.TransformDirection(cameraOffset);
-
-        if (!isAlreadyPlay)
-        {
-            LastTargetRotation = Hips.rotation.eulerAngles;
-            isAlreadyPlay = true;
-        }
-
-        // 상체 회전 적용
-        _target.rotation = Quaternion.Euler(0, _yaw-22.5f, 0);
-        Hips.rotation = Quaternion.Euler(LastTargetRotation);
-        _Spinetarget.rotation = Quaternion.Euler(_pitch, _yaw+22.5f, 0);
-
-        // 회전 누적값 계산
-        float deltaYaw = Mathf.DeltaAngle(passyaw, _yaw);
-        accumulatedYaw += deltaYaw;
-        passyaw = _yaw;
-       TurningStep?.Invoke();
-        if (!IsIdle(out TurningStep,accumulatedYaw)) {
-            // 회전 제한 처리
-            if (accumulatedYaw < -30f || accumulatedYaw > 90f)
-            {
-                isAlreadyPlay = false;
-                Vector3 spineEuler = _Spinetarget.rotation.eulerAngles;
-                Vector3 hipsEuler = Hips.rotation.eulerAngles;
-                
-                hipsEuler.y += _yaw;
-                spineEuler.y -= _yaw;
-                _Spinetarget.rotation = Quaternion.Euler(spineEuler);
-                Hips.rotation = Quaternion.Euler(hipsEuler);
-                TurningStep?.Invoke();
-                accumulatedYaw = 0f; // 누적값 초기화
-            }
-        }
-        else
-        {
-            TurningStep?.Invoke();
-            isAlreadyPlay = false;  
-            accumulatedYaw = 0f; // 누적값 초기화
-        }
-        // 카메라 회전 적용
-        //transform.rotation = Quaternion.Euler(_pitch, _yaw, 0);
-        transform.LookAt(focus.position);
-        Vector3 euler = transform.eulerAngles;
-        euler.y -= yRotation;
-        euler.x += xRotation;
-        transform.eulerAngles = euler;
+        
+        // 플레이어 몸통 전체를 yaw 방향으로 회전 (여기도 스무딩 가능)
+        Quaternion targetBodyRotation = Quaternion.Euler(0, _yaw, 0);
+        playerBody.rotation = Quaternion.Slerp(playerBody.rotation, targetBodyRotation, Time.deltaTime * rotationSmoothSpeed);
+        
+        // 카메라 회전 타겟 설정
+        _targetRotation = Quaternion.Euler(_pitch, _yaw, 0);
+        
+        // 카메라 회전 스무딩 적용
+        transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, Time.deltaTime * rotationSmoothSpeed);
+        
+        // 눈 위치 계산 (머리 위치 + 눈 오프셋)
+        Vector3 eyePosition = head.position + head.TransformDirection(cameraOffset);
+        
+        // 위치 스무딩 적용 (SmoothDamp 사용 - 가속/감속 효과)
+        transform.position = Vector3.SmoothDamp(
+            transform.position, 
+            eyePosition, 
+            ref _currentVelocity, 
+            1f / positionSmoothSpeed
+        );
     }
-
-    public void SetTarget(Transform target)
-    {
-        _target = target;
-
-        // 초기 위치 설정 (타겟이 있을 때만 수행)
-        if (head != null && _target != null)
-        {
-            transform.position = head.position + _target.TransformDirection(cameraOffset);
-        }
-    }
-
-    public void SetSpineTarget(Transform target)
-    {
-        _Spinetarget = target;
-    }
-
-    // PlayerController에서 Pitch 값을 받아 설정하는 함수
-    public void SetPitch(float pitch)
+    
+    // 마우스 입력에서 호출될 메서드
+    public void UpdateCamera(float pitch, float yaw)
     {
         _pitch = pitch;
-    }
-
-    // PlayerController에서 yaw 값을 받아 설정하는 함수
-    public void SetYaw(float yaw)
-    {
         _yaw = yaw;
     }
 }

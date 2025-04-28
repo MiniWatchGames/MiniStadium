@@ -29,7 +29,7 @@ public class PlayerWeapon : MonoBehaviour
     
     private GameObject currentWeapon; // 현재 장착된 무기
     public GameObject CurrentWeapon => currentWeapon;
-
+    
     private void Awake()
     {
         InitWeaponDictionary();
