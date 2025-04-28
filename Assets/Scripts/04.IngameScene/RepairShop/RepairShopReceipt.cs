@@ -33,6 +33,7 @@ public class RepairShopReceipt : MonoBehaviour
     [SerializeField] public int Count_HP = 0;
     [SerializeField] public int Count_AR = 0;
     [SerializeField] public int Count_MV = 0;
+    [SerializeField] public int Count_JP = 0;
     public Image[,] PreviewsInRows;
     
     private void Awake()
@@ -64,11 +65,12 @@ public class RepairShopReceipt : MonoBehaviour
         PlayerItems.count_HP = Count_HP;
         PlayerItems.count_AR = Count_AR;
         PlayerItems.count_MV = Count_MV;
+        PlayerItems.count_JP = Count_JP;
 
         // 스킬
         for (int i = 0; i < 3; i++)
         {
-            // 3개의 Dictionary 초기화
+            // 3개의 튜플 초기화
             PlayerItems.Skills[i] = new (int,string)[3];            
             var j = 0;
             
@@ -83,7 +85,7 @@ public class RepairShopReceipt : MonoBehaviour
             }
         }
         Debug.Log($"Weapon : {PlayerItems.weapon_Name}");
-        Debug.Log($"HP: {PlayerItems.count_HP} AR: {PlayerItems.count_AR} MV: {PlayerItems.count_MV}");
+        Debug.Log($"HP: {PlayerItems.count_HP} AR: {PlayerItems.count_AR} MV: {PlayerItems.count_MV} JP: {PlayerItems.count_JP}");
         //Debug.Log($"Skill 00 : {Dump(PlayerItems.Skills[0][0])}, Skill 01 : {Dump(PlayerItems.Skills[0][1])}, Skill 02 : {Dump(PlayerItems.Skills[0][2])}");
         //Debug.Log($"Skill 10 : {Dump(PlayerItems.Skills[1][0])}, Skill 11 : {Dump(PlayerItems.Skills[1][1])}, Skill 12 : {Dump(PlayerItems.Skills[1][2])}");
         //Debug.Log($"Skill 20 : {Dump(PlayerItems.Skills[2][0])}, Skill 21 : {Dump(PlayerItems.Skills[2][1])}, Skill 22 : {Dump(PlayerItems.Skills[2][2])}");
@@ -113,6 +115,7 @@ public class RepairShopReceipt : MonoBehaviour
         Count_HP = 0;
         Count_AR = 0;
         Count_MV = 0;
+        Count_JP = 0;
 
         for (int i = 0; i < receiptSlots.Length; i++)
         {

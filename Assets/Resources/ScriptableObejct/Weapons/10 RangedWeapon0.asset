@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 10 RangedWeapon0
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 76e86a351b89a4a4088d6ebd9eacab13, type: 3}
-  name: "\uCD1D"
+  _name: "\uCD1D"
   price: 300
   description: 
   type: 1

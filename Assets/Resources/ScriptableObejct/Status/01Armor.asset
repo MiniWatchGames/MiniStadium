@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 01Armor
   m_EditorClassIdentifier: 
   type: 1
-  name: "\uBC29\uC5B4\uB825"
+  statusName: "\uBC29\uC5B4\uB825"
   description: 
   NormalColor: {r: 1, g: 1, b: 1, a: 1}
   HighlightedColor: {r: 0.99618554, g: 1, b: 0.7783019, a: 1}

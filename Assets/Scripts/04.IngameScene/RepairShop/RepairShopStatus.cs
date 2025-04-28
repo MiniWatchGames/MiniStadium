@@ -9,17 +9,16 @@ public class RepairShopStatus : MonoBehaviour
 {
     [SerializeField] private RepairShop RepairShop;
     [SerializeField] private RepairShopReceipt Receipt;
-    public List<BuyableObject_Status> types;
+    [SerializeField] private BuyableObject_Status[] types;
     
-    // 스테이터스 최대 업그레이드 수
-    private int _maxUpgradeCount = 4;
-    private int _statusKinds = 3;
+    // 스테이터스 최대 업그레이드 가능한 수 + 기본 블럭 1
+    private int _maxUpgradeCount = 5;
     
     // 스테이터스 가격
-    private List<GameObject> _priceTags;
     private int _statusOriginalPrice = 100;
     private int _statusAddtivePrice = 100;
-    private int _totalWorth = 0;
+    private int _totalWorth;
+    private List<GameObject> _priceTags;
     
     // 스테이터스 버튼
     [SerializeField] private GameObject statusPrefab;
@@ -41,8 +40,10 @@ public class RepairShopStatus : MonoBehaviour
     // 상점 스테이터스 초기화 및 생성
     public void SetRepairShopStatus()
     {
-        int row = _statusKinds;
-        int col = _maxUpgradeCount + 1;
+        LoadStatusList();
+        
+        int row = types.Length;
+        int col = _maxUpgradeCount;
         
         _buttonsInRows = new RepairShopStatusButton[row, col];
         Receipt.PreviewsInRows = new Image[row, col];
@@ -54,10 +55,11 @@ public class RepairShopStatus : MonoBehaviour
             // 마지막 버튼 정보 초기화
             _lastButtonIndexes.Add(-1);
             
+            // 이름표, 그룹 레이어, receipt 출력 UI 생성
             var group = Instantiate(statusGroupPrefab, statusGroupParent);
             var previewGroup = Instantiate(Receipt.statusGroup, statusPreviewParent);
-            var _name = Instantiate(statusNamePrefab, group.transform);
-            _name.GetComponent<TextMeshProUGUI>().text = types[i].name;
+            var nameTag = Instantiate(statusNamePrefab, group.transform);
+            nameTag.GetComponent<TextMeshProUGUI>().text = types[i].statusName;
             
             // 버튼 생성, 초기화
             for (int j = 0; j < col; j++)
@@ -82,6 +84,13 @@ public class RepairShopStatus : MonoBehaviour
             StatusSetPrice(0, _priceTags[i]);
         }
     }
+
+    // 스킬 정보 로드
+    void LoadStatusList()
+    {
+        types = Resources.LoadAll<BuyableObject_Status>
+            ($"ScriptableObejct/Status");
+    }
     
     // 버튼 선택
     public void SelectSameTypeToLeft(RepairShopStatusButton clickedButton)
@@ -96,7 +105,7 @@ public class RepairShopStatus : MonoBehaviour
         int value = CalculateRowTotal(row);
         RepairShop.totalPrice -= value;
         
-        for (int i = 0; i < _maxUpgradeCount + 1; i++)
+        for (int i = 0; i < _maxUpgradeCount; i++)
             _buttonsInRows[row, i].SetSelected(false);
 
         // 같은 버튼 다시 클릭 시 위치 정보 삭제
@@ -130,9 +139,9 @@ public class RepairShopStatus : MonoBehaviour
             _totalWorth = 0;
         }
         
-        for(int i = 0; i < _statusKinds; i++)
+        for(int i = 0; i < types.Length; i++)
         {
-            for (int j = 1; j < _maxUpgradeCount + 1; j++)
+            for (int j = 1; j < _maxUpgradeCount; j++)
             {
                 var button = _buttonsInRows[i, j];
                 if (refunding)
@@ -152,9 +161,9 @@ public class RepairShopStatus : MonoBehaviour
     public void StatusPurchasing()
     {
         
-        for (int i = 0; i < _statusKinds; i++)
+        for (int i = 0; i < types.Length; i++)
         {
-            for (int j = 0; j < _maxUpgradeCount + 1; j++)
+            for (int j = 0; j < _maxUpgradeCount; j++)
             {
                 var button = _buttonsInRows[i, j];
                 if (!button.isBought && button.isSelected)
@@ -164,6 +173,7 @@ public class RepairShopStatus : MonoBehaviour
                         case 0: Receipt.Count_HP++; break;
                         case 1: Receipt.Count_AR++; break;
                         case 2: Receipt.Count_MV++; break;
+                        case 3: Receipt.Count_JP++; break;
                     }
 
                     _totalWorth += button.StatusPrice;
@@ -192,7 +202,7 @@ public class RepairShopStatus : MonoBehaviour
     {
         int total = 0;
 
-        for (int i = 0; i < _maxUpgradeCount + 1; i++)
+        for (int i = 0; i < _maxUpgradeCount; i++)
         {
             var button = _buttonsInRows[row, i];
             if (!button.isBought && button.isSelected)
