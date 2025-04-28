@@ -7,65 +7,32 @@ using UnityEngine.UI;
 
 public class MainmenuScenePanelController : PanelController
 {
-    public Button leftArrowButton;
-    public Button rightArrowButton;
-    public Button categoryButton;
+    public Button gameStartButton;
+    public Button rankingButton;
+    public Button settingsButton;
     public Button exitButton;
-
-    public TextMeshProUGUI categoryText;
-
-    private string[] categories = { "게임 시작", "랭킹", "설정" };
-    private int currentIndex = 0;
 
     private void Start()
     {
-        leftArrowButton.onClick.AddListener(OnLeftArrowClicked);
-        rightArrowButton.onClick.AddListener(OnRightArrowClicked);
-        categoryButton.onClick.AddListener(OnCategoryClicked);
+        gameStartButton.onClick.AddListener(OnGameStartClicked);
+        rankingButton.onClick.AddListener(OnRankingClicked);
+        settingsButton.onClick.AddListener(OnSettingsClicked);
         exitButton.onClick.AddListener(OnExitClicked);
-        
-        // 처음 텍스트 설정
-        UpdateCategoryText();
     }
 
-    private void OnLeftArrowClicked()
+    private void OnGameStartClicked()
     {
-        currentIndex = (currentIndex - 1 + categories.Length) % categories.Length;
-        Debug.Log("왼쪽 버튼을 눌렀습니다.");
-        Debug.Log("현재 카테고리: " + categories[currentIndex]);
-        UpdateCategoryText();
+        SceneManager.LoadScene("MatchingScene");
     }
 
-    private void OnRightArrowClicked()
+    private void OnRankingClicked()
     {
-        currentIndex = (currentIndex + 1) % categories.Length;
-        Debug.Log("오른쪽 버튼을 눌렀습니다.");
-        Debug.Log("현재 카테고리: " + categories[currentIndex]);
-        UpdateCategoryText();
+        OpenPanel("[PopUpPanel] Ranking");
     }
 
-    private void OnCategoryClicked()
+    private void OnSettingsClicked()
     {
-        Debug.Log("카테고리 버튼 클릭: " + categories[currentIndex]);
-
-        switch (categories[currentIndex])
-        {
-            case "게임 시작":
-                // 버튼 클릭 시 MatchingScene으로 전환
-                SceneManager.LoadScene("MatchingScene");
-                break;
-            case "랭킹":
-                OpenPanel("[PopUpPanel] Ranking");
-                break;
-            case "설정":
-                OpenPanel("[PopUpPanel] Settings");
-                break;
-        }
-    }
-    
-    private void UpdateCategoryText()
-    {
-        categoryText.text = categories[currentIndex];
+        OpenPanel("[PopUpPanel] Settings");
     }
 
     public void CloseRankingPanel()
