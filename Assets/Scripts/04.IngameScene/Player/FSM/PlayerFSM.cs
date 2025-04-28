@@ -96,7 +96,7 @@ public class PlayerFSM<T> where T : Enum
         ChangeState(_defaultState, playerController);
     }
 
-    public void AddSkillState((int, string)[] skills)
+    public List<ActionState> AddSkillState((int, string)[] skills)
     {
         if (typeof(T) == typeof(ActionState)) {
             
@@ -105,7 +105,12 @@ public class PlayerFSM<T> where T : Enum
             {
                 AddState((T)(object)state.Item1, state.Item2);
             }
+
+            List<ActionState> actionStateList = list.Select(x => x.Item1).ToList();
+            
+            return actionStateList;
         }
+        return null;
     }
 
     public void AddState(T stateType, IPlayerState state)

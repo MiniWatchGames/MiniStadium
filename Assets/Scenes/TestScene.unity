@@ -1555,6 +1555,11 @@ PrefabInstance:
       propertyPath: field of view
       value: 99
       objectReference: {fileID: 0}
+    - target: {fileID: 8977189401774924764, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+        type: 3}
+      propertyPath: weaponType
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

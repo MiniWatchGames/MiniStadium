@@ -5,10 +5,10 @@ using UnityEngine;
 public static class SkillFactory
 {
     /// <summary>
-    /// °í¸¥ ½ºÅ³¿¡ ¸Â´Â ½ºÅ³µéÀ» »ı¼ºÇØ¼­ ¹İÈ¯  
+    /// ê³ ë¥¸ ìŠ¤í‚¬ì— ë§ëŠ” ìŠ¤í‚¬ë“¤ì„ ìƒì„±í•´ì„œ ë°˜í™˜  
     /// </summary>
     /// <param name="_aniStrategy"></param>
-    /// <param name="skillNames">½ºÅ³ ÀÌ¸§µéÀÌ ´ã±ä ¸®½ºÆ®</param>
+    /// <param name="skillNames">ìŠ¤í‚¬ ì´ë¦„ë“¤ì´ ë‹´ê¸´ ë¦¬ìŠ¤íŠ¸</param>
     /// <returns></returns>
     public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm, (int,string)[] skills)
     {
@@ -18,7 +18,7 @@ public static class SkillFactory
             switch (skillName.Item1)
             {
                 //"MovementSkills"
-                case 0:
+                case 1:
                     states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
                     break;
             }

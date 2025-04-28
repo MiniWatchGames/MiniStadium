@@ -1,4 +1,4 @@
-﻿using FishNet.Connection;
+using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
 
@@ -6,7 +6,7 @@ namespace FishNet.Example.Scened
 {
 
 
-    public class PlayerController : NetworkBehaviour
+    public class PlayerController_FishNet : NetworkBehaviour
     {
         [SerializeField]
         private GameObject _camera;

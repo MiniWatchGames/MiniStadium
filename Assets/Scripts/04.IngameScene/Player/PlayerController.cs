@@ -113,6 +113,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public PassiveFactory PassiveFactory => _passiveFactory;
     public List<IPassive> PassiveList => _passiveList;
 
+    private List<ActionState> _weaponSkills;
+    private List<ActionState> _movementSkills;
+
+    private string _firstWeaponSkill;
+    private string _secondWeaponSkill;
+    private string _firstMoveSkill;
+    private string _secondMoveSkill;
     // --------
     // 상태 관련
     [Header("FSM")]
@@ -252,8 +259,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //플레이어의 ActionFsm 내에 상태를 넣어야 함
         //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
         //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
-        //ActionFsm.AddSkillState(_playerItems.Skills[1]);
-        //ActionFsm.AddSkillState(_playerItems.Skills[2]);
+        //_weaponSkills = ActionFsm.AddSkillState(_playerItems.Skills[1]);
+        var myArray = new (int, string)[] { (1, "MovementSkills")  };
+        var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
+        _weaponSkills = ActionFsm.AddSkillState(myArray);
+        _movementSkills = ActionFsm.AddSkillState(myArray1);
+        //_movementSkills = ActionFsm.AddSkillState(_playerItems.Skills[2]);
+
         
         _isDead = false;
 
@@ -406,6 +418,91 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         // 앉기 
         SetPostureState(_postureFsm.CurrentState == PostureState.Idle ? "Crouch" : "Idle");
+    }
+
+
+    public void OnFirstWeaponSkillPressed()
+    {
+        if (_weaponSkills?.Count >= 1) { 
+            var weaponSkill = _weaponSkills[0];
+            _firstWeaponSkill = weaponSkill.ToString();
+            if (_actionFsm.CurrentState != weaponSkill)
+                SetActionState(_firstWeaponSkill);
+        }
+    }
+
+    public void OnFirstWeaponSkillReleased()
+    {
+
+        if (_weaponSkills?.Count >= 1)
+        {
+            if (_actionFsm.CurrentState == _weaponSkills[0])
+            {
+                SetActionState("Idle");
+            }
+        }
+    }
+
+    public void OnSecondWeaponSkillPressed()
+    {
+        if (_weaponSkills?.Count >= 2) {
+            var weaponSkill = _weaponSkills[1];
+            _secondWeaponSkill = weaponSkill.ToString();
+            if (_actionFsm.CurrentState != weaponSkill)
+                SetActionState(_secondWeaponSkill);
+        }
+    }
+
+    public void OnSecondWeaponSkillReleased()
+    {
+        if (_weaponSkills?.Count >= 2) { 
+            if (_actionFsm.CurrentState == _weaponSkills[1])
+            {
+                SetActionState("Idle");
+            }
+        }
+    }
+
+    public void OnFirstMoveSkillPressed()
+    {
+        if (_movementSkills?.Count >= 1) { 
+            var moveMentSkill = _movementSkills[0];
+            _firstMoveSkill = moveMentSkill.ToString();
+            if (_actionFsm.CurrentState != moveMentSkill)
+                SetActionState(_firstMoveSkill);
+        }
+    }
+
+    public void OnFirstMoveSkillReleased()
+    {
+        if (_movementSkills?.Count >= 1)
+        {
+            if (_actionFsm.CurrentState == _movementSkills[0])
+            {
+                SetActionState("Idle");
+            }
+        }
+    }
+
+    public void OnSecondMoveSkillPressed()
+    {
+        if (_movementSkills?.Count >= 2) { 
+            var moveMentSkill = _movementSkills[1];
+            _secondMoveSkill = moveMentSkill.ToString();
+            if (_actionFsm.CurrentState != moveMentSkill)
+                SetActionState(_secondMoveSkill);
+        }
+    }
+
+    public void OnSecondMoveSkillReleased()
+    {
+        if (_movementSkills?.Count >= 2)
+        {
+            if (_actionFsm.CurrentState == _movementSkills[1])
+            {
+                SetActionState("Idle");
+            }
+        }
     }
 
     #endregion
@@ -637,5 +734,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 break;
         }
     }
+
     #endregion
 }
