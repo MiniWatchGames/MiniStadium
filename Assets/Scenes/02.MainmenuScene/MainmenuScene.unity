@@ -1155,16 +1155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1b380958322d745a99ac8e608e01c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resolutionDropdown: {fileID: 0}
-  displayModeDropdown: {fileID: 0}
-  bgmSlider: {fileID: 1793279377}
-  effectSlider: {fileID: 619704074}
-  bgmAudioSource: {fileID: 0}
-  effectAudioSource: {fileID: 0}
-  mouseSensitivitySlider: {fileID: 912197686}
-  saveButton: {fileID: 1933506458}
-  closeButton: {fileID: 522090522}
-  settingsPanel: {fileID: 175380112}
 --- !u!1 &181771083
 GameObject:
   m_ObjectHideFlags: 0
@@ -6652,10 +6642,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
