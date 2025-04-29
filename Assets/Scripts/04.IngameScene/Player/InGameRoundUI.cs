@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 public class InGameRoundUI : MonoBehaviour
 {
     [SerializeField] private GameObject RoundCount;
-    [SerializeField] private GameObject RoundTime;
+    //[SerializeField] private GameObject RoundTime;
     [SerializeField] private GameObject BlueWinCount;
     [SerializeField] private GameObject RedWinCount;
     [SerializeField] private InGameManager inGameManager;

@@ -86,6 +86,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     private Dictionary<StatType, Stat> statDictionary;
 
+    //캐릭터가 죽거나 적을 죽였을때 이 이벤트가 발생한다
+    public Action<GameObject> OnPlayerDie;
+    public Action<GameObject> OnEnemyKilled;
+    
     private ObservableFloat currentHp;
     public float CurrentHp
     {
@@ -97,6 +101,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             {
                 Debug.Log("주금..");
                 _isDead = true;
+                OnPlayerDie.Invoke(gameObject);
                 SetMovementState("Idle");
                 SetPostureState("Idle");
                 SetActionState("Dead");
