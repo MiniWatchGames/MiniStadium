@@ -15,16 +15,16 @@ public class RepairShopWeapon : MonoBehaviour
     public RepairShopWeaponSlot currentWeapon;
     public RepairShopWeaponSlot selectedWeapon;
 
-    public void init()
+    public void init(RepairShop _repairShop)
     {
-        GenerateWeaponUI();
+        GenerateWeaponUI(_repairShop);
     }
     
     // 무기 탭 UI 초기화
-    void GenerateWeaponUI()
+    void GenerateWeaponUI(RepairShop _repairShop)
     {
         RepairShopWeapons = new List<RepairShopWeaponSlot>();
-        
+        RepairShop = _repairShop;
         LoadWeaponList();
         int i = 0;
         

@@ -175,24 +175,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _characterController = GetComponent<CharacterController>();
         _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
-
-        _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
-        _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
-        _actionFsm = new PlayerFSM<ActionState>(StateType.Action, _playerWeapon, defaultState);
     }
 
     private void Start()
     {
-        Init();
-
-        Debug.Log(baseMaxHp.Value);
-
-        AddStatDecorate(StatType.MoveSpeed, 1f);
-
-        AddStatDecorate(StatType.MaxHp, 3);
-
-        CurrentHp -= 4;
-        RemoveStatDecorate(StatType.MaxHp);
+        Init();      
     }
 
     private void Update()
@@ -203,10 +190,14 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         DrawRay();
     }
 
-    private void Init()
+    public void Init()
     {
         //구매내역 가져오기
-        //_playerItems = PurchaseManager.PurchasedPlayerItems;
+        _playerItems = PurchaseManager.PurchasedPlayerItems.DeepCopy();
+
+        _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
+        _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
+        _actionFsm = new PlayerFSM<ActionState>(StateType.Action, _playerWeapon, defaultState);
 
         // InputManager 구독 
         InputManager.instance.Register(this);
@@ -237,7 +228,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _actionFsm.Run(this);
 
         // 구매내역에 따른 스텟 분배
-        //DecorateStatByPlayerItems();
+        DecorateStatByPlayerItems();
 
 
         // 스텟 + currentHp 옵저버 등록 
@@ -254,7 +245,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _passiveFactory = new PassiveFactory();
         _passiveList = new List<IPassive>();
         //임시, 구매내역이라 치고 작성
-        //_passiveFactory.CreatePassive(this, _playerItems.Skills[0]);
+        //var myArray2 = new (int, string)[] { (1, "HpRegenerationPassive") };
+        _passiveFactory.CreatePassive(this, _playerItems.Skills[2]);
         foreach (var passive in PassiveList)
         {
             passive.ApplyPassive(this);
@@ -263,16 +255,18 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //플레이어의 ActionFsm 내에 상태를 넣어야 함
         //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
         //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
-        //_weaponSkills = ActionFsm.AddSkillState(_playerItems.Skills[1]);
-        var myArray = new (int, string)[] { (1, "MovementSkills")  };
-        var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
-        _weaponSkills = ActionFsm.AddSkillState(myArray);
-        _movementSkills = ActionFsm.AddSkillState(myArray1);
-        //_movementSkills = ActionFsm.AddSkillState(_playerItems.Skills[2]);
+        _weaponSkills = ActionFsm.AddSkillState(_playerItems.Skills[1],1);
+        _movementSkills = ActionFsm.AddSkillState(_playerItems.Skills[0], 0);
+        //var myArray = new (int, string)[] { (1, "MovementSkills")  };
+        //var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
+        //_weaponSkills = ActionFsm.AddSkillState(myArray);
+        //_movementSkills = ActionFsm.AddSkillState(myArray1);
 
-        
+
         _isDead = false;
 
+        //풀피 만들어주기
+        CurrentHp = baseMaxHp.Value;
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
         PurchaseManager.ResetPurchasedPlayerItems();
     }
@@ -343,8 +337,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (Animator == null) return;
         
         // 시선 IK (머리 회전)
-        Animator.SetLookAtWeight(aimWeight);
-        Animator.SetLookAtPosition(aimTarget.position);
+       // Animator.SetLookAtWeight(aimWeight);
+       // Animator.SetLookAtPosition(aimTarget.position);
         
         // 애니메이션 이후에 상체 회전 적용
         float spineAngle = Mathf.Clamp(_pitch, minAngle, maxAngle);

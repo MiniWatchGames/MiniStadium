@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using TMPro;
+using Cysharp.Threading.Tasks;
 public class RepairShop : MonoBehaviour
 {
     [SerializeField] private GameObject RepairShopUI;
@@ -17,7 +18,7 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
     [SerializeField] private RepairShopReceipt RepairShopReceipt;
-    
+    public RepairShopReceipt Receipt { get => RepairShopReceipt; }
     // 금액
     [SerializeField] private int _startingMoney = 3000;
     [SerializeField] public int currentMoney;
@@ -29,9 +30,9 @@ public class RepairShop : MonoBehaviour
         errorMessage.SetActive(false);
         currentMoney = _startingMoney;
         UpdateMoneyText(0);
-        RepairShopStatus.init();
-        RepairShopSkill.init();
-        RepairShopWeapon.init();
+        RepairShopStatus.init(this);
+        RepairShopSkill.init(this);
+        RepairShopWeapon.init(this);
     }
 
     // 리셋 버튼 클릭 시 환불 절차

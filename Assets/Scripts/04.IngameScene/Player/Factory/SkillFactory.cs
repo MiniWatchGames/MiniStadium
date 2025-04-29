@@ -7,22 +7,61 @@ public static class SkillFactory
     /// <summary>
     /// 고른 스킬에 맞는 스킬들을 생성해서 반환  
     /// </summary>
-    /// <param name="_aniStrategy"></param>
-    /// <param name="skillNames">스킬 이름들이 담긴 리스트</param>
+    /// <param name="skills"> int 스킬번호, string 스킬명</param>
+    /// <param name="SkillType"> 0:Movement, 1:Weapon</param>
     /// <returns></returns>
-    public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm, (int,string)[] skills)
+    public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm, (int,string)[] skills, int SkillType)
     {
         List<(ActionState, IPlayerState)> states = new List<(ActionState, IPlayerState)>();
-        foreach (var skillName in skills)
+        switch(SkillType)
         {
-            switch (skillName.Item1)
-            {
-                //"MovementSkills"
-                case 1:
-                    states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
-                    break;
-            }
+            case 0: //Movement
+                foreach (var skillName in skills)
+                {
+                    switch (skillName.Item1)
+                    {
+                        //"MovementSkills"
+                        case 1:
+                            states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                            break;
+                        case 3:
+                            states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                            break;
+                        case 2:
+                            states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                            break;
+                    }
+                }
+                return states;
+            case 1: //Weapon
+                foreach (var skillName in skills)
+                {
+                    switch (skillName.Item1)
+                    {
+                        //"MovementSkills"
+                        case 1:
+                            states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                            break;
+                        case 2:
+                            states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                            break;
+                        case 3:
+                            states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                            break;
+                        case 4:
+                            states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                            break;
+                        case 5:
+                            states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                            break;
+                        case 6:
+                            states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                            break;
+                    }
+                }
+                return states;
         }
-        return states;
+        return null;
+  
     }
 }

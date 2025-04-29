@@ -1101,7 +1101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abc8b8a6fd199424dba32418677ae671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  repairShop: {fileID: 1303005294}
+  repairShop: {fileID: 0}
   WeaponTab: {fileID: 130993869}
   StatusTab: {fileID: 1609483507}
   SkillTab: {fileID: 940028361}
@@ -4752,7 +4752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cda2c1c19f3c70a4fa693a002f90c5ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RepairShop: {fileID: 1303005294}
+  RepairShop: {fileID: 1303005298}
   RepairShopSkill: {fileID: 940028364}
   Receipt: {fileID: 1296170055}
   weaponSlotPrefab: {fileID: 7765259059937842148, guid: 9a3667a47236fd84887dbd1474c6d529,
@@ -25733,7 +25733,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00007993962}
+  m_AnchoredPosition: {x: 0, y: 0.00035009286}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &584224658
@@ -42790,7 +42790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3fe93f6a9d3bea428dc541f0babe1e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RepairShop: {fileID: 1303005294}
+  RepairShop: {fileID: 0}
   Receipt: {fileID: 1296170055}
   skillSlot: {fileID: 698915502628096259, guid: 78cde7580dd4f2b4483ba09fbe832708,
     type: 3}
@@ -60135,7 +60135,7 @@ MonoBehaviour:
     - {fileID: 375650868}
   - row:
     - {fileID: 1173969275}
-  RepairShop: {fileID: 1303005294}
+  RepairShop: {fileID: 0}
   RepairShopWeapon: {fileID: 130993873}
   RepairShopSkill: {fileID: 940028364}
   playerName: {fileID: 1644179410}
@@ -60370,8 +60370,7 @@ GameObject:
   - component: {fileID: 1303005293}
   - component: {fileID: 1303005297}
   - component: {fileID: 1303005296}
-  - component: {fileID: 1303005294}
-  - component: {fileID: 1303005295}
+  - component: {fileID: 1303005298}
   m_Layer: 5
   m_Name: '[PopupPanel] RepairShop'
   m_TagString: Untagged
@@ -60402,46 +60401,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1303005294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1303005292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85d2be6d78999c345a7cec18599230e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RepairShopUI: {fileID: 1303005292}
-  upperTabs: {fileID: 37759545}
-  RepairShopUpperTabs:
-  - {fileID: 130993869}
-  - {fileID: 1609483507}
-  - {fileID: 940028361}
-  RepairShopLowerTabs: []
-  errorMessage: {fileID: 292152870}
-  RepairShopStatus: {fileID: 1609483508}
-  RepairShopWeapon: {fileID: 130993873}
-  RepairShopSkill: {fileID: 940028364}
-  RepairShopReceipt: {fileID: 1296170055}
-  _startingMoney: 3000
-  currentMoney: 0
-  totalPrice: 0
-  currentMoneyText: {fileID: 1851820142}
---- !u!114 &1303005295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1303005292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84d4753a1a2ccc14d8e4033ab2b0211d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1303005296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60480,6 +60439,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1303005292}
   m_CullTransparentMesh: 1
+--- !u!114 &1303005298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1303005292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b357652136c23247898aa75c132473a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RepairShopUI: {fileID: 1303005292}
+  upperTabs: {fileID: 37759545}
+  RepairShopUpperTabs: []
+  RepairShopLowerTabs: []
+  errorMessage: {fileID: 292152870}
+  RepairShopStatus: {fileID: 1609483508}
+  RepairShopWeapon: {fileID: 130993873}
+  RepairShopSkill: {fileID: 940028364}
+  RepairShopReceipt: {fileID: 1296170055}
+  _startingMoney: 3000
+  currentMoney: 0
+  totalPrice: 0
+  currentMoneyText: {fileID: 1851820142}
 --- !u!43 &1314239522
 Mesh:
   m_ObjectHideFlags: 0
@@ -66170,7 +66154,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1303005294}
+      - m_Target: {fileID: 1303005298}
         m_TargetAssemblyTypeName: RepairShop, Assembly-CSharp
         m_MethodName: PurchaseItem
         m_Mode: 1
@@ -68889,7 +68873,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 508486592}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9395486
+  m_Size: 0.9999972
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -74556,7 +74540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5292ec3d5080b6c40ae299e308b3b227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RepairShop: {fileID: 1303005294}
+  RepairShop: {fileID: 0}
   Receipt: {fileID: 1296170055}
   types:
   - {fileID: 11400000, guid: 5d9e973797d346a48bb983f22c1e1a98, type: 2}
@@ -83167,7 +83151,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1303005294}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: RepairShop, Assembly-CSharp
         m_MethodName: OnClickRefundButton
         m_Mode: 1
@@ -87352,6 +87336,8 @@ MonoBehaviour:
   currentTeam: 0
   currentRoundState: 0
   gameTimer: {fileID: 811303130}
+  PlayerPrefab: {fileID: 7244771892483126651, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+    type: 3}
   currentRound: 0
   currentGameTime: 0
 --- !u!4 &1940594559

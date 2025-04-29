@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PassiveFactory : MonoBehaviour
+public class PassiveFactory 
 {
     //작성이 완료된 패시브클래스를 이곳에 추가시켜주어야 함
     public void CreatePassive(PlayerController target, (int, string)[] passiveNames) {
@@ -13,7 +13,6 @@ public class PassiveFactory : MonoBehaviour
                 case 1: 
                     target.PassiveList.Add(target.AddComponent<HpRegenerationPassive>());
                 break;
-
                 //"IncreasingRandomStatEvery20Seconds"
                 case 2:
                     target.PassiveList.Add(target.AddComponent<IncreasingRandomStatEvery20Seconds>());

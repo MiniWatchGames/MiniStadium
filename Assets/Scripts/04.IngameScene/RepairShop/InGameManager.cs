@@ -42,6 +42,7 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private RoundState currentRoundState;
 
     [SerializeField] private Timer gameTimer;
+    [SerializeField] private GameObject PlayerPrefab;
     
     [SerializeField] public int currentRound = 0;
     [SerializeField] private int currentGameTime = 0;
@@ -158,6 +159,8 @@ public class InGameManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.B) && currentRoundState ==  RoundState.RoundStart)
         {
             RepairShopUI.SetActive(!RepairShopUI.activeSelf);
+            PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
+            Instantiate(PlayerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         }
         
         if(currentRound == 7 && !(currentWinLoseState == WinLoseState.Duse || currentWinLoseState == WinLoseState.Draw))

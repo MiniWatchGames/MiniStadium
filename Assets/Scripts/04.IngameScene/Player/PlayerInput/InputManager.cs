@@ -34,7 +34,7 @@ public class InputManager : MonoBehaviour
         LookInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         
         _listener?.OnMove(MoveInput);
-        _listener?.OnLook(LookInput);
+        //_listener?.OnLook(LookInput);
 
         if (Input.GetButtonDown("Jump")) _listener?.OnJumpPressed();
         if (Input.GetButtonDown("Fire1")) _listener?.OnFirePressed();
