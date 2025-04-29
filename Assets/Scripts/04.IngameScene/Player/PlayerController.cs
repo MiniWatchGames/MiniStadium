@@ -129,7 +129,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     // --------
     // 카메라 관련
     [Header("Camera")]
-    [SerializeField] private Transform rotationTarget;
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float minAngle;
     [SerializeField] private float maxAngle;
