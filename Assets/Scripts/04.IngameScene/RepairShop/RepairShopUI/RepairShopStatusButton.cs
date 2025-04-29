@@ -72,10 +72,7 @@ public class RepairShopStatusButton : MonoBehaviour, IPointerEnterHandler, IPoin
     public void UpdateVisualState()
     {
         var cb = button.colors;
-        if (isSelected)
-            cb.normalColor = cb.selectedColor;
-        else
-            cb.normalColor = Color.white;
+        cb.normalColor = isSelected ? cb.selectedColor : Color.white;
         button.colors = cb;
     }
 

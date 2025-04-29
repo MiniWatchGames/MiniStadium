@@ -99,17 +99,22 @@ public class RepairShopStatus : MonoBehaviour
 
         int row = clickedButton.StatusType;
         int col = clickedButton.StatusIndex;
-        int lastIndex = _lastButtonIndexes[row];
 
         // 금액 반환 및 클릭된 row 초기화
         int value = CalculateRowTotal(row);
         RepairShop.totalPrice -= value;
-        
-        for (int i = 0; i < _maxUpgradeCount; i++)
+
+        for (int i = 1; i < _maxUpgradeCount; i++)
+        {
+            // row 내 모든 버튼 선택 해제
             _buttonsInRows[row, i].SetSelected(false);
+            // 미리보기 색상 적용
+            Receipt.CopyStatusColor(row, i, _buttonsInRows[row, i]);
+            
+        }
 
         // 같은 버튼 다시 클릭 시 위치 정보 삭제
-        if (col == lastIndex)
+        if (col == _lastButtonIndexes[row])
         {
             _lastButtonIndexes[row] = -1;
             RepairShop.SetDescription("", "");
@@ -118,7 +123,11 @@ public class RepairShopStatus : MonoBehaviour
         else
         {
             for (int i = 1; i <= col; i++)
+            {
                 _buttonsInRows[row, i].SetSelected(true);
+                // 미리보기 색상 적용
+                Receipt.CopyStatusColor(row, i, _buttonsInRows[row, i]);
+            }
             _lastButtonIndexes[row] = col;
             RepairShop.SetDescription(types[row].statusName, clickedButton.description);
         }
@@ -135,28 +144,36 @@ public class RepairShopStatus : MonoBehaviour
     // 리셋
     public void StatusReset(bool refunding)
     {
-        if (refunding) // 환불 버튼을 눌렀을 때
+        // 계산
+        if (refunding)
         {
             RepairShop.currentMoney += _totalWorth;
             _totalWorth = 0;
         }
         
+        // 시각 적용
         for(int i = 0; i < types.Length; i++)
         {
+            if (!refunding)
+                RepairShop.totalPrice -= CalculateRowTotal(i);
+            
             for (int j = 1; j < _maxUpgradeCount; j++)
             {
                 var button = _buttonsInRows[i, j];
+                
                 if (refunding)
                 {
                     button.isBought = false;
                     button.button.interactable = true;
-                    Receipt.ChangeStatusColor(i, j, Color.white);
                 }
-                button.SetSelected(false);
+                button.SetSelected(button.isBought);
+                
+                Receipt.CopyStatusColor(i, j, button);
             }
             _lastButtonIndexes[i] = -1;  // 위치 정보 삭제
             StatusSetPrice(0, _priceTags[i]); // 가격표 갱신
         }
+        RepairShop.UpdateMoneyText(RepairShop.totalPrice);
     }
 
     // 구매
@@ -164,7 +181,7 @@ public class RepairShopStatus : MonoBehaviour
     {
         for (int i = 0; i < types.Length; i++)
         {
-            for (int j = 0; j < _maxUpgradeCount; j++)
+            for (int j = 1; j < _maxUpgradeCount; j++)
             {
                 var button = _buttonsInRows[i, j];
                 if (!button.isBought && button.isSelected)
@@ -184,8 +201,7 @@ public class RepairShopStatus : MonoBehaviour
                     button.GetComponent<Button>().interactable = false;
                     
                     // 미리보기 색상 적용
-                    var color = button.button.colors.disabledColor;
-                    Receipt.ChangeStatusColor(i, j, color);
+                    Receipt.CopyStatusColor(i, j, button);
                 }
             }
             StatusSetPrice(0, _priceTags[i]);

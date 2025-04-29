@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
@@ -99,10 +100,12 @@ public class RepairShopReceipt : MonoBehaviour
     //    return "empty";
     //}
     
-    // 스테이터스 색상 처리
-    public void ChangeStatusColor(int i, int j, Color color)
+    // receipt 내의 스테이터스 색상 처리
+    public void CopyStatusColor(int i, int j, RepairShopStatusButton button)
     {
-        PreviewsInRows[i, j].color = color;
+        var cb = button.GetComponent<Button>().colors;
+
+        PreviewsInRows[i, j].color = button.isBought ? cb.disabledColor : cb.normalColor;
     }
     
     // 모두 초기화
