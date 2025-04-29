@@ -62,7 +62,7 @@ public class RepairShopSkill : MonoBehaviour
             {
                 var slot = Instantiate(skillSlot, parents[i]);
                 var script = slot.GetComponent<RepairShopSkillSlot>();
-                script.Init(skillGroups[i][j], this, j);
+                script.Init(skillGroups[i][j], this, j+1);
                 repairShopSkills[i][j] = slot;
 
                 if (i == 1) slot.SetActive(false);
@@ -213,7 +213,7 @@ public class RepairShopSkill : MonoBehaviour
             {
                 if (selectedSkills[i][j] != null)
                 {
-                    selectedSkills[i][j].Selected(refunding ? false : selectedSkills[i][j].isBought);
+                    selectedSkills[i][j].Selected(!refunding && selectedSkills[i][j].isBought);
                     selectedSkills[i][j] = null;
                 }
             }

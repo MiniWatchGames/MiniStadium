@@ -32,7 +32,7 @@ public class RepairShopWeapon : MonoBehaviour
         {
             var slot = Instantiate(weaponSlotPrefab, weaponSlotParent);
             var script = slot.GetComponent<RepairShopWeaponSlot>();
-            script.Init(bo, this, i++);
+            script.Init(bo, this, i++ + 1);
             RepairShopWeapons.Add(script);
         }
     }

@@ -85,20 +85,17 @@ public class RepairShopReceipt : MonoBehaviour
                 }
             }
         }
-        Debug.Log($"Weapon : {PlayerItems.weapon_Name}");
-        Debug.Log($"HP: {PlayerItems.count_HP} AR: {PlayerItems.count_AR} MV: {PlayerItems.count_MV} JP: {PlayerItems.count_JP}");
-        //Debug.Log($"Skill 00 : {Dump(PlayerItems.Skills[0][0])}, Skill 01 : {Dump(PlayerItems.Skills[0][1])}, Skill 02 : {Dump(PlayerItems.Skills[0][2])}");
-        //Debug.Log($"Skill 10 : {Dump(PlayerItems.Skills[1][0])}, Skill 11 : {Dump(PlayerItems.Skills[1][1])}, Skill 12 : {Dump(PlayerItems.Skills[1][2])}");
-        //Debug.Log($"Skill 20 : {Dump(PlayerItems.Skills[2][0])}, Skill 21 : {Dump(PlayerItems.Skills[2][1])}, Skill 22 : {Dump(PlayerItems.Skills[2][2])}");
+        // Debug.Log($"Weapon : {PlayerItems.weapon_Name}");
+        // Debug.Log($"HP: {PlayerItems.count_HP} AR: {PlayerItems.count_AR} MV: {PlayerItems.count_MV} JP: {PlayerItems.count_JP}");
+        // Debug.Log($"Skill 00 : {Dump(PlayerItems.Skills[0][0])}, Skill 01 : {Dump(PlayerItems.Skills[0][1])}, Skill 02 : {Dump(PlayerItems.Skills[0][2])}");
+        // Debug.Log($"Skill 10 : {Dump(PlayerItems.Skills[1][0])}, Skill 11 : {Dump(PlayerItems.Skills[1][1])}, Skill 12 : {Dump(PlayerItems.Skills[1][2])}");
+        // Debug.Log($"Skill 20 : {Dump(PlayerItems.Skills[2][0])}, Skill 21 : {Dump(PlayerItems.Skills[2][1])}, Skill 22 : {Dump(PlayerItems.Skills[2][2])}");
     }
     
-    //private string Dump((Dictionary<int, string>) dict)
-    //{
-    //    if (dict == null || dict.Count == 0) return "null";
-    //    foreach (var kvp in dict)
-    //        return $"{kvp.Key}:{kvp.Value}";
-    //    return "empty";
-    //}
+    // private string Dump((int, string) tuple)
+    // {
+    //     return tuple == default ? "null" : $"{tuple.Item1}:{tuple.Item2}";
+    // }
     
     // receipt 내의 스테이터스 색상 처리
     public void CopyStatusColor(int i, int j, RepairShopStatusButton button)
