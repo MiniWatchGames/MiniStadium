@@ -43,7 +43,9 @@ public class InGameManager : MonoBehaviour
 
     [SerializeField] private Timer gameTimer;
     [SerializeField] private GameObject PlayerPrefab;
-    
+    private GameObject _playerPrefab;
+
+
     [SerializeField] public int currentRound = 0;
     [SerializeField] private int currentGameTime = 0;
     
@@ -75,7 +77,7 @@ public class InGameManager : MonoBehaviour
             case RoundState.RoundStart:
                 Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
-                SetGameTime(40, RoundState.InRound);
+                SetGameTime(100, RoundState.InRound);
                 break;
             case RoundState.InRound:
                 Debug.Log("In Round");
@@ -158,9 +160,17 @@ public class InGameManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.B) && currentRoundState ==  RoundState.RoundStart)
         {
-            RepairShopUI.SetActive(!RepairShopUI.activeSelf);
             PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
-            Instantiate(PlayerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            if (_playerPrefab == null)
+            {
+                _playerPrefab = Instantiate(PlayerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            }
+            else { 
+                var player = _playerPrefab.GetComponent<PlayerController>();
+                player.ResetCharacter();
+                player.ReInit();
+            }
+            RepairShopUI.SetActive(!RepairShopUI.activeSelf);
         }
         
         if(currentRound == 7 && !(currentWinLoseState == WinLoseState.Duse || currentWinLoseState == WinLoseState.Draw))
@@ -176,5 +186,10 @@ public class InGameManager : MonoBehaviour
         currentRound++;
         
     }
+
+    public void OnCharacterResetButtonClick() {
+        _playerPrefab.GetComponent<PlayerController>().ResetCharacter();
+    }
     
 }
+

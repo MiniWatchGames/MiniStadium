@@ -12,6 +12,7 @@ public static class SkillFactory
     /// <returns></returns>
     public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm, (int,string)[] skills, int SkillType)
     {
+        if (skills is null) return null;
         List<(ActionState, IPlayerState)> states = new List<(ActionState, IPlayerState)>();
         switch(SkillType)
         {

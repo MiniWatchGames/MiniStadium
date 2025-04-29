@@ -101,6 +101,7 @@ public class PlayerFSM<T> where T : Enum
         if (typeof(T) == typeof(ActionState)) {
             
             List<(ActionState, IPlayerState)> list = ((PlayerFSM<ActionState>)(object)this).CreateStates(skills,SkillType);
+            if(list is null) return null;
             foreach (var state in list)
             {
                 AddState((T)(object)state.Item1, state.Item2);
@@ -136,6 +137,14 @@ public class PlayerFSM<T> where T : Enum
         _currentState?.Update();
     }
 
+    public void RemoveState(T stateType)
+    {
+        if (_states.ContainsKey(stateType))
+        {
+            _states.Remove(stateType);
+        }
+    }
+
     /// <summary>
     /// 무기 변경시 새 전략으로 바꾸기위해 호출해줘야 함
     /// </summary>
@@ -146,5 +155,5 @@ public class PlayerFSM<T> where T : Enum
     //    _aniStrategy = _playerAnimationStrategyFactory.CreateStrategy(_playerWeapon);
     //    ChangeState(_defaultState, playerController);
     //}
-   
+
 }
