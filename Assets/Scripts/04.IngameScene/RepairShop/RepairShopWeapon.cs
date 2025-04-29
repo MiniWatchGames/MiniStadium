@@ -120,12 +120,14 @@ public class RepairShopWeapon : MonoBehaviour
 
             if (selectedWeapon == ClickedWeapon)
             {
+                RepairShop.SetDescription("", "");
                 Receipt.ResetTargetSlot(Receipt.receiptSlots[3][0],3);
                 ClickedWeapon.Selected(false);
                 selectedWeapon = null;
             }
             else
             {
+                RepairShop.SetDescription(ClickedWeapon.nameText.text, ClickedWeapon.description);
                 selectedWeapon.Selected(false);
                 ClickedWeapon.Selected(true);
                 selectedWeapon = ClickedWeapon;
@@ -134,6 +136,7 @@ public class RepairShopWeapon : MonoBehaviour
         }
         else // 이전에 선택한 무기가 없거나, 구매된 무기인 경우
         {
+            RepairShop.SetDescription(ClickedWeapon.nameText.text, ClickedWeapon.description);
             ClickedWeapon.Selected(true);
             selectedWeapon = ClickedWeapon;
             RepairShop.totalPrice += ClickedWeapon.price;

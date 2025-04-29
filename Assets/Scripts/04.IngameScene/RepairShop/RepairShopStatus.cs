@@ -59,7 +59,7 @@ public class RepairShopStatus : MonoBehaviour
             var group = Instantiate(statusGroupPrefab, statusGroupParent);
             var previewGroup = Instantiate(Receipt.statusGroup, statusPreviewParent);
             var nameTag = Instantiate(statusNamePrefab, group.transform);
-            nameTag.GetComponent<TextMeshProUGUI>().text = types[i].statusName;
+            nameTag.GetComponent<TMP_Text>().text = types[i].statusName;
             
             // 버튼 생성, 초기화
             for (int j = 0; j < col; j++)
@@ -112,6 +112,7 @@ public class RepairShopStatus : MonoBehaviour
         if (col == lastIndex)
         {
             _lastButtonIndexes[row] = -1;
+            RepairShop.SetDescription("", "");
             HighlightSameTypeToLeft(_buttonsInRows[row, col], true);
         }
         else
@@ -119,6 +120,7 @@ public class RepairShopStatus : MonoBehaviour
             for (int i = 1; i <= col; i++)
                 _buttonsInRows[row, i].SetSelected(true);
             _lastButtonIndexes[row] = col;
+            RepairShop.SetDescription(types[row].statusName, clickedButton.description);
         }
 
         // 가격 취합
@@ -160,7 +162,6 @@ public class RepairShopStatus : MonoBehaviour
     // 구매
     public void StatusPurchasing()
     {
-        
         for (int i = 0; i < types.Length; i++)
         {
             for (int j = 0; j < _maxUpgradeCount; j++)
@@ -194,7 +195,7 @@ public class RepairShopStatus : MonoBehaviour
     // 가격표 갱신
     private void StatusSetPrice(int price, GameObject textUI)
     {
-        textUI.GetComponent<TextMeshProUGUI>().text = price.ToString("N0") + "g";
+        textUI.GetComponent<TMP_Text>().text = price.ToString("N0") + "g";
     }
     
     // Row 내 가격 취합

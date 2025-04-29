@@ -16,7 +16,7 @@ public class RepairShopReceipt : MonoBehaviour
     }
     [SerializeField] private ReceiptSlotRow[] receiptSlotRows;
 
-    [SerializeField] private RepairShop RepairShop;
+    [SerializeField] public RepairShop RepairShop;
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
     public PlayerItems PlayerItems = new PlayerItems();

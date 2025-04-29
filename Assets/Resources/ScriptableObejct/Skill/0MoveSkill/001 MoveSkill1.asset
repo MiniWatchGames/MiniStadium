@@ -15,6 +15,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: ad53cd0fe3a08294b985fed6bca2039c, type: 3}
   _name: "\uC774\uB3D9\uAE30 1"
   price: 300
-  description: 
+  description: "\uC774\uB3D9\uAE30 \uC124\uBA85\uC774\uB2E4"
   skillType: 0
   weaponType: 0
