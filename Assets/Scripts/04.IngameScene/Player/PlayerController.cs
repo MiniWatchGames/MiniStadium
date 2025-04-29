@@ -44,6 +44,7 @@ public enum StatType
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatObserver
 {
+    [SerializeField] private Transform spine;
     [SerializeField] private LayerMask groundLayer;
 
     private CharacterController _characterController;
@@ -135,7 +136,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     // --------
     // 카메라 관련
     [Header("Camera")]
-    [SerializeField] private Transform rotationTarget;
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float minAngle;
     [SerializeField] private float maxAngle;
@@ -152,8 +152,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     // --------
     // 애니메이션 관련 
-    [SerializeField] private RuntimeAnimatorController swordController;
-    [SerializeField] private RuntimeAnimatorController gunController;
+    [Header("Animation")]
+    [SerializeField] private RuntimeAnimatorController swordAnimatorController;
+    [SerializeField] private RuntimeAnimatorController gunAnimatorController;
+    [SerializeField] private Transform aimTarget;  // 조준점
+    [SerializeField] private float aimWeight = 1f; // IK 가중치 (0-1)
+    private Transform _rightHandIkTarget;
+    private Transform _leftHandIkTarget;
     private readonly int MoveSpeedHash = Animator.StringToHash("MoveSpeed");
     public Animator Animator { get; private set; }
     public bool IsGrounded
@@ -208,11 +213,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         
         // 카메라 설정
         _cameraController = Camera.main.GetComponent<CameraController>();
-        _cameraController.SetTarget(transform);
-        _cameraController.SetSpineTarget(rotationTarget);
-        _cameraController.IsIdle = IsIdle;
-
-        //플레이어 무기 설정
+        // _cameraController.SetTarget(transform);
+        // _cameraController.SetSpineTarget(rotationTarget);
+        // _cameraController.IsIdle = IsIdle;
 
         //플레이어 스텟 설정
         currentHp = new ObservableFloat(fixedFirstMaxHp, "currentHp");
@@ -228,6 +231,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         
         // 무기 설정 
         EquipWeapon(_playerWeapon);
+        
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
@@ -333,6 +337,22 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         movePosition.y = _velocity.y * Time.deltaTime;
         _characterController.Move(movePosition);
     }
+    
+    private void OnAnimatorIK(int layerIndex)
+    {
+        if (Animator == null) return;
+        
+        // 시선 IK (머리 회전)
+        Animator.SetLookAtWeight(aimWeight);
+        Animator.SetLookAtPosition(aimTarget.position);
+        
+        // 애니메이션 이후에 상체 회전 적용
+        float spineAngle = Mathf.Clamp(_pitch, minAngle, maxAngle);
+        
+        // 상체(흉추) 회전 적용
+        Animator.SetBoneLocalRotation(HumanBodyBones.Spine, 
+            Quaternion.Euler(spineAngle, 0, 0));
+    }
 
     #region Input_Events
 
@@ -362,7 +382,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 }
                 // 버퍼 시간 내에는 이전 입력 유지
             }
-
         }
     }
 
@@ -376,10 +395,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 수직 회전 각도 제한
         _pitch = Mathf.Clamp(_pitch, minAngle, maxAngle);
 
-        // 카메라 Pitch 업데이트
-        // 수직 회전의 일부를 상체에 적용 (전체 피치의 일정 비율)
-        _cameraController.SetPitch(_pitch);
-        _cameraController.SetYaw(_yaw);
+        // 카메라 컨트롤러에 값 전달
+        _cameraController.UpdateCamera(_pitch, _yaw);
     }
 
     public void OnJumpPressed()
@@ -536,11 +553,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         switch (weaponType)
         {
-            case WeaponType.Sword:
-                controllerToApply = swordController;
+            case WeaponType.Sword: 
+                controllerToApply = swordAnimatorController;
                 break;
-            case WeaponType.Gun:
-                controllerToApply = gunController;
+            case WeaponType.Gun: 
+                controllerToApply = gunAnimatorController;
                 break;
         }
 
