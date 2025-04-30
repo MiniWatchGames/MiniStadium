@@ -755,6 +755,14 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         PostureFsm?.ChangeState(defaultState, this);
 
         // 무기 설정 
+        if (_playerItems.weapon_Type == 1)
+        {
+            _playerWeapon.WeaponType = WeaponType.Gun;
+        }
+        else if (_playerItems.weapon_Type == 2) { 
+            _playerWeapon.WeaponType = WeaponType.Sword;
+        }
+
         EquipWeapon(_playerWeapon);
 
         // 구매내역에 따른 스텟 분배

@@ -21,7 +21,7 @@ public class WeaponData
 
 public class PlayerWeapon : MonoBehaviour
 {
-    [SerializeField] private WeaponType weaponType;
+    private WeaponType weaponType;
     public WeaponType WeaponType { get => weaponType; set => weaponType = value; }
     
     [SerializeField] private List<WeaponData> weaponDataList = new List<WeaponData>();

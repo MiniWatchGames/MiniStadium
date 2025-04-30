@@ -25866,7 +25866,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000056028366}
+  m_AnchoredPosition: {x: 0, y: 0.000021451928}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &584224658
@@ -83419,7 +83419,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1303005298}
         m_TargetAssemblyTypeName: RepairShop, Assembly-CSharp
         m_MethodName: OnClickRefundButton
         m_Mode: 1
