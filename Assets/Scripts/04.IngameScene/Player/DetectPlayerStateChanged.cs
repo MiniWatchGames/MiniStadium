@@ -45,7 +45,7 @@ public class DetectPlayerStateChanged : INotifyPropertyChanged
         {
             if(playerHp_Base != value)
             {
-                Debug.Log("playerHp" + value);
+                //Debug.Log("playerHp" + value);
                 playerHp_Base = value;
                 OnPropertyChanged("playerHp");
             }

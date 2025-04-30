@@ -33,7 +33,7 @@ public class SafeZone : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.localScale -= new Vector3(1f,1f,1f) * magneticShrinkSpeed * Time.deltaTime;
+        gameObject.transform.localScale -= new Vector3(1f,1f,1f) * (magneticShrinkSpeed * Time.deltaTime);
         if (gameObject.transform.localScale == Vector3.zero)
         {
             transform.localScale = DefaultScale;
@@ -50,6 +50,7 @@ public class SafeZone : MonoBehaviour
                 var entityInField = objectsInField[other.gameObject];
                 entityInField.isInField = true;
                 objectsInField[other.gameObject] = entityInField;
+                StopCoroutine(CountTimer(entityInField));
                 return;
             }
             else
@@ -60,7 +61,7 @@ public class SafeZone : MonoBehaviour
                     isInField = true,
                     outoffieldAction = () =>
                     {
-                        other.gameObject.GetComponent<PlayerController>().CurrentHp -= magneticFieldDamage;
+                        //other.gameObject.GetComponent<PlayerController>().CurrentHp -= magneticFieldDamage;
                     },
                     timer = 3f
                 });
@@ -69,14 +70,15 @@ public class SafeZone : MonoBehaviour
         }
     }
     
-    async Task CountTimer(entityInField entity)
+    IEnumerator CountTimer(entityInField entity)
     {   
         
-        await Task.Delay((int)(entity.timer * 1000));
+        yield return new WaitForSeconds(entity.timer);
         while (!entity.isInField)
         {
             entity.outoffieldAction?.Invoke();
-            await Task.Delay(1200);
+            Debug.Log("Out of field" + entity.entity.name + " " + magneticFieldDamage);
+            yield return new WaitForSeconds(1f);
         }
     }
     
@@ -87,7 +89,7 @@ public class SafeZone : MonoBehaviour
             var entityInField = objectsInField[other.gameObject];
             entityInField.isInField = false;
             objectsInField[other.gameObject] = entityInField;
-            
+            StartCoroutine(CountTimer(entityInField));
             
             //other.gameObject.GetComponent<TestStat>().ChangedHp -= magneticFieldDamage;
             //Debug.Log("OnTriggerEnter" + other.name);
