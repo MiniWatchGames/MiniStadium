@@ -33,9 +33,9 @@ public class RepairShop : MonoBehaviour
         errorMessage.SetActive(false);
         currentMoney = _startingMoney;
         UpdateMoneyText(0);
-        RepairShopStatus.init();
-        RepairShopSkill.init();
-        RepairShopWeapon.init();
+        RepairShopStatus.init(this);
+        RepairShopSkill.init(this);
+        RepairShopWeapon.init(this);
     }
 
     // 리셋 버튼 클릭 시 환불 절차

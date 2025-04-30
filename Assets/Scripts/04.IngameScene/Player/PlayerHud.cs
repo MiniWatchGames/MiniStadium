@@ -24,14 +24,21 @@ public class PlayerHud : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerStat = GameObject.FindWithTag("Player").GetComponent<TestStat>();
         _detectStat = new DetectPlayerStateChanged(playerStat);
+        
+        playerHPBar = GameObject.Find("[Image] PlayerHpSlider");
+        playerHPText = GameObject.Find("[Text] PlayerHp");
+        playerName = GameObject.Find("[Text] PlayerName");
+        playerWeapon = GameObject.Find("[GroupLayer] PlayerWeapon");
+        playerWeaponAmmo = playerWeapon.transform.GetChild(1).gameObject;
         UpdateUI();
         _detectStat.PropertyChanged += OnDetectPlayerStatChanged;
     }
 
     public void FixedUpdate()
     {
-        Debug.Log("Update" + _detectStat.playerHp);
+        
         _detectStat.playerHp = playerStat.health;
         _detectStat.playerMaxHp = playerStat.maxHealth;
     }

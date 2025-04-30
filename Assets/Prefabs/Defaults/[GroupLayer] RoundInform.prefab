@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 7647634815144249950}
   - component: {fileID: 4556685437177735599}
   m_Layer: 5
-  m_Name: '[Text] PlayerScore'
+  m_Name: '[Text] BlueTeamScore'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -408,7 +408,7 @@ GameObject:
   - component: {fileID: 4233758833125672985}
   - component: {fileID: 727609520924584436}
   m_Layer: 5
-  m_Name: '[Text] EnemyScore'
+  m_Name: '[Text] RedTeamScore'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -67,18 +67,7 @@ public class DetectPlayerStateChanged : INotifyPropertyChanged
             
         }
     }
-    public InGameManager.Team playerTeam
-    {
-        get => playerStat.team;
-        set
-        {
-            if (playerStat.team != value)
-            {
-                playerStat.team = value;
-                OnPropertyChanged("playerTeam");
-            }
-        }
-    }
+    
     
     public event PropertyChangedEventHandler PropertyChanged;
 
