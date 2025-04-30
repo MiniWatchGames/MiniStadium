@@ -6,7 +6,7 @@ using UnityEngine;
 public class BuyableObject_Status : ScriptableObject
 {
     public int type; // 0=HP 1=Armor 2=Speed
-    public string name;
+    public string statusName;
     public string description;
     
     public Color NormalColor;

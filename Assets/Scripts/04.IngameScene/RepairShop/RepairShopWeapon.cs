@@ -32,7 +32,7 @@ public class RepairShopWeapon : MonoBehaviour
         {
             var slot = Instantiate(weaponSlotPrefab, weaponSlotParent);
             var script = slot.GetComponent<RepairShopWeaponSlot>();
-            script.Init(bo, this, i++);
+            script.Init(bo, this, i++ + 1);
             RepairShopWeapons.Add(script);
         }
     }
@@ -92,7 +92,6 @@ public class RepairShopWeapon : MonoBehaviour
             
             CheckboxAlpha(false);
             currentWeapon = null;
-            RepairShopSkill.SetWeaponSkillUI(-1);
         }
         
         selectedWeapon = null;
@@ -105,6 +104,9 @@ public class RepairShopWeapon : MonoBehaviour
                 continue;
             slot.Selected(false);
         }
+        
+        if(currentWeapon == null)
+            RepairShopSkill.SetWeaponSkillUI(-1);
     }
     
     // 무기 클릭 시 정보를 읽어들이는
@@ -120,23 +122,33 @@ public class RepairShopWeapon : MonoBehaviour
 
             if (selectedWeapon == ClickedWeapon)
             {
+                RepairShop.SetDescription("", "");
                 Receipt.ResetTargetSlot(Receipt.receiptSlots[3][0],3);
                 ClickedWeapon.Selected(false);
                 selectedWeapon = null;
+                RepairShopSkill.SetWeaponSkillUI(-1);
+                Receipt.ReceiptUndo(Receipt.receiptSlots[1][0],0);
+                Receipt.ReceiptUndo(Receipt.receiptSlots[1][1],1);
             }
             else
             {
+                RepairShop.SetDescription(ClickedWeapon.nameText.text, ClickedWeapon.description);
                 selectedWeapon.Selected(false);
                 ClickedWeapon.Selected(true);
                 selectedWeapon = ClickedWeapon;
                 RepairShop.totalPrice += ClickedWeapon.price;
+                RepairShopSkill.SetWeaponSkillUI(selectedWeapon.type);
+                Receipt.ReceiptUndo(Receipt.receiptSlots[1][0],0);
+                Receipt.ReceiptUndo(Receipt.receiptSlots[1][1],1);
             }
         }
         else // 이전에 선택한 무기가 없거나, 구매된 무기인 경우
         {
+            RepairShop.SetDescription(ClickedWeapon.nameText.text, ClickedWeapon.description);
             ClickedWeapon.Selected(true);
             selectedWeapon = ClickedWeapon;
             RepairShop.totalPrice += ClickedWeapon.price;
+            RepairShopSkill.SetWeaponSkillUI(selectedWeapon.type);
         }
         Receipt.ReceiptUpdateSlot(false, 3);
         RepairShop.UpdateMoneyText(RepairShop.totalPrice);

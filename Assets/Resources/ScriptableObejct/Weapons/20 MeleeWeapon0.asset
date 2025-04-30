@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 20 MeleeWeapon0
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 24c9bae98ec00f54bbc9076f0167880b, type: 3}
-  name: "\uAC80"
+  _name: "\uAC80"
   price: 300
-  description: 
+  description: "\uB204\uAD6C\uB098 \uC544\uB294 \uADF8\uB7F0 \uAC80\uC785\uB2C8\uB2E4."
   type: 2
