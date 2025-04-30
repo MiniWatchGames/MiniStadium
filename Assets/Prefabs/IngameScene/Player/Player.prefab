@@ -2168,6 +2168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spine: {fileID: 6753021958945865193}
+  head: {fileID: 2529236042057442688}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -2179,8 +2180,8 @@ MonoBehaviour:
   defenceIncreaseAmount: 1
   moveSpeedIncreaseAmount: 0.1
   defaultState: Idle
-  rotationTarget: {fileID: 6753021958945865193}
   rotationSpeed: 2
+  rotationSmoothSpeed: 30
   minAngle: -40
   maxAngle: 80
   swordAnimatorController: {fileID: 9100000, guid: ef346e066ab4a41d2bf197b1c172ff3d,

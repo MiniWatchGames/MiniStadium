@@ -45,11 +45,12 @@ public enum StatType
 public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatObserver
 {
     [SerializeField] private Transform spine;
+    [SerializeField] private Transform head;
     [SerializeField] private LayerMask groundLayer;
 
     private CharacterController _characterController;
     private CameraController _cameraController;
-    private const float _gravity = -9.81f;
+    private const float Gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
     private bool _isDead = false;
     private PlayerItems _playerItems;
@@ -137,6 +138,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     // 카메라 관련
     [Header("Camera")]
     [SerializeField] private float rotationSpeed = 2.0f;
+    [SerializeField] private float rotationSmoothSpeed = 30f; // 회전 부드러움 정도
     [SerializeField] private float minAngle;
     [SerializeField] private float maxAngle;
     private float _yaw = 0f;
@@ -155,10 +157,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [Header("Animation")]
     [SerializeField] private RuntimeAnimatorController swordAnimatorController;
     [SerializeField] private RuntimeAnimatorController gunAnimatorController;
-    [SerializeField] private Transform aimTarget;  // 조준점
     [SerializeField] private float aimWeight = 1f; // IK 가중치 (0-1)
-    private Transform _rightHandIkTarget;
-    private Transform _leftHandIkTarget;
     private readonly int MoveSpeedHash = Animator.StringToHash("MoveSpeed");
     public Animator Animator { get; private set; }
     public bool IsGrounded
@@ -175,6 +174,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _characterController = GetComponent<CharacterController>();
         _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
+        _cameraController = Camera.main.GetComponent<CameraController>();
 
         _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
         _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
@@ -205,18 +205,15 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     private void Init()
     {
+        // 카메라 초기화
+        _cameraController.ResetCamera(head);
+        
         //구매내역 가져오기
         //_playerItems = PurchaseManager.PurchasedPlayerItems;
 
         // InputManager 구독 
         InputManager.instance.Register(this);
         
-        // 카메라 설정
-        _cameraController = Camera.main.GetComponent<CameraController>();
-        // _cameraController.SetTarget(transform);
-        // _cameraController.SetSpineTarget(rotationTarget);
-        // _cameraController.IsIdle = IsIdle;
-
         //플레이어 스텟 설정
         currentHp = new ObservableFloat(fixedFirstMaxHp, "currentHp");
         statDictionary = new Dictionary<StatType, Stat>();
@@ -264,10 +261,14 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
         //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
         //_weaponSkills = ActionFsm.AddSkillState(_playerItems.Skills[1]);
-        var myArray = new (int, string)[] { (1, "MovementSkills")  };
-        var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
-        _weaponSkills = ActionFsm.AddSkillState(myArray);
-        _movementSkills = ActionFsm.AddSkillState(myArray1);
+        
+        //----임시로 주석처리 
+        // var myArray = new (int, string)[] { (1, "MovementSkills")  };
+        // var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
+        // _weaponSkills = ActionFsm.AddSkillState(myArray);
+        // _movementSkills = ActionFsm.AddSkillState(myArray1);
+        //----
+        
         //_movementSkills = ActionFsm.AddSkillState(_playerItems.Skills[2]);
 
         
@@ -333,7 +334,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
 
         // 중력 적용
-        _velocity.y += _gravity * Time.deltaTime;
+        _velocity.y += Gravity * Time.deltaTime;
         movePosition.y = _velocity.y * Time.deltaTime;
         _characterController.Move(movePosition);
     }
@@ -342,16 +343,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         if (Animator == null) return;
         
-        // 시선 IK (머리 회전)
-        Animator.SetLookAtWeight(aimWeight);
-        Animator.SetLookAtPosition(aimTarget.position);
-        
+        var weight = _postureFsm.CurrentState == PostureState.Crouch ? 51.5f : 0f;
         // 애니메이션 이후에 상체 회전 적용
-        float spineAngle = Mathf.Clamp(_pitch, minAngle, maxAngle);
-        
+        float spineAngle = _cameraController.transform.localEulerAngles.x;
         // 상체(흉추) 회전 적용
-        Animator.SetBoneLocalRotation(HumanBodyBones.Spine, 
-            Quaternion.Euler(spineAngle, 0, 0));
+        Animator.SetBoneLocalRotation(HumanBodyBones.Spine, Quaternion.Euler(spineAngle + weight, 0, 0));
     }
 
     #region Input_Events
@@ -391,10 +387,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 마우스 감도 적용
         _yaw += delta.x * rotationSpeed;
         _pitch -= delta.y * rotationSpeed;
-
         // 수직 회전 각도 제한
         _pitch = Mathf.Clamp(_pitch, minAngle, maxAngle);
-
+        // 플레이어 몸통 전체를 yaw 방향으로 회전
+        Quaternion targetBodyRotation = Quaternion.Euler(0, _yaw, 0);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetBodyRotation, Time.deltaTime * rotationSmoothSpeed);
+        
         // 카메라 컨트롤러에 값 전달
         _cameraController.UpdateCamera(_pitch, _yaw);
     }
@@ -404,7 +402,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 점프 
         if (IsGrounded)
         {
-            _velocity.y = Mathf.Sqrt(BaseJumpPower * -2f * _gravity);
+            _velocity.y = Mathf.Sqrt(BaseJumpPower * -2f * Gravity);
             SetMovementState("Jump");
         }
     }
@@ -433,7 +431,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void OnCrouchPressed()
     {
-        // 앉기 
         SetPostureState(_postureFsm.CurrentState == PostureState.Idle ? "Crouch" : "Idle");
     }
 

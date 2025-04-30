@@ -15,8 +15,13 @@ public class GunController : MonoBehaviour
     [SerializeField] private float bulletSpeed = 100f;
     [SerializeField] private float trailDuration = 0.5f; // 시뮬레이션 지속 시간
     
+    private Camera _camera;
     private RaycastHit _hitInfo;
-    
+
+    private void Start()
+    {
+        _camera = Camera.main;
+    }
     public void Fire()
     {
         // 총구 효과
@@ -28,11 +33,11 @@ public class GunController : MonoBehaviour
         // 발사 효과음
         // AudioManager.Instance.PlaySound("GunShot", firePoint.position);
         
-        Vector3 hitPosition = firePoint.position + firePoint.forward * range;
+        Vector3 hitPosition = firePoint.position + _camera.transform.forward * range;
         bool hitTarget = false;
         
         // 레이캐스트로 타격 확인
-        if (Physics.Raycast(firePoint.position, firePoint.forward, out _hitInfo, range, targetMask))
+        if (Physics.Raycast(firePoint.position, _camera.transform.forward, out _hitInfo, range, targetMask))
         {
             hitPosition = _hitInfo.point;
             hitTarget = true;
@@ -44,10 +49,10 @@ public class GunController : MonoBehaviour
             // }
             
             // 데미지 적용
-                hitPosition = _hitInfo.point;
-                hitTarget = true;
+            hitPosition = _hitInfo.point;
+            hitTarget = true;
 
-                ApplyDamage(_hitInfo.collider.gameObject, _hitInfo.point, firePoint.forward);
+            ApplyDamage(_hitInfo.collider.gameObject, _hitInfo.point, firePoint.forward);
         }
         // 총알 궤적 시뮬레이션
         if (bulletTrailPrefab != null)
@@ -120,7 +125,7 @@ public class GunController : MonoBehaviour
         if (firePoint != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawRay(firePoint.position, firePoint.forward * range);
+            Gizmos.DrawRay(firePoint.position, _camera.transform.forward * range);
         }
     }
 #endif
