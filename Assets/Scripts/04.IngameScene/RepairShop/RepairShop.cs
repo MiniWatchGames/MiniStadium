@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using TMPro;
+using Cysharp.Threading.Tasks;
 public class RepairShop : MonoBehaviour
 {
     [SerializeField] private GameObject RepairShopUI;
@@ -17,7 +18,7 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
     [SerializeField] private RepairShopReceipt RepairShopReceipt;
-    
+    public RepairShopReceipt Receipt { get => RepairShopReceipt; }
     // 금액
     [SerializeField] private int _startingMoney = 3000;
     [SerializeField] public int currentMoney;

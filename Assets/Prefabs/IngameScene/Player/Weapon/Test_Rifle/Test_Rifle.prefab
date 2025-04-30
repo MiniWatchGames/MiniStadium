@@ -54,7 +54,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   bulletTrailPrefab: {fileID: 7217896055414789263}
-  bulletSpeed: 50
+  bulletSpeed: 120
   trailDuration: 0.2
 --- !u!1 &2346491082814373627
 GameObject:
