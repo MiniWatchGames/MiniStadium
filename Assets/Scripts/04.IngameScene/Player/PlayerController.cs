@@ -704,7 +704,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 ActionFsm.RemoveState(skill.Item1);
             }
         }
-        _movementSkills.Clear();
+        _movementSkills?.Clear();
 
         if (_weaponSkills?.Count > 0)
         {
@@ -714,7 +714,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 ActionFsm.RemoveState(skill.Item1);
             }
         }
-        _weaponSkills.Clear();
+        _weaponSkills?.Clear();
 
         if (_passiveList?.Count > 0)
         {
@@ -723,7 +723,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 Destroy((UnityEngine.Object)passive);
             }
         }
-        _passiveList.Clear();
+        _passiveList?.Clear();
         
         //스텟 초기화
         foreach(var stat in statDictionary)
