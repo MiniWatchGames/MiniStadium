@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 public class PlayerItems
@@ -15,34 +14,10 @@ public class PlayerItems
     public int count_MV = 0;
 
     public (int, string)[][] Skills = new (int, string)[3][];
-    //(0,"")일때 null
+    //(0,"")�϶� null
     // int= ID, string= name
     // [0][] = Movement skill
     // [1][] = Weapon skill
     // [2][] = Passive skill
 
-    public PlayerItems DeepCopy()
-    {
-        PlayerItems clone = (PlayerItems)this.MemberwiseClone();
-
-        // Skills 배열의 깊은 복사 수행
-        if (Skills != null)
-        {
-            clone.Skills = new (int, string)[3][];
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (Skills[i] != null)
-                {
-                    clone.Skills[i] = new (int, string)[Skills[i].Length];
-                    for(int j = 0; j < Skills[i].Length; j++)
-                    {
-                        clone.Skills[i][j] = Skills[i][j];
-                    }
-                }
-            }
-        }
-
-        return clone;
-    }
 }

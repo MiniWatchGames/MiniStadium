@@ -27,7 +27,7 @@ public class ObservableFloat : IStatPublisher
     }
 
     /// <summary>
-    /// ìƒì„±ì
+    /// »ı¼ºÀÚ
     /// </summary>
     public ObservableFloat(float result, string floatName)
     {
@@ -42,7 +42,6 @@ public class ObservableFloat : IStatPublisher
         {
             observers = new List<IStatObserver>();
         }
-        if (observers.Contains(observer)) return;
         observers.Add(observer);
     }
 

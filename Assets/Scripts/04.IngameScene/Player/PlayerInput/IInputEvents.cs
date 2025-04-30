@@ -10,16 +10,4 @@ public interface IInputEvents
     void OnFirePressed();
     void OnFireReleased();
     void OnCrouchPressed();
-
-    void OnFirstWeaponSkillPressed();
-    void OnFirstWeaponSkillReleased();
-
-    void OnSecondWeaponSkillPressed();
-    void OnSecondWeaponSkillReleased();
-
-    void OnFirstMoveSkillPressed();
-    void OnFirstMoveSkillReleased();
-
-    void OnSecondMoveSkillPressed();
-    void OnSecondMoveSkillReleased();
 }

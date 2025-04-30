@@ -13,6 +13,7 @@ public class SwordController : MonoBehaviour
     }
     
     [SerializeField] private SwordTriggerZone[] _triggerZones;
+    
     [SerializeField] private int attackPower = 10;
     [SerializeField] private LayerMask targetLayerMask;
     
@@ -109,7 +110,6 @@ public class SwordController : MonoBehaviour
             //Debug.Log($"Hit {target.name} for {attackPower} damage at {hitPoint}");
         }
     }
-    
 #if UNITY_EDITOR
     
     private void OnDrawGizmos()

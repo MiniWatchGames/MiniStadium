@@ -4,11 +4,11 @@ using UnityEngine;
 
 public interface IPassive 
 {
-    //í•„ìš”í•œ ê²ƒë§Œ ë°›ì•„ì˜¤ë ¤í–ˆì§€ë§Œ ë„ˆë¬´ ë§ê±°ë‚˜
-    // refë¥¼ ì‚¬ìš©í•˜ì§€ ëª»í•˜ëŠ” ê²½ìš°ê°€ ìƒê¸°ë¯€ë¡œ playerControllerë¥¼ í†µìœ¼ë¡œ ë„˜ê²¨ì¤€ë‹¤
+    //ÇÊ¿äÇÑ °Í¸¸ ¹Ş¾Æ¿À·ÁÇßÁö¸¸ ³Ê¹« ¸¹°Å³ª
+    // ref¸¦ »ç¿ëÇÏÁö ¸øÇÏ´Â °æ¿ì°¡ »ı±â¹Ç·Î playerController¸¦ ÅëÀ¸·Î ³Ñ°ÜÁØ´Ù
     /// <summary>
-    ///  íŒ¨ì‹œë¸Œë¥¼ ì ìš©í•˜ê¸° ìœ„í•œ ë©”ì†Œë“œ
-    ///  íŒ¨ì‹œë¸Œ ë‚´ìš©ì´ êµ¬í˜„ëœë‹¤
+    ///  ÆĞ½Ãºê¸¦ Àû¿ëÇÏ±â À§ÇÑ ¸Ş¼Òµå
+    ///  ÆĞ½Ãºê ³»¿ëÀÌ ±¸ÇöµÈ´Ù
     /// </summary>
     /// <param name="playerController">playerController</param>
     public void ApplyPassive(PlayerController playerController);

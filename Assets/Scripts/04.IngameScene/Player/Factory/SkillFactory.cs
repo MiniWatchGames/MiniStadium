@@ -1,81 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public static class SkillFactory
 {
     /// <summary>
-    /// Í≥†Î•∏ Ïä§ÌÇ¨Ïóê ÎßûÎäî Ïä§ÌÇ¨Îì§ÏùÑ ÏÉùÏÑ±Ìï¥ÏÑú Î∞òÌôò  
+    /// ∞Ì∏• Ω∫≈≥ø° ∏¬¥¬ Ω∫≈≥µÈ¿ª ª˝º∫«ÿº≠ π›»Ø  
     /// </summary>
-    /// <param name="skills"> int Ïä§ÌÇ¨Î≤àÌò∏, string Ïä§ÌÇ¨Î™Ö</param>
-    /// <param name="SkillType"> 0:Movement, 1:Weapon</param>
+    /// <param name="_aniStrategy"></param>
+    /// <param name="skillNames">Ω∫≈≥ ¿Ã∏ßµÈ¿Ã ¥„±‰ ∏ÆΩ∫∆Æ</param>
     /// <returns></returns>
-    public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm, PlayerController target, (int,string)[] skills, int SkillType)
+    public static List<(ActionState, IPlayerState)> CreateStates(this PlayerFSM<ActionState> fsm, (int,string)[] skills)
     {
-        if (skills is null) return null;
         List<(ActionState, IPlayerState)> states = new List<(ActionState, IPlayerState)>();
-
-        switch (SkillType)
+        foreach (var skillName in skills)
         {
-            case 0: //Movement
-                foreach (var skillName in skills)
-                {
-                    IPlayerState skill = null;
-                    switch (skillName.Item1)
-                    {
-                        //"MovementSkills"
-                        case 1:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
-                            break;
-                        case 2:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
-                            break;
-                        case 3:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
-                            break;
-                    }
-                }
-                return states;
-            case 1: //Weapon
-                foreach (var skillName in skills)
-                {
-                    IPlayerState skill = null;
-                    switch (skillName.Item1)
-                    {
-                        //"MovementSkills"
-                        case 1:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
-                            break;
-                        case 2:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
-                            break;
-                        case 3:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
-                            break;
-                        case 4:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
-                            break;
-                        case 5:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
-                            break;
-                        case 6:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
-                            break;
-                    }
-                }
-                return states;
+            switch (skillName.Item1)
+            {
+                //"MovementSkills"
+                case 0:
+                    states.Add(new(ActionState.MovementSkills, new MovementSkillsState()));
+                    break;
+            }
         }
-        return null;
-  
+        return states;
     }
 }

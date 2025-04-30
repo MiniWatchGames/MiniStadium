@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementSkillsState : PlayerActionState 
+public class MovementSkillsState : PlayerActionState
 {
     //이동 스킬 블루 프린트입니다
     private static int aniName;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IStatObserver 
 {
-    //Statì´ ë³€í™”ë  ë•Œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
-    //ì‚¬ìš©í•˜ë ¤ëŠ” í´ë ˆìŠ¤ì—ì„œ IStatPublisherë¥¼ ìƒì†ë°›ê³  ì´ í´ë˜ìŠ¤ë¥¼ í•´ë‹¹í•˜ëŠ” Statì˜ Obseerversì— ë“±ë¡í•´ì•¼í•¨
+    //StatÀÌ º¯È­µÉ ¶§ È£ÃâµÇ´Â ¸Ş¼Òµå
+    //»ç¿ëÇÏ·Á´Â Å¬·¹½º¿¡¼­ IStatPublisher¸¦ »ó¼Ó¹Ş°í ÀÌ Å¬·¡½º¸¦ ÇØ´çÇÏ´Â StatÀÇ Obseervers¿¡ µî·ÏÇØ¾ßÇÔ
     public void WhenStatChanged((float,string) data);  
 }

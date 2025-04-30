@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerActionState : MonoBehaviour, IPlayerState
+public class PlayerActionState : IPlayerState
 {
     protected PlayerController _playerController;
    // protected IWeaponAnimationStrategy _aniStrategy;
