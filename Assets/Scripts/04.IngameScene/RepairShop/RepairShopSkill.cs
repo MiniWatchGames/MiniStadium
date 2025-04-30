@@ -70,7 +70,7 @@ public class RepairShopSkill : MonoBehaviour
         }
     }
     
-    // 구현된 스킬 정보 로드
+    // 스킬 정보 로드
     void LoadSkillList()
     {
         BOmoveSkills = Resources.LoadAll<BuyableObject_Skill>

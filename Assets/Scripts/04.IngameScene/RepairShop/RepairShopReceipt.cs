@@ -128,7 +128,7 @@ public class RepairShopReceipt : MonoBehaviour
     }
 
     // 클릭 시 선택 취소
-    public void ReceiptUndo(ReceiptSlot slot, int index, int ID)
+    public void ReceiptUndo(ReceiptSlot slot, int index)
     {
         var type = slot.type;
         
@@ -142,7 +142,6 @@ public class RepairShopReceipt : MonoBehaviour
         // 무기 선택 해제
         if (type == 3)
         {
-            // 선택 해제
             if (RepairShopWeapon.selectedWeapon != null && RepairShopWeapon.selectedWeapon != RepairShopWeapon.currentWeapon)
             {
                 RepairShop.totalPrice -= RepairShopWeapon.selectedWeapon.price;
@@ -150,6 +149,9 @@ public class RepairShopReceipt : MonoBehaviour
                 RepairShopWeapon.selectedWeapon = null;
                 RepairShop.UpdateMoneyText(RepairShop.totalPrice);
                 ResetTargetSlot(slot, 3);
+                RepairShopSkill.SetWeaponSkillUI(-1);
+                ReceiptUndo(receiptSlots[1][0],0);
+                ReceiptUndo(receiptSlots[1][1],1);
             }
             return;
         }
