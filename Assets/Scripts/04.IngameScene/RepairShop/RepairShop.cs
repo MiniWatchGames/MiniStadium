@@ -29,7 +29,7 @@ public class RepairShop : MonoBehaviour
         errorMessage.SetActive(false);
         currentMoney = _startingMoney;
         UpdateMoneyText(0);
-        RepairShopStatus.init();
+        RepairShopStatus.init(this);
         RepairShopSkill.init(this);
         RepairShopWeapon.init(this);
     }
