@@ -19,12 +19,13 @@ public class Timer : MonoBehaviour
     public TimerType timerType;
     public float timeLimit;
     public float currentTime;
-
+    public RepairShopTimer repairShopTimer;
     private bool _isPaused;
     // Start is called before the first frame update
     void Start()
     {
         ResetTimer();
+        repairShopTimer = GameObject.FindObjectOfType<RepairShopTimer>();
         _isPaused = false;
     }
 
@@ -35,6 +36,7 @@ public class Timer : MonoBehaviour
         if (timerType == TimerType.Decrease)
         {
             currentTime -=  Time.deltaTime * 2f;
+            repairShopTimer.time = currentTime;
             if (currentTime <= 0)
             {
                 OnTimerEndDelegate?.Invoke();
@@ -50,7 +52,7 @@ public class Timer : MonoBehaviour
             }
             
         }
-        //timer.fillAmount = currentTime/timeLimit;
+        timer.fillAmount = currentTime/timeLimit;
         text.text = FormatSeconds(currentTime);
     }
     public void ResetTimer()

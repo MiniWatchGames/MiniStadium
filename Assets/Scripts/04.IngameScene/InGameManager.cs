@@ -153,6 +153,7 @@ public class InGameManager : MonoBehaviour
         if (currentRoundState == RoundState.RoundStart)
         {
             RepairShopUI.SetActive(true);
+            
             SetWinLoseState(WinLoseState.Default);
         }
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
