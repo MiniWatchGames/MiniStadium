@@ -101,12 +101,12 @@ public class InGameManager : MonoBehaviour
             case RoundState.RoundStart:
                 //Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
-                SetGameTime(10, RoundState.InRound);
+                SetGameTime(5, RoundState.InRound);
                 break;
             case RoundState.InRound:
                 //Debug.Log("In Round");
                 currentRoundState = RoundState.InRound;
-                SetGameTime(120, RoundState.RoundEnd);
+                SetGameTime(5, RoundState.RoundEnd);
                 break;
             case RoundState.RoundEnd:
                 //Debug.Log("Round End");
