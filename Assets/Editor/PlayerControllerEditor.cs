@@ -109,7 +109,20 @@ public class PlayerControllerEditor : Editor
         EditorGUILayout.LabelField("현재 상태", playerController?.MovementFsm?.CurrentState.ToString(), EditorStyles.boldLabel);
         EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
 
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        EditorGUILayout.LabelField("플레이어 스탯", EditorStyles.boldLabel);
+        if (UnityEditor.EditorApplication.isPlaying) {
+            EditorGUILayout.LabelField($"weapon    : {playerController?.PlayerWeapon?.CurrentWeapon}");
+            EditorGUILayout.LabelField($"HP        : {playerController?.CurrentHp} / {playerController?.BaseMaxHp}");
+            EditorGUILayout.LabelField($"Defence   : {playerController?.BaseDefence}");
+            EditorGUILayout.LabelField($"Jump Power: {playerController?.BaseJumpPower}");
+            EditorGUILayout.LabelField($"Move Speed: {playerController?.BaseMoveSpeed}");
+        }
+
+        EditorGUILayout.EndVertical();
 
     }
 

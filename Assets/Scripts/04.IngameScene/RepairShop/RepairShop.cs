@@ -17,7 +17,7 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
     [SerializeField] private RepairShopReceipt RepairShopReceipt;
-    
+    public RepairShopReceipt Receipt { get => RepairShopReceipt; }
     // 금액
     [SerializeField] private int _startingMoney = 3000;
     [SerializeField] public int currentMoney;

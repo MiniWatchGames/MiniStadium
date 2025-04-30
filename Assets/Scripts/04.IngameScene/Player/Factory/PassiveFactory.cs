@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PassiveFactory : MonoBehaviour
+public class PassiveFactory 
 {
-    //ÀÛ¼ºÀÌ ¿Ï·áµÈ ÆĞ½ÃºêÅ¬·¡½º¸¦ ÀÌ°÷¿¡ Ãß°¡½ÃÄÑÁÖ¾î¾ß ÇÔ
-    public void CreatePassive(PlayerController target, (int, string)[] passiveNames) {
-        foreach (var passiveName in passiveNames) {
-            switch (passiveName.Item1) {
+    //ì‘ì„±ì´ ì™„ë£Œëœ íŒ¨ì‹œë¸Œí´ë˜ìŠ¤ë¥¼ ì´ê³³ì— ì¶”ê°€ì‹œì¼œì£¼ì–´ì•¼ í•¨
+    public void CreatePassive(PlayerController target, (int, string)[] passives) {
+        if(passives is null) return;
+        foreach (var passive in passives) {
+            switch (passive.Item1) {
                 //"HpRegenerationPassive"
-                case 0: 
+                case 1: 
                     target.PassiveList.Add(target.AddComponent<HpRegenerationPassive>());
                 break;
-
                 //"IncreasingRandomStatEvery20Seconds"
-                case 1:
+                case 2:
                     target.PassiveList.Add(target.AddComponent<IncreasingRandomStatEvery20Seconds>());
                 break;
             }

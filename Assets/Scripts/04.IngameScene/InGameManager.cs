@@ -62,6 +62,10 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private Timer gameTimer;
     [SerializeField] private TestStat player;
     [SerializeField] private TestStat Enemy;
+    [SerializeField] private GameObject PlayerPrefab;
+    private GameObject _playerPrefab;
+
+
     [SerializeField] public int currentRound = 0;
     public int BlueWinCount = 0;
     public int RedWinCount = 0;
@@ -102,12 +106,12 @@ public class InGameManager : MonoBehaviour
             case RoundState.RoundStart:
                 Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
-                SetGameTime(20, RoundState.InRound);
+                SetGameTime(100, RoundState.InRound);
                 break;
             case RoundState.InRound:
                 Debug.Log("In Round");
                 currentRoundState = RoundState.InRound;
-                SetGameTime(20, RoundState.RoundEnd);
+                SetGameTime(120, RoundState.RoundEnd);
                 break;
             case RoundState.RoundEnd:
                 Debug.Log("Round End");
@@ -224,6 +228,16 @@ public class InGameManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.B) && currentRoundState ==  RoundState.RoundStart)
         {
+            PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
+            if (_playerPrefab == null)
+            {
+                _playerPrefab = Instantiate(PlayerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            }
+            else { 
+                var player = _playerPrefab.GetComponent<PlayerController>();
+                player.ResetCharacter();
+                player.ReInit();
+            }
             RepairShopUI.SetActive(!RepairShopUI.activeSelf);
         }
         
@@ -295,3 +309,4 @@ public class InGameManager : MonoBehaviour
         RedWinCount = 0;
     }
 }
+
