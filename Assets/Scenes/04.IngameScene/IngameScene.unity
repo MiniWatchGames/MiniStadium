@@ -28978,7 +28978,6 @@ GameObject:
   - component: {fileID: 560846254}
   - component: {fileID: 560846256}
   - component: {fileID: 560846255}
-  - component: {fileID: 560846257}
   m_Layer: 5
   m_Name: '[Panel]PlayerHud'
   m_TagString: Untagged
@@ -29040,22 +29039,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 560846253}
   m_CullTransparentMesh: 1
---- !u!114 &560846257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 560846253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7162ae6848252c84892450e9b6795964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RoundCount: {fileID: 1568700562}
-  BlueWinCount: {fileID: 1885192356}
-  RedWinCount: {fileID: 1885192355}
-  inGameManager: {fileID: 0}
 --- !u!1 &562447903
 GameObject:
   m_ObjectHideFlags: 0
@@ -44358,6 +44341,10 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8408206433110112542, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 811303133}
     - targetCorrespondingSourceObject: {fileID: 9045089916022933202, guid: 4e2f70a69d3144d4a9b7d04427bad570,
         type: 3}
       insertIndex: -1
@@ -44411,6 +44398,22 @@ MonoBehaviour:
   timeLimit: 0
   currentTime: 0
   repairShopTimer: {fileID: 0}
+--- !u!114 &811303133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811303129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7162ae6848252c84892450e9b6795964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RoundCount: {fileID: 1568700562}
+  BlueWinCount: {fileID: 1885192356}
+  RedWinCount: {fileID: 1885192355}
+  inGameManager: {fileID: 0}
 --- !u!1 &811994740
 GameObject:
   m_ObjectHideFlags: 0
@@ -118069,7 +118072,7 @@ PrefabInstance:
         type: 3}
       propertyPath: GameRoundInfoUI
       value: 
-      objectReference: {fileID: 811303129}
+      objectReference: {fileID: 904119540}
     - target: {fileID: 5789351672964011462, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
       propertyPath: m_Name

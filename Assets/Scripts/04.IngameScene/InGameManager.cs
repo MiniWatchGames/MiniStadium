@@ -84,12 +84,12 @@ public class InGameManager : MonoBehaviour
             case GameState.InGame:
                 //Debug.Log("In Game");
                 currentGameState = GameState.InGame;
-                GameRoundInfoUI.GetComponent<TMP_Text>().text = "Game Start";
+                
                 break;
             case GameState.EndGame:
                // Debug.Log("End Game");
                 currentGameState = GameState.EndGame;
-                GameRoundInfoUI.GetComponent<TMP_Text>().text = "Game Start";
+                
                 break;
         }
     }
@@ -99,6 +99,7 @@ public class InGameManager : MonoBehaviour
         switch (state)
         {
             case RoundState.RoundStart:
+                GameRoundInfoUI.gameObject.SetActive(false);
                 //Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
                 SetGameTime(5, RoundState.InRound);
@@ -112,8 +113,15 @@ public class InGameManager : MonoBehaviour
                 //Debug.Log("Round End");
                 currentRoundState = RoundState.RoundEnd;
                 currentRound++;
+                GameRoundInfoUI.gameObject.SetActive(true);
+                if(BlueWinCount == 4 || RedWinCount == 4)
+                {
+                    SetGameState(GameState.EndGame);
+                }
+                
                 if (currentGameState == GameState.EndGame)
                 {
+                    
                     //TODO: 이겼는지 졌는지 UI 띄우기
                 }
                 SetGameTime(5, RoundState.RoundStart);
@@ -215,14 +223,6 @@ public class InGameManager : MonoBehaviour
         {
             RepairShopUI.SetActive(!RepairShopUI.activeSelf);
         }
-        
-        if(currentRound == 7 && currentRoundState == RoundState.RoundEnd)
-        {
-            SetGameState(GameState.EndGame);
-        }
-        
-        
-        
     }
 
     //플레이어가 죽을때 또는 죽였을 때 호출되야한다.

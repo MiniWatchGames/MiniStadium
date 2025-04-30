@@ -13,15 +13,24 @@ public struct entityInField
     public Action outoffieldAction;
     public float timer;
 } 
+
 public class SafeZone : MonoBehaviour
 {
     public Collider magneticFieldCollider;
     public Vector3 DefaultScale = new Vector3(100, 100, 100);
+    private float defaultShrinkSpeed = 1f;
+    private float defaultMagneticFieldDamage = 1f;
+    
+    
     public float magneticShrinkSpeed = 2f;
-    private Dictionary<GameObject, entityInField> objectsInField = new Dictionary<GameObject, entityInField>();
     public float magneticFieldDamage = 1f;
-    public Action onMagneticFieldDamage;
-    private Task _task;
+    
+    private Dictionary<GameObject, entityInField> objectsInField = new Dictionary<GameObject, entityInField>();
+    private Dictionary<GameObject, Coroutine> activeCoroutines = new Dictionary<GameObject, Coroutine>();
+    
+    
+   
+    
     //public HashSet<GameObject> objectsInField = new HashSet<GameObject>();
     // Start is called before the first frame update
     void Start()
@@ -40,6 +49,12 @@ public class SafeZone : MonoBehaviour
         }
     }
 
+    public void Reset()
+    {
+        transform.localScale = DefaultScale;
+        magneticShrinkSpeed = defaultShrinkSpeed;
+        magneticFieldDamage = defaultMagneticFieldDamage;
+    }
     public void OnTriggerEnter(Collider other)
     {
         Debug.Log("OnTriggerEnter" + other.name);
@@ -50,7 +65,11 @@ public class SafeZone : MonoBehaviour
                 var entityInField = objectsInField[other.gameObject];
                 entityInField.isInField = true;
                 objectsInField[other.gameObject] = entityInField;
-                StopCoroutine(CountTimer(entityInField));
+                if (activeCoroutines.ContainsKey(other.gameObject))
+                {
+                    StopCoroutine(activeCoroutines[other.gameObject]);
+                    //activeCoroutines.Remove(other.gameObject);
+                }
                 return;
             }
             else
@@ -89,7 +108,11 @@ public class SafeZone : MonoBehaviour
             var entityInField = objectsInField[other.gameObject];
             entityInField.isInField = false;
             objectsInField[other.gameObject] = entityInField;
-            StartCoroutine(CountTimer(entityInField));
+            if (activeCoroutines.ContainsKey(other.gameObject))
+            {
+                StopCoroutine(activeCoroutines[other.gameObject]);
+            }
+            activeCoroutines[other.gameObject] = StartCoroutine(CountTimer(objectsInField[other.gameObject]));
             
             //other.gameObject.GetComponent<TestStat>().ChangedHp -= magneticFieldDamage;
             //Debug.Log("OnTriggerEnter" + other.name);
