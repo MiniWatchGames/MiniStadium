@@ -76,6 +76,7 @@ public class SafeZone : MonoBehaviour
         while (!entity.isInField)
         {
             entity.outoffieldAction?.Invoke();
+            await Task.Delay(1200);
         }
     }
     
@@ -86,14 +87,7 @@ public class SafeZone : MonoBehaviour
             var entityInField = objectsInField[other.gameObject];
             entityInField.isInField = false;
             objectsInField[other.gameObject] = entityInField;
-            if (_task == null)
-            {
-                _task = CountTimer(entityInField);
-            }
-            else
-            {
-                _task = CountTimer(entityInField);
-            }
+            
             
             //other.gameObject.GetComponent<TestStat>().ChangedHp -= magneticFieldDamage;
             //Debug.Log("OnTriggerEnter" + other.name);
