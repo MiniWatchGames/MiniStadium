@@ -24,12 +24,16 @@ public class RepairShop : MonoBehaviour
     [SerializeField] public int totalPrice = 0;
     [SerializeField] public TMP_Text currentMoneyText;
     
+    // 설명 란
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private TMP_Text descriptionText;
+    
     void Start()
     {
         errorMessage.SetActive(false);
         currentMoney = _startingMoney;
         UpdateMoneyText(0);
-        RepairShopStatus.init(this);
+        RepairShopStatus.init();
         RepairShopSkill.init(this);
         RepairShopWeapon.init(this);
     }
@@ -48,6 +52,7 @@ public class RepairShop : MonoBehaviour
         RepairShopWeapon.WeaponShopReset(true);
         RepairShopSkill.SkillShopReset(true);
         RepairShopReceipt.ReceiptRefundAll();
+        SetDescription("","");
         ResetPrice();
     }
     
@@ -77,6 +82,7 @@ public class RepairShop : MonoBehaviour
             RepairShopStatus.StatusPurchasing();
             RepairShopSkill.BuyingSkill();
             RepairShopReceipt.ReceiptUpdateSlot(true, 0);
+            SetDescription("","");
             
             ResetPrice();
         }
@@ -85,5 +91,11 @@ public class RepairShop : MonoBehaviour
             errorMessage.GetComponent<TextMeshProUGUI>().text = "자금이 부족합니다.";
             errorMessage.SetActive(true);
         }
+    }
+
+    public void SetDescription(string name, string description)
+    {
+        nameText.text = name;
+        descriptionText.text = description;
     }
 }

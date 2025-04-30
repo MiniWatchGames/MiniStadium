@@ -62,7 +62,7 @@ public class RepairShopSkill : MonoBehaviour
             {
                 var slot = Instantiate(skillSlot, parents[i]);
                 var script = slot.GetComponent<RepairShopSkillSlot>();
-                script.Init(skillGroups[i][j], this, j);
+                script.Init(skillGroups[i][j], this, j+1);
                 repairShopSkills[i][j] = slot;
 
                 if (i == 1) slot.SetActive(false);
@@ -70,7 +70,7 @@ public class RepairShopSkill : MonoBehaviour
         }
     }
     
-    // 구현된 스킬 정보 로드
+    // 스킬 정보 로드
     void LoadSkillList()
     {
         BOmoveSkills = Resources.LoadAll<BuyableObject_Skill>
@@ -117,6 +117,7 @@ public class RepairShopSkill : MonoBehaviour
                 }
                 
                 RepairShop.UpdateMoneyText(RepairShop.totalPrice);
+                RepairShop.SetDescription("","");
                 return;
             }
         }
@@ -140,6 +141,7 @@ public class RepairShopSkill : MonoBehaviour
                 remainingSkillsToBuy[type]--; // 선택 시 남은 선택 가능 횟수 감소
                 Receipt.ReceiptUpdateSlot(false, type);
                 RepairShop.UpdateMoneyText(RepairShop.totalPrice);
+                RepairShop.SetDescription(clicked.nameText.text, clicked.description);
                 return;
             }
         }
@@ -150,9 +152,7 @@ public class RepairShopSkill : MonoBehaviour
         remainingSkillsToBuy[type]++; // 선택 해제시 남은 선택 가능 횟수 증가
 
         for (int i = 1; i < maxPerType[type]; i++)
-        {
             selectedSkills[type][i - 1] = selectedSkills[type][i];
-        }
 
         selectedSkills[type][maxPerType[type] - 1] = clicked;
         clicked.Selected(true);
@@ -161,6 +161,7 @@ public class RepairShopSkill : MonoBehaviour
 
         Receipt.ReceiptUpdateSlot(false, type);
         RepairShop.UpdateMoneyText(RepairShop.totalPrice);
+        RepairShop.SetDescription(clicked.nameText.text, clicked.description);
     }
     
     // 스킬 구매 처리
@@ -212,7 +213,7 @@ public class RepairShopSkill : MonoBehaviour
             {
                 if (selectedSkills[i][j] != null)
                 {
-                    selectedSkills[i][j].Selected(refunding ? false : selectedSkills[i][j].isBought);
+                    selectedSkills[i][j].Selected(!refunding && selectedSkills[i][j].isBought);
                     selectedSkills[i][j] = null;
                 }
             }

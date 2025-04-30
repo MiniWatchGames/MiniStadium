@@ -15,7 +15,7 @@ public class RepairShopWeaponSlot : MonoBehaviour
     [SerializeField] public int type;
     [SerializeField] public int index;
     [SerializeField] public int price;
-    [SerializeField] private string description;
+    [SerializeField] public string description;
     
     public void Init(BuyableObject_Weapon BOdata, RepairShopWeapon manager, int _index)
     {

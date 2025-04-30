@@ -15,7 +15,7 @@ public class RepairShopSkillSlot : MonoBehaviour
     [SerializeField] public int weaponType;
     [SerializeField] public int index;
     [SerializeField] public int price;
-    [SerializeField] private string description;
+    [SerializeField] public string description;
     
     [SerializeField] public GameObject checkbox;
     [SerializeField] public bool isBought = false;

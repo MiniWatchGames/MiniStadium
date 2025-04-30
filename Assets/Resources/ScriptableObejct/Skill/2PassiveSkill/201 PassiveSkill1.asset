@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: 201 PassiveSkill1
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: ad53cd0fe3a08294b985fed6bca2039c, type: 3}
-  name: "\uD328\uC2DC\uBE0C\uC2A4\uD0AC1"
+  _name: "\uD328\uC2DC\uBE0C1"
   price: 300
-  description: 
+  description: "\uD328\uC2DC\uBE0C \uC2A4\uD0AC 1 \uD328\uC2DC\uBE0C \uC2A4\uD0AC
+    1 \uD328\uC2DC\uBE0C \uC2A4\uD0AC 1"
   skillType: 2
   weaponType: 0
