@@ -64,8 +64,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     // --------
     // 스탯 관련
-    [Header("Stat")]
-    [SerializeField] private float fixedFirstMaxHp;
+    [Header("Stat")] [SerializeField] private float fixedFirstMaxHp;
     [SerializeField] private float fixedFirstDefence;
     [SerializeField] private float fixedFirstMoveSpeed;
     [SerializeField] private float fixedFirstJumpPower;
@@ -89,6 +88,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private Dictionary<StatType, Stat> statDictionary;
 
     private ObservableFloat currentHp;
+
     public float CurrentHp
     {
         get => currentHp.Value;
@@ -108,8 +108,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     // --------
     // 패시브 스킬관련
-    [Header("Passive_Skill")]
-    private PassiveFactory _passiveFactory;
+    [Header("Passive_Skill")] private PassiveFactory _passiveFactory;
     private List<IPassive> _passiveList;
 
     public PassiveFactory PassiveFactory => _passiveFactory;
@@ -121,51 +120,65 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private string _firstWeaponSkill;
     private string _secondWeaponSkill;
     private string _firstMoveSkill;
+
     private string _secondMoveSkill;
+
     // --------
     // 상태 관련
-    [Header("FSM")]
-    private PlayerFSM<MovementState> _movementFsm;
+    [Header("FSM")] private PlayerFSM<MovementState> _movementFsm;
     private PlayerFSM<PostureState> _postureFsm;
     private PlayerFSM<ActionState> _actionFsm;
     [SerializeField] private string defaultState;
 
-    public PlayerFSM<MovementState> MovementFsm { get => _movementFsm; }
-    public PlayerFSM<PostureState> PostureFsm { get => _postureFsm; }
-    public PlayerFSM<ActionState> ActionFsm { get => _actionFsm; }
+    public PlayerFSM<MovementState> MovementFsm
+    {
+        get => _movementFsm;
+    }
+
+    public PlayerFSM<PostureState> PostureFsm
+    {
+        get => _postureFsm;
+    }
+
+    public PlayerFSM<ActionState> ActionFsm
+    {
+        get => _actionFsm;
+    }
 
     // --------
     // 카메라 관련
-    [Header("Camera")]
-    [SerializeField] private float rotationSpeed = 2.0f;
+    [Header("Camera")] [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float rotationSmoothSpeed = 30f; // 회전 부드러움 정도
     [SerializeField] private float minAngle;
     [SerializeField] private float maxAngle;
     private float _yaw = 0f;
     private float _pitch = 0f;
 
-    [Header("Weapon")]
-    private PlayerWeapon _playerWeapon;
-    public PlayerWeapon PlayerWeapon { get => _playerWeapon; }
+    [Header("Weapon")] private PlayerWeapon _playerWeapon;
 
-    [Header("Combat")]
-    private CombatManager _combatManager;
-    public CombatManager CombatManager { get => _combatManager; }
+    public PlayerWeapon PlayerWeapon
+    {
+        get => _playerWeapon;
+    }
+
+    [Header("Combat")] private CombatManager _combatManager;
+
+    public CombatManager CombatManager
+    {
+        get => _combatManager;
+    }
 
     // --------
     // 애니메이션 관련 
-    [Header("Animation")]
-    [SerializeField] private RuntimeAnimatorController swordAnimatorController;
+    [Header("Animation")] [SerializeField] private RuntimeAnimatorController swordAnimatorController;
     [SerializeField] private RuntimeAnimatorController gunAnimatorController;
     [SerializeField] private float aimWeight = 1f; // IK 가중치 (0-1)
     private readonly int MoveSpeedHash = Animator.StringToHash("MoveSpeed");
     public Animator Animator { get; private set; }
+
     public bool IsGrounded
     {
-        get
-        {
-            return GetDistanceToGround() <= 0.03f;
-        }
+        get { return GetDistanceToGround() <= 0.03f; }
     }
 
     private void Awake()
@@ -207,13 +220,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         // 카메라 초기화
         _cameraController.ResetCamera(head);
-        
+
         //구매내역 가져오기
         //_playerItems = PurchaseManager.PurchasedPlayerItems;
 
         // InputManager 구독 
         InputManager.instance.Register(this);
-        
+
         //플레이어 스텟 설정
         currentHp = new ObservableFloat(fixedFirstMaxHp, "currentHp");
         statDictionary = new Dictionary<StatType, Stat>();
@@ -225,10 +238,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         statDictionary.Add(StatType.MoveSpeed, baseMoveSpeed);
         baseJumpPower = new Stat(fixedFirstJumpPower, "baseJumpPower");
         statDictionary.Add(StatType.JumpPower, baseJumpPower);
-        
+
         // 무기 설정 
         EquipWeapon(_playerWeapon);
-        
+
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
@@ -261,17 +274,17 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
         //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
         //_weaponSkills = ActionFsm.AddSkillState(_playerItems.Skills[1]);
-        
+
         //----임시로 주석처리 
         // var myArray = new (int, string)[] { (1, "MovementSkills")  };
         // var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
         // _weaponSkills = ActionFsm.AddSkillState(myArray);
         // _movementSkills = ActionFsm.AddSkillState(myArray1);
         //----
-        
+
         //_movementSkills = ActionFsm.AddSkillState(_playerItems.Skills[2]);
 
-        
+
         _isDead = false;
 
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
@@ -282,10 +295,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         _movementFsm.ChangeState(stateName, this);
     }
+
     public void SetPostureState(string stateName)
     {
         _postureFsm.ChangeState(stateName, this);
     }
+
     public void SetActionState(string stateName)
     {
         _actionFsm.ChangeState(stateName, this);
@@ -302,17 +317,17 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         _combatManager.CurrentWeapon = _playerWeapon.CurrentWeapon;
     }
-    
+
     // 데이지 계산
     public void TakeDamage(DamageInfo damageInfo)
     {
         // todo : 데미지 적용 식 정해야 함
-        
+
         // 자기 자신이면 데미지 입지 않음
         var rootTransform = damageInfo.attacker.transform.root;
         var rootObject = rootTransform.gameObject;
         if (rootObject == gameObject) return;
-        
+
         var damage = damageInfo.damage;
         currentHp.Value -= damage;
         Debug.Log($"current Hp = {currentHp.Value}");
@@ -338,19 +353,39 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         movePosition.y = _velocity.y * Time.deltaTime;
         _characterController.Move(movePosition);
     }
-    
+
     private void OnAnimatorIK(int layerIndex)
     {
         if (Animator == null) return;
+
+        // 현재 Spine 본의 애니메이션 회전값을 가져오기
+        Transform spineBone = Animator.GetBoneTransform(HumanBodyBones.Spine);
+        if (spineBone == null) return;
+    
+        // 애니메이션의 현재 회전
+        Quaternion animatedRotation = spineBone.localRotation;
         
-        var weight = _postureFsm.CurrentState == PostureState.Crouch ? 51.5f : 0f;
-        // 애니메이션 이후에 상체 회전 적용
-        float spineAngle = _cameraController.transform.localEulerAngles.x;
-        // 상체(흉추) 회전 적용
-        Animator.SetBoneLocalRotation(HumanBodyBones.Spine, Quaternion.Euler(spineAngle + weight, 0, 0));
+        // 애니메이션의 Y 및 Z 회전만 추출
+        Vector3 animEuler = animatedRotation.eulerAngles;
+    
+        // 현재 애니메이션의 X 회전 (정규화)
+        float animX = animEuler.x;
+        if (animX > 180f) animX -= 360f;
+    
+        // 최종 X 회전
+        float combinedX = animX + _pitch;
+    
+        // X 회전 클램프 적용
+        float clampedX = Mathf.Clamp(combinedX, minAngle, maxAngle);
+    
+        // 최종 회전 생성
+        Quaternion finalRotation = Quaternion.Euler(clampedX, 0, 0);
+    
+        // 최종 회전 적용
+        Animator.SetBoneLocalRotation(HumanBodyBones.Spine, finalRotation);
     }
 
-    #region Input_Events
+#region Input_Events
 
     public void OnMove(Vector2 input)
     {
