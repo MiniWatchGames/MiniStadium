@@ -89,7 +89,7 @@ public class InGameManager : MonoBehaviour
             case GameState.EndGame:
                // Debug.Log("End Game");
                 currentGameState = GameState.EndGame;
-                
+                SceneManager.LoadScene("MainmenuScene");
                 break;
         }
     }
@@ -222,6 +222,11 @@ public class InGameManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.B) && currentRoundState ==  RoundState.RoundStart)
         {
             RepairShopUI.SetActive(!RepairShopUI.activeSelf);
+        }
+
+        if (currentRound == 3)
+        {
+            SetGameState(GameState.EndGame);
         }
     }
 
