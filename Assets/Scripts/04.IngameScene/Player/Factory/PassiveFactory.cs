@@ -5,17 +5,17 @@ using UnityEngine;
 
 public class PassiveFactory : MonoBehaviour
 {
-    //ÀÛ¼ºÀÌ ¿Ï·áµÈ ÆÐ½ÃºêÅ¬·¡½º¸¦ ÀÌ°÷¿¡ Ãß°¡½ÃÄÑÁÖ¾î¾ß ÇÔ
+    //ï¿½Û¼ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ ï¿½Ð½Ãºï¿½Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì°ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½
     public void CreatePassive(PlayerController target, (int, string)[] passiveNames) {
         foreach (var passiveName in passiveNames) {
             switch (passiveName.Item1) {
                 //"HpRegenerationPassive"
-                case 0: 
+                case 1: 
                     target.PassiveList.Add(target.AddComponent<HpRegenerationPassive>());
                 break;
 
                 //"IncreasingRandomStatEvery20Seconds"
-                case 1:
+                case 2:
                     target.PassiveList.Add(target.AddComponent<IncreasingRandomStatEvery20Seconds>());
                 break;
             }

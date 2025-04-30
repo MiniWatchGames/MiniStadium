@@ -31,11 +31,11 @@ public class InGameRoundUI : MonoBehaviour
         inGameUIDetect.GameRound = inGameManager.currentRound;
         inGameUIDetect.BlueWinCount = inGameManager.BlueWinCount;
         inGameUIDetect.RedWinCount = inGameManager.RedWinCount;
-        Debug.Log("UIUpdate");
+        //Debug.Log("UIUpdate");
     }
     private void OnIngameChanged(object sender, PropertyChangedEventArgs e)
     {
-        Debug.Log("functioning");
+        //Debug.Log("functioning");
         switch (e.PropertyName)
         {
             case "GameRound":

@@ -94,19 +94,17 @@ public class Timer : MonoBehaviour
         int seconds = (int)(elapsed % 60);
             
         
-        if (elapsed < 60)
+        if (5f <elapsed  && elapsed < 60f)
         {
             minutes = 0;
             seconds = (int)(elapsed % 60);
             return $"{minutes:00}:{seconds:00}";
         }
 
-        // if (elapsed < 5)
-        // {
-        //     seconds = (int)(elapsed % 60);
-        //     float hundredths = elapsed%100;
-        //     return $"{seconds:00}.{hundredths:00}";
-        // }
+        if (elapsed < 5f)
+        {
+            return $"{elapsed:F2}";
+        }
        
         return $"{minutes:00}:{seconds:00}";
         

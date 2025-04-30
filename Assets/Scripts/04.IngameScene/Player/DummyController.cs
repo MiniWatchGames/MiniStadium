@@ -7,30 +7,34 @@ public class DummyController : MonoBehaviour, IDamageable
 {
     private int _currentHp;
     public Action<GameObject> OnDieCallBack;
-    private int CurrentHp
+    public int CurrentHp
     {
         get => _currentHp;
         set
         {
-            if (CurrentHp < 0) CurrentHp = 0;
-            OnDieCallBack.Invoke(gameObject);
+            if (CurrentHp <= 0)
+            {
+                //CurrentHp = 0;
+                OnDieCallBack.Invoke(gameObject);
+            }
+            
             Debug.Log($"dummy is dead");
         }
     }
-
+    
     private void Start()
     {
         CurrentHp = 100;
     }
-
+    
     public void TakeDamage(DamageInfo damageInfo)
     {
         var damage = damageInfo.damage;
-        CurrentHp -= damage;
-        Debug.Log($"current Hp = {CurrentHp}");
+        //CurrentHp -= damage;
+       // Debug.Log($"current Hp = {CurrentHp}");
     }
-    public void ResetHp()
-    {
-        CurrentHp = 100;
-    }
+    // public void ResetHp()
+    // {
+    //     CurrentHp = 100;
+    // }
 }

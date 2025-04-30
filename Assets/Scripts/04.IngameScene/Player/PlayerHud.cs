@@ -50,7 +50,7 @@ public class PlayerHud : MonoBehaviour
     // Update is called once per frame
     private void OnDetectPlayerStatChanged(object sender, PropertyChangedEventArgs e)
     {
-        Debug.Log("functioning");
+        //Debug.Log("functioning");
         if(e.PropertyName == "playerHp")
         {
             playerHPBar.GetComponent<Image>().fillAmount = _detectStat.playerHp / _detectStat.playerMaxHp;

@@ -45,7 +45,7 @@ public enum StatType
 public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatObserver
 {
     [SerializeField] private LayerMask groundLayer;
-
+    
     private CharacterController _characterController;
     private CameraController _cameraController;
     private const float _gravity = -9.81f;
@@ -196,7 +196,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         DrawRay();
     }
 
-    private void Init()
+    public void Init()
     {
         //구매내역 가져오기
         //_playerItems = PurchaseManager.PurchasedPlayerItems;
@@ -249,6 +249,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _passiveList = new List<IPassive>();
         //임시, 구매내역이라 치고 작성
         //_passiveFactory.CreatePassive(this, _playerItems.Skills[0]);
+        var myArray2 = new (int, string)[] { (1, "HpRegenerationPassive") };
+        _passiveFactory.CreatePassive(this, myArray2);
         foreach (var passive in PassiveList)
         {
             passive.ApplyPassive(this);

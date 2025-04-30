@@ -60,8 +60,7 @@ public class InGameManager : MonoBehaviour
     Dictionary<GameObject, List<Spawner>> mapSpawners = new Dictionary<GameObject, List<Spawner>>();
     Dictionary<GameObject,Team> teamDictionary = new Dictionary<GameObject,Team>();
     [SerializeField] private Timer gameTimer;
-    [SerializeField] private TestStat player;
-    [SerializeField] private TestStat Enemy;
+    
     [SerializeField] public int currentRound = 0;
     public int BlueWinCount = 0;
     public int RedWinCount = 0;
@@ -78,17 +77,17 @@ public class InGameManager : MonoBehaviour
         switch (state)
         {
             case GameState.StartGame:
-                Debug.Log("Start Game");
+                //Debug.Log("Start Game");
                 currentGameState = GameState.StartGame;
                 SetRoundState(RoundState.RoundStart);
                 break;
             case GameState.InGame:
-                Debug.Log("In Game");
+                //Debug.Log("In Game");
                 currentGameState = GameState.InGame;
                 GameRoundInfoUI.GetComponent<TMP_Text>().text = "Game Start";
                 break;
             case GameState.EndGame:
-                Debug.Log("End Game");
+               // Debug.Log("End Game");
                 currentGameState = GameState.EndGame;
                 GameRoundInfoUI.GetComponent<TMP_Text>().text = "Game Start";
                 break;
@@ -100,17 +99,17 @@ public class InGameManager : MonoBehaviour
         switch (state)
         {
             case RoundState.RoundStart:
-                Debug.Log("Round Start");
+                //Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
-                SetGameTime(20, RoundState.InRound);
+                SetGameTime(10, RoundState.InRound);
                 break;
             case RoundState.InRound:
-                Debug.Log("In Round");
+                //Debug.Log("In Round");
                 currentRoundState = RoundState.InRound;
                 SetGameTime(120, RoundState.RoundEnd);
                 break;
             case RoundState.RoundEnd:
-                Debug.Log("Round End");
+                //Debug.Log("Round End");
                 currentRoundState = RoundState.RoundEnd;
                 currentRound++;
                 if (currentGameState == GameState.EndGame)
@@ -127,17 +126,17 @@ public class InGameManager : MonoBehaviour
         switch (state)
         {
             case WinLoseState.Default:
-                Debug.Log("Default");
+               // Debug.Log("Default");
                 currentWinLoseState = WinLoseState.Default;
                 break;
             case WinLoseState.Win:
-                Debug.Log("Win");
+                //Debug.Log("Win");
                 
                 currentWinLoseState = WinLoseState.Win;
                 
                 break;
             case WinLoseState.Lose:
-                Debug.Log("Lose");
+                //Debug.Log("Lose");
                 currentWinLoseState = WinLoseState.Lose;
                 break;
            
@@ -145,23 +144,23 @@ public class InGameManager : MonoBehaviour
     }
     void SetGameTime(float time, RoundState state)
     {
-        
-        if (currentWinLoseState == WinLoseState.Default && currentRoundState == RoundState.InRound)
+
+        if (currentRoundState == RoundState.InRound)
         {
-            SetWinLoseState(WinLoseState.Draw);
-            time = 10;
+            RepairShopUI.SetActive(false);
         }
         
+        if (currentRoundState == RoundState.RoundStart)
+        {
+            RepairShopUI.SetActive(true);
+            SetWinLoseState(WinLoseState.Default);
+        }
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
             {
-                Debug.Log("Game Time End");
-                if (currentWinLoseState == WinLoseState.Draw)
-                {
-                    SetRoundState(currentRoundState);
-                    return;
-                }
+                //Debug.Log("Game Time End");
+                
                 SetRoundState(state);
-                SetWinLoseState(WinLoseState.Default);
+                
             });
     }
     
@@ -174,7 +173,7 @@ public class InGameManager : MonoBehaviour
                 teamDictionary[playerStat] = Team.Blue;
                 break;
             case Team.Red:
-                Debug.Log("Red Team");
+                //Debug.Log("Red Team");
                 teamDictionary[playerStat] = Team.Red;
                 break;
         }
@@ -185,9 +184,7 @@ public class InGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentRound = 1;
-        BlueWinCount = 0;
-        RedWinCount = 0;
+        ResetRound();
         
         GameObject playerStat = GameObject.FindWithTag("Player");
         List<Spawner> countSpanwer = new List<Spawner>
@@ -265,7 +262,7 @@ public class InGameManager : MonoBehaviour
             LoseRound(player);
             SetWinLoseState(WinLoseState.Lose);
         };
-        EnemyPlayer.GetComponent<DummyController>().OnDieCallBack = (enemy) =>
+        EnemyPlayer.GetComponent<PlayerController>().OnPlayerDie = (enemy) =>
         {
             if (currentWinLoseState == WinLoseState.Lose)
             {
@@ -292,7 +289,7 @@ public class InGameManager : MonoBehaviour
     public void ResetRound()
     {
         
-        currentRound = 0;
+        currentRound = 1;
         BlueWinCount = 0;
         RedWinCount = 0;
     }
