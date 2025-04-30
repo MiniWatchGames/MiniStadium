@@ -96,20 +96,17 @@ public class PlayerFSM<T> where T : Enum
         ChangeState(_defaultState, playerController);
     }
 
-    public List<ActionState> AddSkillState((int, string)[] skills, int SkillType)
+    public List<(ActionState, IPlayerState)> AddSkillState(PlayerController target,(int, string)[] skills, int SkillType)
     {
         if (typeof(T) == typeof(ActionState)) {
             
-            List<(ActionState, IPlayerState)> list = ((PlayerFSM<ActionState>)(object)this).CreateStates(skills,SkillType);
+            List<(ActionState, IPlayerState)> list = ((PlayerFSM<ActionState>)(object)this).CreateStates(target,skills,SkillType);
             if(list is null) return null;
             foreach (var state in list)
             {
                 AddState((T)(object)state.Item1, state.Item2);
             }
-
-            List<ActionState> actionStateList = list.Select(x => x.Item1).ToList();
-            
-            return actionStateList;
+            return list;
         }
         return null;
     }

@@ -114,8 +114,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public PassiveFactory PassiveFactory => _passiveFactory;
     public List<IPassive> PassiveList => _passiveList;
 
-    private List<ActionState> _weaponSkills;
-    private List<ActionState> _movementSkills;
+    private List<(ActionState, IPlayerState)> _weaponSkills;
+    private List<(ActionState, IPlayerState)> _movementSkills;
 
     private string _firstWeaponSkill;
     private string _secondWeaponSkill;
@@ -200,7 +200,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private void Start()
     {
         //Init();      
-        ResetCharacter();
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
@@ -381,7 +380,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_weaponSkills?.Count >= 1) { 
             var weaponSkill = _weaponSkills[0];
             _firstWeaponSkill = weaponSkill.ToString();
-            if (_actionFsm.CurrentState != weaponSkill)
+            if (_actionFsm.CurrentState != weaponSkill.Item1)
                 SetActionState(_firstWeaponSkill);
         }
     }
@@ -391,7 +390,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         if (_weaponSkills?.Count >= 1)
         {
-            if (_actionFsm.CurrentState == _weaponSkills[0])
+            if (_actionFsm.CurrentState == _weaponSkills[0].Item1)
             {
                 SetActionState("Idle");
             }
@@ -403,7 +402,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_weaponSkills?.Count >= 2) {
             var weaponSkill = _weaponSkills[1];
             _secondWeaponSkill = weaponSkill.ToString();
-            if (_actionFsm.CurrentState != weaponSkill)
+            if (_actionFsm.CurrentState != weaponSkill.Item1)
                 SetActionState(_secondWeaponSkill);
         }
     }
@@ -411,7 +410,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public void OnSecondWeaponSkillReleased()
     {
         if (_weaponSkills?.Count >= 2) { 
-            if (_actionFsm.CurrentState == _weaponSkills[1])
+            if (_actionFsm.CurrentState == _weaponSkills[1].Item1)
             {
                 SetActionState("Idle");
             }
@@ -423,7 +422,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_movementSkills?.Count >= 1) { 
             var moveMentSkill = _movementSkills[0];
             _firstMoveSkill = moveMentSkill.ToString();
-            if (_actionFsm.CurrentState != moveMentSkill)
+            if (_actionFsm.CurrentState != moveMentSkill.Item1)
                 SetActionState(_firstMoveSkill);
         }
     }
@@ -432,7 +431,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         if (_movementSkills?.Count >= 1)
         {
-            if (_actionFsm.CurrentState == _movementSkills[0])
+            if (_actionFsm.CurrentState == _movementSkills[0].Item1)
             {
                 SetActionState("Idle");
             }
@@ -444,7 +443,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_movementSkills?.Count >= 2) { 
             var moveMentSkill = _movementSkills[1];
             _secondMoveSkill = moveMentSkill.ToString();
-            if (_actionFsm.CurrentState != moveMentSkill)
+            if (_actionFsm.CurrentState != moveMentSkill.Item1)
                 SetActionState(_secondMoveSkill);
         }
     }
@@ -453,7 +452,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         if (_movementSkills?.Count >= 2)
         {
-            if (_actionFsm.CurrentState == _movementSkills[1])
+            if (_actionFsm.CurrentState == _movementSkills[1].Item1)
             {
                 SetActionState("Idle");
             }
@@ -701,23 +700,30 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 추가 생성한 스킬, 패시브 제거
         if (_movementSkills?.Count > 0) { 
             foreach (var skill in _movementSkills) {
-                ActionFsm.RemoveState(skill);
+                Destroy((UnityEngine.Object)skill.Item2);
+                ActionFsm.RemoveState(skill.Item1);
             }
         }
+        _movementSkills.Clear();
+
         if (_weaponSkills?.Count > 0)
         {
             foreach (var skill in _weaponSkills)
             {
-                ActionFsm.RemoveState(skill);
+                Destroy((UnityEngine.Object)skill.Item2);
+                ActionFsm.RemoveState(skill.Item1);
             }
         }
-        if(_passiveList?.Count > 0)
+        _weaponSkills.Clear();
+
+        if (_passiveList?.Count > 0)
         {
             foreach (var passive in _passiveList)
             {
                 Destroy((UnityEngine.Object)passive);
             }
         }
+        _passiveList.Clear();
         
         //스텟 초기화
         foreach(var stat in statDictionary)
@@ -765,8 +771,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
      
         //스킬 목록 적용
-        _weaponSkills = ActionFsm?.AddSkillState(_playerItems?.Skills[1], 1);
-        _movementSkills = ActionFsm?.AddSkillState(_playerItems?.Skills[0], 0);
+        _weaponSkills = ActionFsm?.AddSkillState(this,_playerItems?.Skills[1], 1);
+        _movementSkills = ActionFsm?.AddSkillState(this, _playerItems?.Skills[0], 0);
         _isDead = false;
 
         //풀피 만들어주기
@@ -823,8 +829,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //플레이어의 ActionFsm 내에 상태를 넣어야 함
         //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
         //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
-        _weaponSkills = ActionFsm.AddSkillState(_playerItems.Skills[1], 1);
-        _movementSkills = ActionFsm.AddSkillState(_playerItems.Skills[0], 0);
+        _weaponSkills = ActionFsm.AddSkillState(this,_playerItems.Skills[1], 1);
+        _movementSkills = ActionFsm.AddSkillState(this, _playerItems.Skills[0], 0);
         //var myArray = new (int, string)[] { (1, "MovementSkills")  };
         //var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
         //_weaponSkills = ActionFsm.AddSkillState(myArray);
