@@ -37845,12 +37845,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &811303129 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8408206433110112542, guid: 4e2f70a69d3144d4a9b7d04427bad570,
-    type: 3}
-  m_PrefabInstance: {fileID: 811303125}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &811303130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87176,9 +87170,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 100
-  winCount: 0
   team: 0
-  inGameManager_obj: {fileID: 0}
+  inGameManager: {fileID: 0}
 --- !u!136 &1938681133
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -87281,15 +87274,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bdddfd5e975e4041b4029faa7d5180b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RepairShopUI: {fileID: 1303005292}
-  GameRoundInfoUI: {fileID: 811303129}
-  currentGameState: 0
-  currentWinLoseState: 0
-  currentTeam: 0
-  currentRoundState: 0
-  gameTimer: {fileID: 811303130}
-  currentRound: 0
-  currentGameTime: 0
 --- !u!4 &1940594559
 Transform:
   m_ObjectHideFlags: 0
@@ -88854,9 +88838,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 100
-  winCount: 0
   team: 0
-  inGameManager_obj: {fileID: 0}
+  inGameManager: {fileID: 0}
 --- !u!136 &1993856901
 CapsuleCollider:
   m_ObjectHideFlags: 0
