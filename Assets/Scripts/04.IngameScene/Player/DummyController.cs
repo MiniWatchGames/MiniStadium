@@ -15,7 +15,7 @@ public class DummyController : MonoBehaviour, IDamageable
             if (CurrentHp <= 0)
             {
                 //CurrentHp = 0;
-                OnDieCallBack.Invoke(gameObject);
+                OnDieCallBack?.Invoke(gameObject);
             }
             
             Debug.Log($"dummy is dead");

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -131,4 +132,9 @@ public class CombatManager : MonoBehaviour
         playerController.Animator.SetLayerWeight(_upperBodyLayerIndex, targetWeight);
     }
     
+}
+
+public static class CombatEvents
+{
+    public static Action<GameObject> OnTargetHit;
 }
