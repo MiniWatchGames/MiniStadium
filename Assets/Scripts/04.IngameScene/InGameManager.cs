@@ -58,20 +58,24 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private RoundState currentRoundState;
     [SerializeField] private GameObject Damagefield;
     Dictionary<GameObject, List<Spawner>> mapSpawners = new Dictionary<GameObject, List<Spawner>>();
-    Dictionary<GameObject,Team> teamDictionary = new Dictionary<GameObject,Team>();
+    Dictionary<GameObject, Team> teamDictionary = new Dictionary<GameObject, Team>();
     [SerializeField] private Timer gameTimer;
-    
+    [SerializeField] private GameObject PlayerPrefab;
+    [SerializeField] private RepairShopTimer RepairShopTimer;
+    [SerializeField] private float repairShopTime = 5;
+    private GameObject _playerPrefab;
+
     [SerializeField] public int currentRound = 0;
     public int BlueWinCount = 0;
     public int RedWinCount = 0;
     [SerializeField] private int currentGameTime = 0;
     private List<GameObject> maps = new List<GameObject>();
     public Action inGameUIAction;
-    public float timer{get => gameTimer.currentTime;}
-    public RoundState roundstate{get => currentRoundState;}
+    public float timer { get => gameTimer.currentTime; }
+    public RoundState roundstate { get => currentRoundState; }
     #endregion
     #region StateChangeFunction
-    
+
     void SetGameState(GameState state)
     {
         switch (state)
@@ -84,10 +88,10 @@ public class InGameManager : MonoBehaviour
             case GameState.InGame:
                 //Debug.Log("In Game");
                 currentGameState = GameState.InGame;
-                
+
                 break;
             case GameState.EndGame:
-               // Debug.Log("End Game");
+                // Debug.Log("End Game");
                 currentGameState = GameState.EndGame;
                 SceneManager.LoadScene("MainmenuScene");
                 break;
@@ -102,30 +106,31 @@ public class InGameManager : MonoBehaviour
                 GameRoundInfoUI.gameObject.SetActive(false);
                 //Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
-                SetGameTime(5, RoundState.InRound);
+                RepairShopTimer.SetTime = repairShopTime;
+                SetGameTime(repairShopTime, RoundState.InRound);
                 break;
             case RoundState.InRound:
                 //Debug.Log("In Round");
                 currentRoundState = RoundState.InRound;
-                SetGameTime(5, RoundState.RoundEnd);
+                SetGameTime(50, RoundState.RoundEnd);
                 break;
             case RoundState.RoundEnd:
                 //Debug.Log("Round End");
                 currentRoundState = RoundState.RoundEnd;
                 currentRound++;
                 GameRoundInfoUI.gameObject.SetActive(true);
-                if(BlueWinCount == 4 || RedWinCount == 4)
+                if (BlueWinCount == 4 || RedWinCount == 4)
                 {
                     SetGameState(GameState.EndGame);
                 }
-                
+
                 if (currentGameState == GameState.EndGame)
                 {
-                    
+
                     //TODO: 이겼는지 졌는지 UI 띄우기
                 }
                 SetGameTime(5, RoundState.RoundStart);
-                
+
                 break;
         }
     }
@@ -134,20 +139,20 @@ public class InGameManager : MonoBehaviour
         switch (state)
         {
             case WinLoseState.Default:
-               // Debug.Log("Default");
+                // Debug.Log("Default");
                 currentWinLoseState = WinLoseState.Default;
                 break;
             case WinLoseState.Win:
                 //Debug.Log("Win");
-                
+
                 currentWinLoseState = WinLoseState.Win;
-                
+
                 break;
             case WinLoseState.Lose:
                 //Debug.Log("Lose");
                 currentWinLoseState = WinLoseState.Lose;
                 break;
-           
+
         }
     }
     void SetGameTime(float time, RoundState state)
@@ -157,24 +162,24 @@ public class InGameManager : MonoBehaviour
         {
             RepairShopUI.SetActive(false);
         }
-        
+
         if (currentRoundState == RoundState.RoundStart)
         {
             RepairShopUI.SetActive(true);
-            
+
             SetWinLoseState(WinLoseState.Default);
         }
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
-            {
-                //Debug.Log("Game Time End");
-                
-                SetRoundState(state);
-                
-            });
+        {
+            //Debug.Log("Game Time End");
+
+            SetRoundState(state);
+
+        });
     }
-    
+
     void SetTeam(Team team, GameObject playerStat)
-    
+
     {
         switch (team)
         {
@@ -187,18 +192,19 @@ public class InGameManager : MonoBehaviour
                 break;
         }
     }
-    
+
     #endregion
-    
+
     // Start is called before the first frame update
     void Start()
     {
         ResetRound();
-        
+
         GameObject playerStat = GameObject.FindWithTag("Player");
+        if (playerStat is null) return;
         List<Spawner> countSpanwer = new List<Spawner>
             (FindObjectsByType<Spawner>(FindObjectsInactive.Include, FindObjectsSortMode.None));
-       
+
         for (int i = 0; i < countSpanwer.Count; i++)
         {
             if (mapSpawners.ContainsKey(countSpanwer[i].transform.parent.gameObject))
@@ -219,8 +225,19 @@ public class InGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.B) && currentRoundState ==  RoundState.RoundStart)
+        if (Input.GetKeyDown(KeyCode.B) && currentRoundState == RoundState.RoundStart)
         {
+            PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
+            if (_playerPrefab == null)
+            {
+                _playerPrefab = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
+            }
+            else
+            {
+                var player = _playerPrefab.GetComponent<PlayerController>();
+                player.ResetCharacter();
+                player.ReInit();
+            }
             RepairShopUI.SetActive(!RepairShopUI.activeSelf);
         }
 
@@ -234,7 +251,7 @@ public class InGameManager : MonoBehaviour
     public void EndRound(GameObject Loser)
     {
         SetRoundState(RoundState.RoundEnd);
-        switch(teamDictionary[Loser])
+        switch (teamDictionary[Loser])
         {
             case Team.Blue:
                 RedWinCount++;
@@ -248,11 +265,13 @@ public class InGameManager : MonoBehaviour
     }
     public void SetPlayerTeam(GameObject player)
     {
+        if(player == null) return;
         int tmpRandom = Random.Range(0, 1);
         int Enemy = tmpRandom == 0 ? 1 : 0;
         GameObject EnemyPlayer = GameObject.FindWithTag("Enemy");
-        
-        
+        if(EnemyPlayer == null) return;
+
+
         teamDictionary[player.gameObject] = (Team)tmpRandom;
         //playerStat.team = (Team)tmpRandom;
         teamDictionary[EnemyPlayer] = (Team)Enemy;
@@ -278,7 +297,7 @@ public class InGameManager : MonoBehaviour
             WinRound(enemy);
             SetWinLoseState(WinLoseState.Win);
         };
-        
+
 
     }
     public void WinRound(GameObject Enemy)
@@ -291,10 +310,10 @@ public class InGameManager : MonoBehaviour
         //UIPopUpFor Losing Screen
         EndRound(player);
     }
-    
+
     public void ResetRound()
     {
-        
+
         currentRound = 1;
         BlueWinCount = 0;
         RedWinCount = 0;

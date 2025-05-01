@@ -16,10 +16,12 @@ public class DetectPlayerStateChanged : INotifyPropertyChanged
     
     public DetectPlayerStateChanged(PlayerController stat)
     {
-        playerStat = stat;
-        playerName_Base = playerStat.name;
-        playerHp_Base = stat.CurrentHp;
-        playerMaxHp_Base = stat.BaseMaxHp;
+        if (stat != null) { 
+            playerStat = stat;
+            playerName_Base = playerStat.name;
+            playerHp_Base = stat.CurrentHp;
+            playerMaxHp_Base = stat.BaseMaxHp;
+        }
     }
     private string playerName_Base;
     public string playerName

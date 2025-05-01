@@ -3,22 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 public class RepairShopTimer : MonoBehaviour
 {
     public Image timerImage;
     public TMP_Text timerText;
-    public float timeLimit;
-    public float time;
-    // Start is called before the first frame update
-    void Start()
+    private float timeLimit;
+    private float time;
+    public float SetTime
     {
-        timeLimit = time;
+        set
+        {
+            timeLimit = value;
+            time = value;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private Coroutine coTimer;
+
+ 
+    private void OnEnable() {
+        
+            coTimer = StartCoroutine(timer());
+        
+    }
+
+    private void OnDisable()
     {
-        timerImage.fillAmount = time / timeLimit;
-        timerText.text = $"다음 라운드 시작까지 {time:F1}초...";
+        if (coTimer != null)
+        {
+            StopCoroutine(coTimer);
+            coTimer = null;
+        }
+    }
+
+    IEnumerator timer() {
+        while (true) {
+            timerImage.fillAmount = time / timeLimit;
+            timerText.text = $"다음 라운드 시작까지 {time:F1}초...";
+            time -= Time.deltaTime;
+            yield return null;
+        }
     }
 }

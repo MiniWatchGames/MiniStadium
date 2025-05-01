@@ -13,7 +13,6 @@ public class SwordController : MonoBehaviour
     }
     
     [SerializeField] private SwordTriggerZone[] _triggerZones;
-    
     [SerializeField] private int attackPower = 10;
     [SerializeField] private LayerMask targetLayerMask;
     
@@ -100,6 +99,9 @@ public class SwordController : MonoBehaviour
 
             // 데미지 적용
             damageable.TakeDamage(damageInfo);
+            
+            // 크로스헤어 알림용
+            CombatEvents.OnTargetHit?.Invoke(target);
 
             // 효과음 재생
             // AudioManager.Instance.PlaySoundEffect("SwordHit", hitPoint);
@@ -110,6 +112,7 @@ public class SwordController : MonoBehaviour
             //Debug.Log($"Hit {target.name} for {attackPower} damage at {hitPoint}");
         }
     }
+    
 #if UNITY_EDITOR
     
     private void OnDrawGizmos()
