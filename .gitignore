@@ -156,6 +156,7 @@ sysinfo.txt
 /[Aa]ssets/[Ss]cenes/TestScene.unity
 /[Aa]ssets/[Ss]cenes/TestScene.unity.meta
 /[Aa]ssets/[Rr]esources/[Tt]est*
+/[Aa]ssets/[Aa]ssets/DoubleL*
 
 
 # End of https://www.toptal.com/developers/gitignore/api/unity,rider
