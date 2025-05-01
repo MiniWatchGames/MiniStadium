@@ -803,6 +803,15 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         EquipWeapon(_playerWeapon);
 
+
+        // 스텟 + currentHp 옵저버 등록 
+        foreach (var stat in statDictionary)
+        {
+            stat.Value.AddObserver(this);
+        }
+
+        currentHp.AddObserver(this);
+
         // 구매내역에 따른 스텟 분배
         DecorateStatByPlayerItems();
 

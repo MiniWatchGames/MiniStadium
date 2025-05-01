@@ -118775,14 +118775,9 @@ PrefabInstance:
       objectReference: {fileID: 811303130}
     - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
-        type: 3}
       propertyPath: RepairShopUI
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1217625377}
     - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
       propertyPath: GameRoundInfoUI
@@ -118792,7 +118787,7 @@ PrefabInstance:
         type: 3}
       propertyPath: RepairShopTimer
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1111962201}
     - target: {fileID: 5789351672964011462, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
       propertyPath: m_Name
