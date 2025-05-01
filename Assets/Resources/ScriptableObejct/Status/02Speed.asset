@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 02Speed
   m_EditorClassIdentifier: 
   type: 2
-  statusName: "\uC774\uB3D9\uC18D\uB3C4"
-  description: "\uB808\uBCA8 \uB2F9 \uC774\uB3D9 \uC18D\uB3C4 (+?) \uC99D\uAC00"
+  name: "\uC774\uB3D9 \uC18D\uB3C4"
+  description: 
   NormalColor: {r: 1, g: 1, b: 1, a: 1}
   HighlightedColor: {r: 0.99618554, g: 1, b: 0.7783019, a: 1}
   PressedColor: {r: 1, g: 0.8668608, b: 0.6367924, a: 1}

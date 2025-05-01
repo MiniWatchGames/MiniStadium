@@ -21,7 +21,7 @@ public class WeaponData
 
 public class PlayerWeapon : MonoBehaviour
 {
-    [SerializeField] private WeaponType weaponType;
+    [SerializeField]private WeaponType weaponType;
     public WeaponType WeaponType { get => weaponType; set => weaponType = value; }
     
     [SerializeField] private List<WeaponData> weaponDataList = new List<WeaponData>();
@@ -29,7 +29,7 @@ public class PlayerWeapon : MonoBehaviour
     
     private GameObject currentWeapon; // 현재 장착된 무기
     public GameObject CurrentWeapon => currentWeapon;
-
+    
     private void Awake()
     {
         InitWeaponDictionary();
