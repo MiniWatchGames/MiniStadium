@@ -2154,7 +2154,7 @@ MonoBehaviour:
       type: 3}
     weaponSocket: {fileID: 3371079071144149785}
     positionOffset: {x: -0.038, y: 0.16, z: 0.023}
-    rotationOffset: {x: -84.322, y: 70.545, z: 32.509}
+    rotationOffset: {x: -85.737, y: 175.455, z: -98.613}
 --- !u!114 &3557174751171254769
 MonoBehaviour:
   m_ObjectHideFlags: 0
