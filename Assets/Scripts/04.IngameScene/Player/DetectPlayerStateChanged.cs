@@ -12,14 +12,16 @@ public class DetectPlayerStateChanged : INotifyPropertyChanged
     //StatUpdate와 StatReset 메소드는 매개변수로 TestStat을 받는다.
     //TestStat은 캐릭터의 스텟을 담고 있는 클래스이다.
     //StatUpdate와 StatReset 메소드는 TestStat을 매개변수로 받아서 캐릭터의 스텟을 업데이트하거나 초기화한다.
-    private TestStat playerStat;
+    private PlayerController playerStat;
     
-    public DetectPlayerStateChanged(TestStat stat)
+    public DetectPlayerStateChanged(PlayerController stat)
     {
-        playerStat = stat;
-        playerName_Base = playerStat.name;
-        playerHp_Base = playerStat.health;
-        playerMaxHp_Base = playerStat.maxHealth;
+        if (stat != null) { 
+            playerStat = stat;
+            playerName_Base = playerStat.name;
+            playerHp_Base = stat.CurrentHp;
+            playerMaxHp_Base = stat.BaseMaxHp;
+        }
     }
     private string playerName_Base;
     public string playerName
@@ -45,7 +47,7 @@ public class DetectPlayerStateChanged : INotifyPropertyChanged
         {
             if(playerHp_Base != value)
             {
-                Debug.Log("playerHp" + value);
+                //Debug.Log("playerHp" + value);
                 playerHp_Base = value;
                 OnPropertyChanged("playerHp");
             }

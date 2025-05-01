@@ -6,25 +6,35 @@ using UnityEngine;
 public class DummyController : MonoBehaviour, IDamageable
 {
     private int _currentHp;
-    private int CurrentHp
+    public Action<GameObject> OnDieCallBack;
+    public int CurrentHp
     {
         get => _currentHp;
         set
         {
-            if (CurrentHp < 0) CurrentHp = 0;
+            if (CurrentHp <= 0)
+            {
+                //CurrentHp = 0;
+                OnDieCallBack?.Invoke(gameObject);
+            }
+            
             Debug.Log($"dummy is dead");
         }
     }
-
+    
     private void Start()
     {
         CurrentHp = 100;
     }
-
+    
     public void TakeDamage(DamageInfo damageInfo)
     {
         var damage = damageInfo.damage;
-        CurrentHp -= damage;
-        Debug.Log($"current Hp = {CurrentHp}");
+        //CurrentHp -= damage;
+       // Debug.Log($"current Hp = {CurrentHp}");
     }
+    // public void ResetHp()
+    // {
+    //     CurrentHp = 100;
+    // }
 }

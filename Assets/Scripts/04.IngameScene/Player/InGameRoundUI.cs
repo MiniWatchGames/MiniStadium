@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 public class InGameRoundUI : MonoBehaviour
 {
     [SerializeField] private GameObject RoundCount;
-    [SerializeField] private GameObject RoundTime;
+    //[SerializeField] private GameObject RoundTime;
     [SerializeField] private GameObject BlueWinCount;
     [SerializeField] private GameObject RedWinCount;
     [SerializeField] private InGameManager inGameManager;
@@ -20,7 +20,7 @@ public class InGameRoundUI : MonoBehaviour
         inGameManager = FindObjectsByType<InGameManager>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
         inGameUIDetect = new InGameUIDetect(inGameManager);
         inGameUIDetect.PropertyChanged += OnIngameChanged;
-        inGameManager.inGameUIAction = () => UIUpdate();
+        inGameManager.inGameUIAction += () => UIUpdate();
         InitUI();
     }
 
@@ -31,11 +31,11 @@ public class InGameRoundUI : MonoBehaviour
         inGameUIDetect.GameRound = inGameManager.currentRound;
         inGameUIDetect.BlueWinCount = inGameManager.BlueWinCount;
         inGameUIDetect.RedWinCount = inGameManager.RedWinCount;
-        Debug.Log("UIUpdate");
+        //Debug.Log("UIUpdate");
     }
     private void OnIngameChanged(object sender, PropertyChangedEventArgs e)
     {
-        Debug.Log("functioning");
+        //Debug.Log("functioning");
         switch (e.PropertyName)
         {
             case "GameRound":

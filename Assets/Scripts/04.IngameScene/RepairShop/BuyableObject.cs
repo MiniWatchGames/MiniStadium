@@ -7,7 +7,7 @@ public class BuyableObject : ScriptableObject
 {
    public Sprite icon;
    
-   public string _name;
+   public string name;
    
    public int price;
    

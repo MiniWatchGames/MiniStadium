@@ -17,7 +17,7 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
     [SerializeField] private RepairShopReceipt RepairShopReceipt;
-    
+    public RepairShopReceipt Receipt { get => RepairShopReceipt; }
     // 금액
     [SerializeField] private int _startingMoney = 3000;
     [SerializeField] public int currentMoney;
@@ -27,7 +27,6 @@ public class RepairShop : MonoBehaviour
     // 설명 란
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text descriptionText;
-    
     void Start()
     {
         errorMessage.SetActive(false);
@@ -52,7 +51,7 @@ public class RepairShop : MonoBehaviour
         RepairShopWeapon.WeaponShopReset(true);
         RepairShopSkill.SkillShopReset(true);
         RepairShopReceipt.ReceiptRefundAll();
-        SetDescription("","");
+		SetDescription("", "");
         ResetPrice();
     }
     
@@ -82,8 +81,7 @@ public class RepairShop : MonoBehaviour
             RepairShopStatus.StatusPurchasing();
             RepairShopSkill.BuyingSkill();
             RepairShopReceipt.ReceiptUpdateSlot(true, 0);
-            SetDescription("","");
-            
+            SetDescription("", "");
             ResetPrice();
         }
         else // 실패
@@ -92,7 +90,6 @@ public class RepairShop : MonoBehaviour
             errorMessage.SetActive(true);
         }
     }
-
     public void SetDescription(string name, string description)
     {
         nameText.text = name;

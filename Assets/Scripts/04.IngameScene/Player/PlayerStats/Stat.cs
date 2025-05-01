@@ -25,10 +25,10 @@ public class Stat : IStatPublisher
     }
 
     /// <summary>
-    /// »ı¼ºÀÚ
+    /// ìƒì„±ì
     /// </summary>
-    /// <param name="baseValue"> PlayerControllerÀÇ fixedº¯¼öµéÀÇ ±âº»°ªÀ» ÇÒ´ç </param>
-    /// <param name="statName">ºñ±³¸¦ À§ÇÑ StatÀÇ ÀÌ¸§À» Á¤ÇÔ</param>
+    /// <param name="baseValue"> PlayerControllerì˜ fixedë³€ìˆ˜ë“¤ì˜ ê¸°ë³¸ê°’ì„ í• ë‹¹ </param>
+    /// <param name="statName">ë¹„êµë¥¼ ìœ„í•œ Statì˜ ì´ë¦„ì„ ì •í•¨</param>
     public Stat(float baseValue, string statName)
     {
         this.baseValue = baseValue;
@@ -39,9 +39,9 @@ public class Stat : IStatPublisher
     }
 
     /// <summary>
-    /// µ¥ÄÚ·¹ÀÌÆ® Ãß°¡ ¸Ş¼Òµå
+    /// ë°ì½”ë ˆì´íŠ¸ ì¶”ê°€ ë©”ì†Œë“œ
     /// </summary>
-    /// <param name="Decorate">µ¥ÄÚ·¹ÀÌÆ® ÇÒ func ³»¿ëÀÌ µé¾î°£´Ù</param>
+    /// <param name="Decorate">ë°ì½”ë ˆì´íŠ¸ í•  func ë‚´ìš©ì´ ë“¤ì–´ê°„ë‹¤</param>
     public void AddDecorate(Func<float, float> Decorate)
     {
         modifiers.Add(Decorate);
@@ -49,7 +49,7 @@ public class Stat : IStatPublisher
     }
 
     /// <summary>
-    /// ÀÎµ¦½º ¹øÂ° ¹öÇÁ Á¦°Å 
+    /// ì¸ë±ìŠ¤ ë²ˆì§¸ ë²„í”„ ì œê±° 
     /// </summary>
     public void RemoveModifiers() {
         if (modifiers.Count > 0)
@@ -60,7 +60,7 @@ public class Stat : IStatPublisher
     }
 
     /// <summary>
-    /// ¹öÇÁ ¸ğµÎ Á¦°Å
+    /// ë²„í”„ ëª¨ë‘ ì œê±°
     /// </summary>
     public void RemoveAllModifiers()
     {
@@ -73,6 +73,7 @@ public class Stat : IStatPublisher
         if (observers == null) {
             observers = new List<IStatObserver>();
         }
+        if(observers.Contains(observer))return;
         observers.Add(observer);
     }
 
