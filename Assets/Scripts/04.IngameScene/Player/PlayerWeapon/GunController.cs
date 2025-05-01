@@ -16,12 +16,13 @@ public class GunController : MonoBehaviour
     [SerializeField] private float bulletSpeed = 100f;
     [SerializeField] private float trailDuration = 0.5f; // 시뮬레이션 지속 시간
     
-    private Camera _camera;
+    private CameraController _camera;
     private RaycastHit _hitInfo;
 
     private void Start()
     {
-        _camera = Camera.main;
+        var pc = GetComponentInParent<PlayerController>();
+        _camera = pc.CameraController;
     }
     public void Fire()
     {
