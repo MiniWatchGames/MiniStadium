@@ -2154,7 +2154,7 @@ MonoBehaviour:
       type: 3}
     weaponSocket: {fileID: 3371079071144149785}
     positionOffset: {x: -0.038, y: 0.16, z: 0.023}
-    rotationOffset: {x: -84.322, y: 70.545, z: 32.509}
+    rotationOffset: {x: -85.737, y: 175.455, z: -98.613}
 --- !u!114 &3557174751171254769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2168,6 +2168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spine: {fileID: 6753021958945865193}
+  head: {fileID: 2529236042057442688}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -2179,15 +2180,14 @@ MonoBehaviour:
   defenceIncreaseAmount: 1
   moveSpeedIncreaseAmount: 0.1
   defaultState: Idle
-  rotationTarget: {fileID: 6753021958945865193}
   rotationSpeed: 2
+  rotationSmoothSpeed: 30
   minAngle: -40
   maxAngle: 80
   swordAnimatorController: {fileID: 9100000, guid: ef346e066ab4a41d2bf197b1c172ff3d,
     type: 2}
   gunAnimatorController: {fileID: 9100000, guid: 7d752a938992a43bd9f56abe328d736e,
     type: 2}
-  aimTarget: {fileID: 0}
   aimWeight: 1
 --- !u!114 &8037387594734043560
 MonoBehaviour:
