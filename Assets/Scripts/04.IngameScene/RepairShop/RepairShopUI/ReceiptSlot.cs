@@ -19,8 +19,7 @@ public class ReceiptSlot : MonoBehaviour
     {
         // 유니티 기본 선택 기능 해제
         EventSystem.current.SetSelectedGameObject(null);
-        manager.ReceiptUndo(this, Index);
-        manager.RepairShop.SetDescription("","");
+        manager.GetComponent<RepairShopReceipt>().ReceiptUndo(this, Index, ID);
     }
 }
 

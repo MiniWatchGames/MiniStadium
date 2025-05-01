@@ -15,7 +15,7 @@ public class RepairShopSkillSlot : MonoBehaviour
     [SerializeField] public int weaponType;
     [SerializeField] public int index;
     [SerializeField] public int price;
-    [SerializeField] public string description;
+    [SerializeField] private string description;
     
     [SerializeField] public GameObject checkbox;
     [SerializeField] public bool isBought = false;
@@ -24,7 +24,7 @@ public class RepairShopSkillSlot : MonoBehaviour
     {
         _manager = manager;
         iconImage.sprite = BOdata.icon;
-        nameText.text = BOdata._name;
+        nameText.text = BOdata.name;
         price = BOdata.price;
         priceText.text = $"{BOdata.price.ToString()}g";
         description = BOdata.description;

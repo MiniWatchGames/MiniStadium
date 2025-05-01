@@ -11,11 +11,11 @@ public class PassiveFactory
         foreach (var passive in passives) {
             switch (passive.Item1) {
                 //"HpRegenerationPassive"
-                case 1: 
+                case 0: 
                     target.PassiveList.Add(target.AddComponent<HpRegenerationPassive>());
                 break;
                 //"IncreasingRandomStatEvery20Seconds"
-                case 2:
+                case 1:
                     target.PassiveList.Add(target.AddComponent<IncreasingRandomStatEvery20Seconds>());
                 break;
             }

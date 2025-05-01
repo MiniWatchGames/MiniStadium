@@ -13,7 +13,6 @@ public class PlayerItems
     public int count_HP = 0;
     public int count_AR = 0;
     public int count_MV = 0;
-    public int count_JP = 0;
 
     public (int, string)[][] Skills = new (int, string)[3][];
     //(0,"")일때 null
@@ -26,7 +25,7 @@ public class PlayerItems
     {
         PlayerItems clone = (PlayerItems)this.MemberwiseClone();
 
-        // Skills 배열의 깊은 복사 수행
+        // Skills 諛곗뿴??源딆? 蹂듭궗 ?섑뻾
         if (Skills != null)
         {
             clone.Skills = new (int, string)[3][];

@@ -15,13 +15,13 @@ public class RepairShopWeaponSlot : MonoBehaviour
     [SerializeField] public int type;
     [SerializeField] public int index;
     [SerializeField] public int price;
-    [SerializeField] public string description;
+    [SerializeField] private string description;
     
     public void Init(BuyableObject_Weapon BOdata, RepairShopWeapon manager, int _index)
     {
         _manager = manager;
         iconImage.sprite = BOdata.icon;
-        nameText.text = BOdata._name;
+        nameText.text = BOdata.name;
         price = BOdata.price;
         priceText.text = $"{BOdata.price.ToString()}g";
         description = BOdata.description;

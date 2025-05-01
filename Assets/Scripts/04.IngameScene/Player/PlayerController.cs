@@ -87,6 +87,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     private Dictionary<StatType, Stat> statDictionary;
 
+    //캐릭터가 죽거나 적을 죽였을때 이 이벤트가 발생한다
+    public Action<GameObject> OnPlayerDie;
+    public Action<GameObject> OnEnemyKilled;
+    
     private ObservableFloat currentHp;
     public float CurrentHp
     {
@@ -98,6 +102,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             {
                 Debug.Log("주금..");
                 _isDead = true;
+                OnPlayerDie.Invoke(gameObject);
                 SetMovementState("Idle");
                 SetPostureState("Idle");
                 SetActionState("Dead");
@@ -278,11 +283,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private void OnAnimatorIK(int layerIndex)
     {
         if (Animator == null) return;
-        
+
         // 시선 IK (머리 회전)
-       // Animator.SetLookAtWeight(aimWeight);
-       // Animator.SetLookAtPosition(aimTarget.position);
-        
+        Animator.SetLookAtWeight(aimWeight);
+        Animator.SetLookAtPosition(aimTarget.position);
+
         // 애니메이션 이후에 상체 회전 적용
         float spineAngle = Mathf.Clamp(_pitch, minAngle, maxAngle);
         
