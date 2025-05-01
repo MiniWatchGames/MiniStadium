@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
@@ -16,7 +17,7 @@ public class RepairShopReceipt : MonoBehaviour
     }
     [SerializeField] private ReceiptSlotRow[] receiptSlotRows;
 
-    [SerializeField] private RepairShop RepairShop;
+  	[SerializeField] public RepairShop RepairShop;
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
     public PlayerItems PlayerItems = new PlayerItems();
@@ -33,6 +34,7 @@ public class RepairShopReceipt : MonoBehaviour
     [SerializeField] public int Count_HP = 0;
     [SerializeField] public int Count_AR = 0;
     [SerializeField] public int Count_MV = 0;
+    [SerializeField] public int Count_JP = 0;
     public Image[,] PreviewsInRows;
     
     private void Awake()
@@ -64,43 +66,43 @@ public class RepairShopReceipt : MonoBehaviour
         PlayerItems.count_HP = Count_HP;
         PlayerItems.count_AR = Count_AR;
         PlayerItems.count_MV = Count_MV;
+		PlayerItems.count_JP = Count_JP;
 
         // 스킬
         for (int i = 0; i < 3; i++)
         {
-            // 3개의 Dictionary 초기화
-            PlayerItems.Skills[i] = new (int,string)[3];            
+            // 3개의 튜플 초기화
+            PlayerItems.Skills[i] = new (int, string)[3];
             var j = 0;
-            
+
             foreach (var slot in receiptSlots[i])
             {
-                if (receiptSlots[i] != null &&  slot._checkbox.activeSelf)
+                if (receiptSlots[i] != null && slot._checkbox.activeSelf)
                 {
-                    if(slot.ID == 0 || slot._name.text == "") continue;
-                    PlayerItems.Skills[i][j] = new (slot.ID, slot._name.text);
+                    if (slot.ID == 0 || slot._name.text == "") continue;
+                    PlayerItems.Skills[i][j] = new(slot.ID, slot._name.text);
                     j++;
                 }
             }
         }
-        Debug.Log($"Weapon : {PlayerItems.weapon_Name}");
-        Debug.Log($"HP: {PlayerItems.count_HP} AR: {PlayerItems.count_AR} MV: {PlayerItems.count_MV}");
-        //Debug.Log($"Skill 00 : {Dump(PlayerItems.Skills[0][0])}, Skill 01 : {Dump(PlayerItems.Skills[0][1])}, Skill 02 : {Dump(PlayerItems.Skills[0][2])}");
-        //Debug.Log($"Skill 10 : {Dump(PlayerItems.Skills[1][0])}, Skill 11 : {Dump(PlayerItems.Skills[1][1])}, Skill 12 : {Dump(PlayerItems.Skills[1][2])}");
-        //Debug.Log($"Skill 20 : {Dump(PlayerItems.Skills[2][0])}, Skill 21 : {Dump(PlayerItems.Skills[2][1])}, Skill 22 : {Dump(PlayerItems.Skills[2][2])}");
+        // Debug.Log($"Weapon : {PlayerItems.weapon_Name}");
+        // Debug.Log($"HP: {PlayerItems.count_HP} AR: {PlayerItems.count_AR} MV: {PlayerItems.count_MV} JP: {PlayerItems.count_JP}");
+        // Debug.Log($"Skill 00 : {Dump(PlayerItems.Skills[0][0])}, Skill 01 : {Dump(PlayerItems.Skills[0][1])}, Skill 02 : {Dump(PlayerItems.Skills[0][2])}");
+        // Debug.Log($"Skill 10 : {Dump(PlayerItems.Skills[1][0])}, Skill 11 : {Dump(PlayerItems.Skills[1][1])}, Skill 12 : {Dump(PlayerItems.Skills[1][2])}");
+        // Debug.Log($"Skill 20 : {Dump(PlayerItems.Skills[2][0])}, Skill 21 : {Dump(PlayerItems.Skills[2][1])}, Skill 22 : {Dump(PlayerItems.Skills[2][2])}");
     }
     
-    //private string Dump((Dictionary<int, string>) dict)
-    //{
-    //    if (dict == null || dict.Count == 0) return "null";
-    //    foreach (var kvp in dict)
-    //        return $"{kvp.Key}:{kvp.Value}";
-    //    return "empty";
-    //}
+ // private string Dump((int, string) tuple)
+    // {
+    //     return tuple == default ? "null" : $"{tuple.Item1}:{tuple.Item2}";
+    // }
     
-    // 스테이터스 색상 처리
-    public void ChangeStatusColor(int i, int j, Color color)
+    // receipt 내의 스테이터스 색상 처리
+    public void CopyStatusColor(int i, int j, RepairShopStatusButton button)
     {
-        PreviewsInRows[i, j].color = color;
+        var cb = button.GetComponent<Button>().colors;
+
+        PreviewsInRows[i, j].color = button.isBought ? cb.disabledColor : cb.normalColor;
     }
     
     // 모두 초기화
@@ -113,6 +115,7 @@ public class RepairShopReceipt : MonoBehaviour
         Count_HP = 0;
         Count_AR = 0;
         Count_MV = 0;
+ 		Count_JP = 0;
 
         for (int i = 0; i < receiptSlots.Length; i++)
         {
@@ -125,7 +128,7 @@ public class RepairShopReceipt : MonoBehaviour
     }
 
     // 클릭 시 선택 취소
-    public void ReceiptUndo(ReceiptSlot slot, int index, int ID)
+    public void ReceiptUndo(ReceiptSlot slot, int index)
     {
         var type = slot.type;
         
@@ -139,7 +142,7 @@ public class RepairShopReceipt : MonoBehaviour
         // 무기 선택 해제
         if (type == 3)
         {
-            // 선택 해제
+           
             if (RepairShopWeapon.selectedWeapon != null && RepairShopWeapon.selectedWeapon != RepairShopWeapon.currentWeapon)
             {
                 RepairShop.totalPrice -= RepairShopWeapon.selectedWeapon.price;
@@ -147,6 +150,9 @@ public class RepairShopReceipt : MonoBehaviour
                 RepairShopWeapon.selectedWeapon = null;
                 RepairShop.UpdateMoneyText(RepairShop.totalPrice);
                 ResetTargetSlot(slot, 3);
+  				RepairShopSkill.SetWeaponSkillUI(-1);
+                ReceiptUndo(receiptSlots[1][0], 0);
+                ReceiptUndo(receiptSlots[1][1], 1);
             }
             return;
         }

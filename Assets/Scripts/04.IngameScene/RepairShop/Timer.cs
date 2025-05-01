@@ -10,12 +10,12 @@ public class Timer : MonoBehaviour
 {
     public Image timer;
     public TMP_Text text;
-    
+
     public delegate void TimerDelegate();
     public TimerDelegate OnTimerEndDelegate;
     public TimerDelegate OnTimerStartDelegate;
 
-    public enum TimerType{Decrease, Increase}
+    public enum TimerType { Decrease, Increase }
     public TimerType timerType;
     public float timeLimit;
     public float currentTime;
@@ -25,18 +25,16 @@ public class Timer : MonoBehaviour
     void Start()
     {
         ResetTimer();
-        repairShopTimer = GameObject.FindObjectOfType<RepairShopTimer>();
         _isPaused = false;
     }
 
     void Update()
     {
-        
-        if(_isPaused) return;
+
+        if (_isPaused) return;
         if (timerType == TimerType.Decrease)
         {
-            currentTime -=  Time.deltaTime * 2f;
-            repairShopTimer.time = currentTime;
+            currentTime -= Time.deltaTime ;
             if (currentTime <= 0)
             {
                 OnTimerEndDelegate?.Invoke();
@@ -50,9 +48,8 @@ public class Timer : MonoBehaviour
                 OnTimerEndDelegate?.Invoke();
                 //_isPaused= true;
             }
-            
+
         }
-        timer.fillAmount = currentTime/timeLimit;
         text.text = FormatSeconds(currentTime);
     }
     public void ResetTimer()
@@ -72,11 +69,11 @@ public class Timer : MonoBehaviour
     {
         _isPaused = true;
     }
-    
+
     public void ResumeTimer()
     {
         _isPaused = false;
-        
+
     }
     public void SetTimer(float timeLimit, TimerType timerType, TimerDelegate timerDelegate)
     {
@@ -91,12 +88,12 @@ public class Timer : MonoBehaviour
     }
     string FormatSeconds(float elapsed)
     {
-        
+
         int minutes = (int)(elapsed / 60);
         int seconds = (int)(elapsed % 60);
-            
-        
-        if (5f <elapsed  && elapsed < 60f)
+
+
+        if (5f < elapsed && elapsed < 60f)
         {
             minutes = 0;
             seconds = (int)(elapsed % 60);
@@ -107,11 +104,8 @@ public class Timer : MonoBehaviour
         {
             return $"{elapsed:F2}";
         }
-       
+
         return $"{minutes:00}:{seconds:00}";
-        
+
     }
 }
-
-
-

@@ -47334,7 +47334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
+  m_SendPointerHoverToParent: 0
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -71235,6 +71235,7 @@ MonoBehaviour:
   Count_HP: 0
   Count_AR: 0
   Count_MV: 0
+  Count_JP: 0
 --- !u!43 &1296341919
 Mesh:
   m_ObjectHideFlags: 0
@@ -71883,6 +71884,8 @@ MonoBehaviour:
   currentMoney: 0
   totalPrice: 0
   currentMoneyText: {fileID: 1851820142}
+  nameText: {fileID: 0}
+  descriptionText: {fileID: 0}
 --- !u!43 &1304932770
 Mesh:
   m_ObjectHideFlags: 0
@@ -89974,8 +89977,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerImage: {fileID: 528483750}
   timerText: {fileID: 470369453}
-  timeLimit: 0
-  time: 0
 --- !u!1 &1652862087
 GameObject:
   m_ObjectHideFlags: 0
@@ -118151,9 +118152,19 @@ PrefabInstance:
       objectReference: {fileID: 1303005292}
     - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
+      propertyPath: repairShopTime
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
+        type: 3}
       propertyPath: GameRoundInfoUI
       value: 
       objectReference: {fileID: 904119540}
+    - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
+        type: 3}
+      propertyPath: RepairShopTimer
+      value: 
+      objectReference: {fileID: 1648131165}
     - target: {fileID: 5789351672964011462, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
       propertyPath: m_Name

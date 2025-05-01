@@ -7,7 +7,7 @@ public class BuyableObject_Skill : ScriptableObject
 {
     public Sprite icon;
    
-    public string name;
+    public string _name;
    
     public int price;
    

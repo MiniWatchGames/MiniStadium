@@ -24,7 +24,7 @@ public class PlayerHud : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerStat = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        playerStat = GameObject.FindWithTag("Player")?.GetComponent<PlayerController>();
         _detectStat = new DetectPlayerStateChanged(playerStat);
         
         playerHPBar = GameObject.Find("[Image] PlayerHpSlider");
@@ -38,9 +38,11 @@ public class PlayerHud : MonoBehaviour
 
     public void FixedUpdate()
     {
-        
-        _detectStat.playerHp = playerStat.CurrentHp;
-        _detectStat.playerMaxHp = playerStat.BaseMaxHp;
+        if (playerStat != null && _detectStat != null)
+        {
+            _detectStat.playerHp = playerStat.CurrentHp;
+            _detectStat.playerMaxHp = playerStat.BaseMaxHp;
+        }
     }
 
     // public void Update()

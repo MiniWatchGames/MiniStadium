@@ -13,6 +13,7 @@ public class PlayerItems
     public int count_HP = 0;
     public int count_AR = 0;
     public int count_MV = 0;
+    public int count_JP = 0;
 
     public (int, string)[][] Skills = new (int, string)[3][];
     //(0,"")일때 null

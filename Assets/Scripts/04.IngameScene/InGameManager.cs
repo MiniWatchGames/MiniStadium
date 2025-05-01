@@ -61,6 +61,8 @@ public class InGameManager : MonoBehaviour
     Dictionary<GameObject, Team> teamDictionary = new Dictionary<GameObject, Team>();
     [SerializeField] private Timer gameTimer;
     [SerializeField] private GameObject PlayerPrefab;
+    [SerializeField] private RepairShopTimer RepairShopTimer;
+    [SerializeField] private float repairShopTime = 5;
     private GameObject _playerPrefab;
 
     [SerializeField] public int currentRound = 0;
@@ -104,7 +106,8 @@ public class InGameManager : MonoBehaviour
                 GameRoundInfoUI.gameObject.SetActive(false);
                 //Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
-                SetGameTime(50, RoundState.InRound);
+                RepairShopTimer.SetTime = repairShopTime;
+                SetGameTime(repairShopTime, RoundState.InRound);
                 break;
             case RoundState.InRound:
                 //Debug.Log("In Round");
@@ -198,6 +201,7 @@ public class InGameManager : MonoBehaviour
         ResetRound();
 
         GameObject playerStat = GameObject.FindWithTag("Player");
+        if (playerStat is null) return;
         List<Spawner> countSpanwer = new List<Spawner>
             (FindObjectsByType<Spawner>(FindObjectsInactive.Include, FindObjectsSortMode.None));
 
@@ -226,7 +230,7 @@ public class InGameManager : MonoBehaviour
             PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
             if (_playerPrefab == null)
             {
-                _playerPrefab = Instantiate(PlayerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                _playerPrefab = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
             }
             else
             {
@@ -261,9 +265,11 @@ public class InGameManager : MonoBehaviour
     }
     public void SetPlayerTeam(GameObject player)
     {
+        if(player == null) return;
         int tmpRandom = Random.Range(0, 1);
         int Enemy = tmpRandom == 0 ? 1 : 0;
         GameObject EnemyPlayer = GameObject.FindWithTag("Enemy");
+        if(EnemyPlayer == null) return;
 
 
         teamDictionary[player.gameObject] = (Team)tmpRandom;
