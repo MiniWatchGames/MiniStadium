@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 3
   statusName: "\uC810\uD504\uB825"
-  description: "\uB808\uBCA8 \uB2F9 \uC810\uD504 \uB192\uC774 (+?) \uC99D\uAC00"
+  description: "\uB808\uBCA8 \uB2F9 \uC810\uD504 (+?) \uC99D\uAC00"
   NormalColor: {r: 1, g: 1, b: 1, a: 1}
   HighlightedColor: {r: 0.99618554, g: 1, b: 0.7783019, a: 1}
   PressedColor: {r: 1, g: 0.8668608, b: 0.6367924, a: 1}
