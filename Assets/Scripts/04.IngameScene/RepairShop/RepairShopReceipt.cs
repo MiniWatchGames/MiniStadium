@@ -17,7 +17,7 @@ public class RepairShopReceipt : MonoBehaviour
     }
     [SerializeField] private ReceiptSlotRow[] receiptSlotRows;
 
-    [SerializeField] public RepairShop RepairShop;
+  	[SerializeField] public RepairShop RepairShop;
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
     public PlayerItems PlayerItems = new PlayerItems();
@@ -66,21 +66,21 @@ public class RepairShopReceipt : MonoBehaviour
         PlayerItems.count_HP = Count_HP;
         PlayerItems.count_AR = Count_AR;
         PlayerItems.count_MV = Count_MV;
-        PlayerItems.count_JP = Count_JP;
+		PlayerItems.count_JP = Count_JP;
 
         // 스킬
         for (int i = 0; i < 3; i++)
         {
             // 3개의 튜플 초기화
-            PlayerItems.Skills[i] = new (int,string)[3];            
+            PlayerItems.Skills[i] = new (int, string)[3];
             var j = 0;
-            
+
             foreach (var slot in receiptSlots[i])
             {
-                if (receiptSlots[i] != null &&  slot._checkbox.activeSelf)
+                if (receiptSlots[i] != null && slot._checkbox.activeSelf)
                 {
-                    if(slot.ID == 0 || slot._name.text == "") continue;
-                    PlayerItems.Skills[i][j] = new (slot.ID, slot._name.text);
+                    if (slot.ID == 0 || slot._name.text == "") continue;
+                    PlayerItems.Skills[i][j] = new(slot.ID, slot._name.text);
                     j++;
                 }
             }
@@ -92,7 +92,7 @@ public class RepairShopReceipt : MonoBehaviour
         // Debug.Log($"Skill 20 : {Dump(PlayerItems.Skills[2][0])}, Skill 21 : {Dump(PlayerItems.Skills[2][1])}, Skill 22 : {Dump(PlayerItems.Skills[2][2])}");
     }
     
-    // private string Dump((int, string) tuple)
+ // private string Dump((int, string) tuple)
     // {
     //     return tuple == default ? "null" : $"{tuple.Item1}:{tuple.Item2}";
     // }
@@ -115,7 +115,7 @@ public class RepairShopReceipt : MonoBehaviour
         Count_HP = 0;
         Count_AR = 0;
         Count_MV = 0;
-        Count_JP = 0;
+ 		Count_JP = 0;
 
         for (int i = 0; i < receiptSlots.Length; i++)
         {
@@ -142,6 +142,7 @@ public class RepairShopReceipt : MonoBehaviour
         // 무기 선택 해제
         if (type == 3)
         {
+           
             if (RepairShopWeapon.selectedWeapon != null && RepairShopWeapon.selectedWeapon != RepairShopWeapon.currentWeapon)
             {
                 RepairShop.totalPrice -= RepairShopWeapon.selectedWeapon.price;
@@ -149,9 +150,9 @@ public class RepairShopReceipt : MonoBehaviour
                 RepairShopWeapon.selectedWeapon = null;
                 RepairShop.UpdateMoneyText(RepairShop.totalPrice);
                 ResetTargetSlot(slot, 3);
-                RepairShopSkill.SetWeaponSkillUI(-1);
-                ReceiptUndo(receiptSlots[1][0],0);
-                ReceiptUndo(receiptSlots[1][1],1);
+  				RepairShopSkill.SetWeaponSkillUI(-1);
+                ReceiptUndo(receiptSlots[1][0], 0);
+                ReceiptUndo(receiptSlots[1][1], 1);
             }
             return;
         }

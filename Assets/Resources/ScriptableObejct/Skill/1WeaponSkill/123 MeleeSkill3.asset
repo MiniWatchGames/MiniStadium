@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3eac3f510134e57458e71407c3298bfc, type: 3}
-  m_Name: 200 PassiveSkill0
+  m_Name: 123 MeleeSkill3
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: ad53cd0fe3a08294b985fed6bca2039c, type: 3}
-  _name: "\uD328\uC2DC\uBE0C0"
+  _name: "\uADFC\uC811 \uC2A4\uD0AC3"
   price: 300
-  description: "\uD328\uC2DC\uBE0C \uC2A4\uD0AC 0 \uD328\uC2DC\uBE0C \uC2A4\uD0AC
-    0 \uD328\uC2DC\uBE0C \uC2A4\uD0AC 0"
-  skillType: 2
-  weaponType: 0
+  description: "\uADFC\uC811 \uC2A4\uD0AC \uC124\uBA853"
+  skillType: 1
+  weaponType: 2

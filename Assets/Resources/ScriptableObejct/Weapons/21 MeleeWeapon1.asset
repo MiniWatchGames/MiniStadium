@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b9884913bedf484c8827dd15ecfd538, type: 3}
-  m_Name: 20 MeleeWeapon0
+  m_Name: 21 MeleeWeapon1
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 24c9bae98ec00f54bbc9076f0167880b, type: 3}
   _name: "\uAC80"
-  price: 300
-  description: "\uB204\uAD6C\uB098 \uC544\uB294 \uADF8\uB7F0 \uAC80\uC785\uB2C8\uB2E4."
+  price: 0
+  description: "\uAC80 \uC124\uBA85"
   type: 2

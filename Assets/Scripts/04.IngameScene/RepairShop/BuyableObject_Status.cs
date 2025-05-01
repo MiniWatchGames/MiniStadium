@@ -8,7 +8,7 @@ public class BuyableObject_Status : ScriptableObject
     public int type; // 0=HP 1=Armor 2=Speed
     public string statusName;
     public string description;
-    
+
     public Color NormalColor;
     public Color HighlightedColor;
     public Color PressedColor;
