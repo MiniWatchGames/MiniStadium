@@ -9,7 +9,7 @@ public class UpperTabs : MonoBehaviour
     
     public delegate Button TabDelegate(Button button);
     public TabDelegate tabButtonDelegate;
-    [SerializeField] private UpperTabs repairShop;
+    [SerializeField] private RepairShop repairShop;
     [SerializeField] private GameObject WeaponTab;
     [SerializeField] private GameObject StatusTab;
     [SerializeField] private GameObject SkillTab;

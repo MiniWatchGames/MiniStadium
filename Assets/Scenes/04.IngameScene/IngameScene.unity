@@ -1101,6 +1101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abc8b8a6fd199424dba32418677ae671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  repairShop: {fileID: 0}
   WeaponTab: {fileID: 130993869}
   StatusTab: {fileID: 1609483507}
   SkillTab: {fileID: 940028361}
@@ -4757,8 +4758,6 @@ MonoBehaviour:
   weaponSlotPrefab: {fileID: 7765259059937842148, guid: 9a3667a47236fd84887dbd1474c6d529,
     type: 3}
   weaponSlotParent: {fileID: 1684203660}
-  BOweaponList: []
-  RepairShopWeapons: []
   currentWeapon: {fileID: 0}
   selectedWeapon: {fileID: 0}
 --- !u!1 &131002439
@@ -42741,7 +42740,6 @@ MonoBehaviour:
   BOmoveSkills: []
   BOweaponSkills: []
   BOpassiveSkills: []
-  maxPerType: 010000000200000003000000
   remainingSkillsToBuy: 010000000200000003000000
 --- !u!43 &947462923
 Mesh:
@@ -60081,11 +60079,6 @@ MonoBehaviour:
   RepairShopSkill: {fileID: 940028364}
   playerName: {fileID: 1644179410}
   noneSprite: {fileID: 21300000, guid: bec9c5b461f77f649bb970a80ef70e38, type: 3}
-  _defaultNames:
-  - "\uC774\uB3D9\uAE30"
-  - "\uBB34\uAE30 \uC804\uC6A9\uAE30"
-  - "\uD328\uC2DC\uBE0C"
-  - "\uBB34\uAE30 \uC5C6\uC74C"
   status: {fileID: 5256223768004525494, guid: 6f88b9908e311b24bbd576ee8c407c7c, type: 3}
   statusGroup: {fileID: 3549640501646963342, guid: 2cf5f13d0cd86064e87755223d6aed2b,
     type: 3}
@@ -74635,11 +74628,6 @@ MonoBehaviour:
   RepairShop: {fileID: 1303005298}
   Receipt: {fileID: 1296170055}
   types: []
-  _maxUpgradeCount: 5
-  _statusOriginalPrice: 100
-  _statusAddtivePrice: 100
-  _totalWorth: 0
-  _priceTags: []
   statusPrefab: {fileID: 2860442263994008382, guid: 1a8ecc715ee63ab4a8334748b228e294,
     type: 3}
   statusGroupPrefab: {fileID: 6251202504613155447, guid: f231242d7b24c064c95a45434f5c66d0,
@@ -74650,7 +74638,6 @@ MonoBehaviour:
     type: 3}
   pricePrefab: {fileID: 6163927060514845221, guid: a1135dc38dd2f2647b2bd85ae3fa71f8,
     type: 3}
-  _lastButtonIndexes: 
 --- !u!114 &1609483509
 MonoBehaviour:
   m_ObjectHideFlags: 0
