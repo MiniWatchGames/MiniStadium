@@ -41,18 +41,18 @@ public class DetectPlayerStateChanged : INotifyPropertyChanged
 
     private float playerHp_Base;
 
-    public float playerHpValue
-    {
-        get
-        {
-            if(playerHp_Base != playerStat.CurrentHp)
-            {
-                playerHp_Base = playerStat.CurrentHp;
-                OnPropertyChanged("playerHpValue");
-            }
-            return playerHp_Base;
-        }
-    }
+    // public float playerHpValue
+    // {
+    //     get
+    //     {
+    //         if(playerHp_Base != playerStat.CurrentHp)
+    //         {
+    //             playerHp_Base = playerStat.CurrentHp;
+    //             OnPropertyChanged("playerHpValue");
+    //         }
+    //         return playerHp_Base;
+    //     }
+    // }
     public float playerHp
     {
         get => playerHp_Base;
