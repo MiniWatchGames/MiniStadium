@@ -17,8 +17,8 @@ public class HpRegenerationPassive : MonoBehaviour, IPassive
 
     IEnumerator HelthRegen(PlayerController playerController) {
         while (true) { 
-            if(playerController.CurrentHp < playerController.BaseMaxHp)
-            playerController.CurrentHp += 1;
+            if(playerController.CurrentHp.Value < playerController.BaseMaxHp.Value)
+            playerController.CurrentHp.Value += 1;
             yield return new WaitForSeconds(2f);
         }
     }

@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [SerializeField] private LayerMask groundLayer;
 
     private CharacterController _characterController;
-    private CameraController _cameraController;
     private const float Gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
     private bool _isDead = false;
@@ -79,10 +78,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private Stat baseMoveSpeed;
     private Stat baseJumpPower;
 
-    public float BaseMaxHp => baseMaxHp.Value;
-    public float BaseDefence => baseDefence.Value;
-    public float BaseMoveSpeed => baseMoveSpeed.Value;
-    public float BaseJumpPower => baseJumpPower.Value;
+    public Stat BaseMaxHp => baseMaxHp;
+    public Stat BaseDefence => baseDefence;
+    public Stat BaseMoveSpeed => baseMoveSpeed;
+    public Stat BaseJumpPower => baseJumpPower;
 
 
     private Dictionary<StatType, Stat> statDictionary;
@@ -93,12 +92,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     
     private ObservableFloat currentHp;
 
-    public float CurrentHp
+    public ObservableFloat CurrentHp
     {
-        get => currentHp.Value;
+        get => currentHp;
         set
         {
-            currentHp.Value = value;
+            currentHp = value;
             if (currentHp.Value <= 0 && !_isDead)
             {
                 Debug.Log("주금..");
@@ -144,12 +143,14 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     // --------
     // 카메라 관련
     [Header("Camera")]
+    [SerializeField] private CameraController cameraController;
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float rotationSmoothSpeed = 30f; // 회전 부드러움 정도
     [SerializeField] private float minAngle;
     [SerializeField] private float maxAngle;
     private float _yaw = 0f;
     private float _pitch = 0f;
+    public CameraController CameraController { get => cameraController; }
 
     [Header("Weapon")]
     private PlayerWeapon _playerWeapon;
@@ -179,7 +180,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _characterController = GetComponent<CharacterController>();
         _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
-        _cameraController = Camera.main.GetComponent<CameraController>();
 
         _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
         _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
@@ -360,7 +360,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         transform.rotation = Quaternion.Slerp(transform.rotation, targetBodyRotation, Time.deltaTime * rotationSmoothSpeed);
 
         // 카메라 컨트롤러에 값 전달
-        _cameraController.UpdateCamera(_pitch, _yaw);
+        cameraController.UpdateCamera(_pitch, _yaw);
     }
 
     public void OnJumpPressed()
@@ -368,7 +368,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 점프 
         if (IsGrounded)
         {
-            _velocity.y = Mathf.Sqrt(BaseJumpPower * -2f * Gravity);
+            _velocity.y = Mathf.Sqrt(BaseJumpPower.Value * -2f * Gravity);
             SetMovementState("Jump");
         }
     }
@@ -622,9 +622,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
         if (stat == StatType.MaxHp)
         {
-            if (CurrentHp >= baseMaxHp.Value)
+            if (CurrentHp.Value >= baseMaxHp.Value)
             {
-                CurrentHp = baseMaxHp.Value;
+                CurrentHp.Value = baseMaxHp.Value;
             }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
@@ -641,9 +641,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
         if (stat == StatType.MaxHp)
         {
-            if (CurrentHp >= baseMaxHp.Value)
+            if (CurrentHp.Value >= baseMaxHp.Value)
             {
-                CurrentHp = baseMaxHp.Value;
+                CurrentHp.Value = baseMaxHp.Value;
             }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
@@ -660,9 +660,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
         if (stat == StatType.MaxHp)
         {
-            if (CurrentHp >= baseMaxHp.Value)
+            if (CurrentHp.Value >= baseMaxHp.Value)
             {
-                CurrentHp = baseMaxHp.Value;
+                CurrentHp.Value = baseMaxHp.Value;
             }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
@@ -784,8 +784,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
 
         //카메라 설정 (아마 기존에 이미 들어가 있어서 없어도 괜찮을 듯)
-        _cameraController = Camera.main?.GetComponent<CameraController>();
-        _cameraController.ResetCamera(head);
+        //_cameraController = Camera.main?.GetComponent<CameraController>();
+        // 멀티플레이에서 메인카메라를 사용한다면 둘의 카메라가 겹칠 수 있기 때문에 개별카메라로 변경하였습니다.
+        cameraController.ResetCamera(head);
 
         //상태 변경
         ActionFsm?.ChangeState(defaultState, this);
@@ -832,7 +833,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _isDead = false;
 
         //풀피 만들어주기
-        CurrentHp = baseMaxHp.Value;
+        CurrentHp.Value = baseMaxHp.Value;
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
         PurchaseManager.ResetPurchasedPlayerItems();
     }
@@ -848,7 +849,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         InputManager.instance.Register(this);
 
         // 카메라 설정
-        _cameraController = Camera.main.GetComponent<CameraController>();
         // _cameraController.SetTarget(transform);
         // _cameraController.SetSpineTarget(rotationTarget);
         // _cameraController.IsIdle = IsIdle;
@@ -896,7 +896,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _isDead = false;
 
         //풀피 만들어주기
-        CurrentHp = baseMaxHp.Value;
+        CurrentHp.Value = baseMaxHp.Value;
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
         PurchaseManager.ResetPurchasedPlayerItems();
     }
