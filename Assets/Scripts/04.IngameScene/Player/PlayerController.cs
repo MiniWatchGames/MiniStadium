@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [SerializeField] private LayerMask groundLayer;
 
     private CharacterController _characterController;
-    private CameraController _cameraController;
     private const float Gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
     private bool _isDead = false;
@@ -144,12 +143,14 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     // --------
     // 카메라 관련
     [Header("Camera")]
+    [SerializeField] private CameraController cameraController;
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float rotationSmoothSpeed = 30f; // 회전 부드러움 정도
     [SerializeField] private float minAngle;
     [SerializeField] private float maxAngle;
     private float _yaw = 0f;
     private float _pitch = 0f;
+    public CameraController CameraController { get => cameraController; }
 
     [Header("Weapon")]
     private PlayerWeapon _playerWeapon;
@@ -179,7 +180,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _characterController = GetComponent<CharacterController>();
         _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
-        _cameraController = Camera.main.GetComponent<CameraController>();
 
         _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
         _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
@@ -360,7 +360,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         transform.rotation = Quaternion.Slerp(transform.rotation, targetBodyRotation, Time.deltaTime * rotationSmoothSpeed);
 
         // 카메라 컨트롤러에 값 전달
-        _cameraController.UpdateCamera(_pitch, _yaw);
+        cameraController.UpdateCamera(_pitch, _yaw);
     }
 
     public void OnJumpPressed()
@@ -784,8 +784,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
 
         //카메라 설정 (아마 기존에 이미 들어가 있어서 없어도 괜찮을 듯)
-        _cameraController = Camera.main?.GetComponent<CameraController>();
-        _cameraController.ResetCamera(head);
+        //_cameraController = Camera.main?.GetComponent<CameraController>();
+        // 멀티플레이에서 메인카메라를 사용한다면 둘의 카메라가 겹칠 수 있기 때문에 개별카메라로 변경하였습니다.
+        cameraController.ResetCamera(head);
 
         //상태 변경
         ActionFsm?.ChangeState(defaultState, this);
@@ -848,7 +849,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         InputManager.instance.Register(this);
 
         // 카메라 설정
-        _cameraController = Camera.main.GetComponent<CameraController>();
         // _cameraController.SetTarget(transform);
         // _cameraController.SetSpineTarget(rotationTarget);
         // _cameraController.IsIdle = IsIdle;
