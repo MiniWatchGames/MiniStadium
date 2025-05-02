@@ -38,6 +38,7 @@ public class PlayerHud : MonoBehaviour
 
     public void FixedUpdate()
     {
+        
         if (playerStat != null && _detectStat != null)
         {
             _detectStat.playerHp = playerStat.CurrentHp;

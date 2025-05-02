@@ -200,8 +200,8 @@ public class InGameManager : MonoBehaviour
     {
         ResetRound();
 
-        GameObject playerStat = GameObject.FindWithTag("Player");
-        if (playerStat is null) return;
+        //GameObject playerStat = GameObject.FindWithTag("Player");
+        //if (playerStat is null) return;
         List<Spawner> countSpanwer = new List<Spawner>
             (FindObjectsByType<Spawner>(FindObjectsInactive.Include, FindObjectsSortMode.None));
 
@@ -217,8 +217,9 @@ public class InGameManager : MonoBehaviour
                 mapSpawners[countSpanwer[i].transform.parent.gameObject].Add(countSpanwer[i]);
             }
         }
-        SetPlayerTeam(playerStat);
+        
         SetGameState(GameState.StartGame);
+        //SetPlayerTeam(playerStat);
         maps.AddRange(GameObject.FindGameObjectsWithTag("Map"));
     }
 
