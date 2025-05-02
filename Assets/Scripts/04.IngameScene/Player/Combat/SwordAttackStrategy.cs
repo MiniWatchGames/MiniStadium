@@ -12,15 +12,18 @@ public class SwordAttackStrategy : IAttackStrategy
         private int _maxCombo = 2;
         private SwordController _swordController;
         
+        private bool _waitingForNextCombo = false;
+        private float _nextComboTime = 0f;
+        
         public void Enter(PlayerController playerController, GameObject weaponObject)
         {
             _playerController = playerController;
             _swordController = weaponObject.GetComponent<SwordController>();
             
+            _currentCombo = 0;
             _swordController.AttackStart();
             _isAttacking = true;
             _comboActive = false;
-            _currentCombo = 0;
             
             _playerController.Animator.SetTrigger(Attack);
         }
@@ -50,10 +53,17 @@ public class SwordAttackStrategy : IAttackStrategy
                 }
                 else
                 {
-                    // 다음 콤보로 전환될 때 상태 업데이트
-                    _swordController.AttackEnd();
-                    _currentCombo++;
-                    _swordController.AttackStart();
+                    if (!_waitingForNextCombo)
+                    {
+                        _swordController.AttackEnd();
+                        _waitingForNextCombo = true;
+                        _nextComboTime = Time.time + 0.033f; // 한 프레임 정도 대기
+                    }
+                    else if (Time.time >= _nextComboTime)
+                    {
+                        _currentCombo++;
+                        _swordController.SetComboIndex(_currentCombo);
+                    }
                 }
             }
         }
