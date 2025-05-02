@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordController : MonoBehaviour
+public class SwordController : MonoBehaviour, IWeapon
 {
     [Serializable]
     public class SwordTriggerZone
@@ -13,8 +13,10 @@ public class SwordController : MonoBehaviour
     }
     
     [SerializeField] private SwordTriggerZone[] _triggerZones;
-    [SerializeField] private int attackPower = 10;
+    [SerializeField] private ObservableFloat _attackPower;
     [SerializeField] private LayerMask targetLayerMask;
+    [SerializeField] private ObservableFloat _currentAmmo;
+    [SerializeField] private ObservableFloat _maxAmmo;
     
     // 충돌 처리
     private Vector3[] _previousPositions;
@@ -23,10 +25,17 @@ public class SwordController : MonoBehaviour
     private RaycastHit[] _hits = new RaycastHit[10];
     private bool _isAttacking = false;
 
+    public ObservableFloat Damage { get => _attackPower;}
+    public ObservableFloat CurrentAmmo { get => _currentAmmo;}
+    public ObservableFloat MaxAmmo { get => _maxAmmo; }
+
     private void Start()
     {
         _previousPositions = new Vector3[_triggerZones.Length];
         _hitColliders = new HashSet<Collider>();
+        _attackPower = new ObservableFloat(10, "SwordAttackPower");
+        _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
+        _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
 
     // 공격 시작 함수
@@ -92,7 +101,7 @@ public class SwordController : MonoBehaviour
             DamageInfo damageInfo = new DamageInfo
             {
                 attacker = gameObject,
-                damage = attackPower,
+                damage = (int) _attackPower.Value,
                 hitPoint = hitPoint,
                 hitDirection = (target.transform.position - transform.position).normalized
             };
