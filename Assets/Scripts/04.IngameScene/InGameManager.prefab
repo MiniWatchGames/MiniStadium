@@ -50,9 +50,12 @@ MonoBehaviour:
   currentWinLoseState: 0
   currentTeam: 0
   currentRoundState: 0
+  Damagefield: {fileID: 0}
   gameTimer: {fileID: 0}
-  player: {fileID: 0}
-  Enemy: {fileID: 0}
+  PlayerPrefab: {fileID: 7244771892483126651, guid: 72e1acac55be246ac9671c7ac3c2f98c,
+    type: 3}
+  RepairShopTimer: {fileID: 0}
+  repairShopTime: 50
   currentRound: 0
   BlueWinCount: 0
   RedWinCount: 0

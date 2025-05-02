@@ -25,7 +25,7 @@ public class IncreasingRandomStatEvery20Seconds : MonoBehaviour, IPassive
                 case 0:
                     //최대 체력 증가, 체력 5 회복
                     playerController.AddStatDecorate(StatType.MaxHp, 5);
-                    playerController.CurrentHp += 5;
+                    playerController.CurrentHp.Value += 5;
                     break;
                 case 1:
                     //이동 속도 증가

@@ -63,6 +63,10 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private RepairShopTimer RepairShopTimer;
     [SerializeField] private float repairShopTime = 5;
+    [SerializeField] private PlayerHud playerHud;
+    private PlayerController playerContoroller;
+    private GameObject player;
+
     private GameObject _playerPrefab;
 
     [SerializeField] public int currentRound = 0;
@@ -107,10 +111,27 @@ public class InGameManager : MonoBehaviour
                 //Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
                 RepairShopTimer.SetTime = repairShopTime;
+                //플레이어 초기화
+                if (playerContoroller is not null) {
+                    playerContoroller.ResetCharacter();
+                }
                 SetGameTime(repairShopTime, RoundState.InRound);
                 break;
             case RoundState.InRound:
                 //Debug.Log("In Round");
+                //구매정보 넘기고, 플레이어 없다면 생성, 플레이어 구매 내역 적용
+                PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
+                if (player is null)
+                {
+                    player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
+                    SetPlayerTeam(player);
+                    playerContoroller = player.GetComponent<PlayerController>();
+                    playerHud.init(playerContoroller);
+                }
+              
+                playerContoroller.ReInit();
+                RepairShopUI.SetActive(!RepairShopUI.activeSelf);
+
                 currentRoundState = RoundState.InRound;
                 SetGameTime(50, RoundState.RoundEnd);
                 break;
@@ -200,8 +221,7 @@ public class InGameManager : MonoBehaviour
     {
         ResetRound();
 
-        //GameObject playerStat = GameObject.FindWithTag("Player");
-        //if (playerStat is null) return;
+  
         List<Spawner> countSpanwer = new List<Spawner>
             (FindObjectsByType<Spawner>(FindObjectsInactive.Include, FindObjectsSortMode.None));
 
@@ -217,9 +237,8 @@ public class InGameManager : MonoBehaviour
                 mapSpawners[countSpanwer[i].transform.parent.gameObject].Add(countSpanwer[i]);
             }
         }
-        
+
         SetGameState(GameState.StartGame);
-        //SetPlayerTeam(playerStat);
         maps.AddRange(GameObject.FindGameObjectsWithTag("Map"));
     }
 
@@ -228,18 +247,7 @@ public class InGameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.B) && currentRoundState == RoundState.RoundStart)
         {
-            PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
-            if (_playerPrefab == null)
-            {
-                _playerPrefab = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
-            }
-            else
-            {
-                var player = _playerPrefab.GetComponent<PlayerController>();
-                player.ResetCharacter();
-                player.ReInit();
-            }
-            RepairShopUI.SetActive(!RepairShopUI.activeSelf);
+           
         }
 
         if (currentRound == 3)
@@ -268,14 +276,14 @@ public class InGameManager : MonoBehaviour
     {
         if(player == null) return;
         int tmpRandom = Random.Range(0, 1);
-        int Enemy = tmpRandom == 0 ? 1 : 0;
+        //int Enemy = tmpRandom == 0 ? 1 : 0;
         GameObject EnemyPlayer = GameObject.FindWithTag("Enemy");
         if(EnemyPlayer == null) return;
 
 
-        teamDictionary[player.gameObject] = (Team)tmpRandom;
+        teamDictionary[player.gameObject] = Team.Blue;
         //playerStat.team = (Team)tmpRandom;
-        teamDictionary[EnemyPlayer] = (Team)Enemy;
+        teamDictionary[EnemyPlayer] = Team.Red;
         //EnemyPlayer.GetComponent<TestStat>().team = (Team)Enemy;
         //플레이어가 죽었을때 패배 표시
         player.GetComponent<PlayerController>().OnPlayerDie = (player) =>

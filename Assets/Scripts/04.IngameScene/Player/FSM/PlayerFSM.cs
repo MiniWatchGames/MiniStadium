@@ -115,7 +115,7 @@ public class PlayerFSM<T> where T : Enum
     {
         if (_states.ContainsKey(stateType))
         {
-            Debug.LogError($"State {stateType} already exists.");
+            Debug.Log($"State {stateType} already exists.");
             return;
         }
         _states.Add(stateType, state);

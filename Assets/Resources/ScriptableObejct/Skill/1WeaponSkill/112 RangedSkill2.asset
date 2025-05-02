@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: 112 RangedSkill2
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: ad53cd0fe3a08294b985fed6bca2039c, type: 3}
-  _name: "\uC6D0\uAC70\uB9AC \uC2A4\uD0AC 2"
+  _name: "\uC6D0\uAC70\uB9AC \uC2A4\uD0AC2"
   price: 300
-  description: "\uC6D0\uAC70\uB9AC \uC2A4\uD0AC 2\uC6D0\uAC70\uB9AC \uC2A4\uD0AC
-    2\uC6D0\uAC70\uB9AC \uC2A4\uD0AC 2"
+  description: "\uC6D0\uAC70\uB9AC \uC2A4\uD0AC \uC124\uBA852"
   skillType: 1
   weaponType: 1
