@@ -79,10 +79,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private Stat baseMoveSpeed;
     private Stat baseJumpPower;
 
-    public float BaseMaxHp => baseMaxHp.Value;
-    public float BaseDefence => baseDefence.Value;
-    public float BaseMoveSpeed => baseMoveSpeed.Value;
-    public float BaseJumpPower => baseJumpPower.Value;
+    public Stat BaseMaxHp => baseMaxHp;
+    public Stat BaseDefence => baseDefence;
+    public Stat BaseMoveSpeed => baseMoveSpeed;
+    public Stat BaseJumpPower => baseJumpPower;
 
 
     private Dictionary<StatType, Stat> statDictionary;
@@ -93,12 +93,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     
     private ObservableFloat currentHp;
 
-    public float CurrentHp
+    public ObservableFloat CurrentHp
     {
-        get => currentHp.Value;
+        get => currentHp;
         set
         {
-            currentHp.Value = value;
+            currentHp = value;
             if (currentHp.Value <= 0 && !_isDead)
             {
                 Debug.Log("주금..");
@@ -368,7 +368,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 점프 
         if (IsGrounded)
         {
-            _velocity.y = Mathf.Sqrt(BaseJumpPower * -2f * Gravity);
+            _velocity.y = Mathf.Sqrt(BaseJumpPower.Value * -2f * Gravity);
             SetMovementState("Jump");
         }
     }
@@ -622,9 +622,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
         if (stat == StatType.MaxHp)
         {
-            if (CurrentHp >= baseMaxHp.Value)
+            if (CurrentHp.Value >= baseMaxHp.Value)
             {
-                CurrentHp = baseMaxHp.Value;
+                CurrentHp.Value = baseMaxHp.Value;
             }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
@@ -641,9 +641,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
         if (stat == StatType.MaxHp)
         {
-            if (CurrentHp >= baseMaxHp.Value)
+            if (CurrentHp.Value >= baseMaxHp.Value)
             {
-                CurrentHp = baseMaxHp.Value;
+                CurrentHp.Value = baseMaxHp.Value;
             }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
@@ -660,9 +660,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
         if (stat == StatType.MaxHp)
         {
-            if (CurrentHp >= baseMaxHp.Value)
+            if (CurrentHp.Value >= baseMaxHp.Value)
             {
-                CurrentHp = baseMaxHp.Value;
+                CurrentHp.Value = baseMaxHp.Value;
             }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
@@ -832,7 +832,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _isDead = false;
 
         //풀피 만들어주기
-        CurrentHp = baseMaxHp.Value;
+        CurrentHp.Value = baseMaxHp.Value;
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
         PurchaseManager.ResetPurchasedPlayerItems();
     }
@@ -896,7 +896,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _isDead = false;
 
         //풀피 만들어주기
-        CurrentHp = baseMaxHp.Value;
+        CurrentHp.Value = baseMaxHp.Value;
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
         PurchaseManager.ResetPurchasedPlayerItems();
     }
