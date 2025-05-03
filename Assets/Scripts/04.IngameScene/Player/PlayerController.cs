@@ -14,6 +14,9 @@ public enum ActionState
     Dead,
     MovementSkills,
     WeaponSkills,
+    RunSkill,
+    DoubleJumpSkill,
+    TeleportSkill,
     None
 }
 
@@ -83,7 +86,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public Stat BaseDefence => baseDefence;
     public Stat BaseMoveSpeed => baseMoveSpeed;
     public Stat BaseJumpPower => baseJumpPower;
-
 
     private Dictionary<StatType, Stat> statDictionary;
 
@@ -172,7 +174,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public bool IsGrounded
     {
-        get { return GetDistanceToGround() <= 0.03f; }
+        get {return GetDistanceToGround() <= 0.03f; }
     }
 
     private void Awake()
@@ -208,7 +210,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
-        ReInit();
+        //ReInit();
     }
 
 
@@ -369,11 +371,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 점프 
         if (IsGrounded)
         {
-            _velocity.y = Mathf.Sqrt(BaseJumpPower.Value * -2f * Gravity);
+            Jump(); 
             SetMovementState("Jump");
         }
     }
-
+    public void Jump() {
+        _velocity.y = Mathf.Sqrt(BaseJumpPower.Value * -2f * Gravity);
+    }
     public void OnFirePressed()
     {
         // 공격 (마우스 다운)
@@ -407,7 +411,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_weaponSkills?.Count >= 1)
         {
             var weaponSkill = _weaponSkills[0];
-            _firstWeaponSkill = weaponSkill.ToString();
+            _firstWeaponSkill = weaponSkill.Item1.ToString();
             if (_actionFsm.CurrentState != weaponSkill.Item1)
                 SetActionState(_firstWeaponSkill);
         }
@@ -430,7 +434,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_weaponSkills?.Count >= 2)
         {
             var weaponSkill = _weaponSkills[1];
-            _secondWeaponSkill = weaponSkill.ToString();
+            _secondWeaponSkill = weaponSkill.Item1.ToString();
             if (_actionFsm.CurrentState != weaponSkill.Item1)
                 SetActionState(_secondWeaponSkill);
         }
@@ -452,7 +456,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_movementSkills?.Count >= 1)
         {
             var moveMentSkill = _movementSkills[0];
-            _firstMoveSkill = moveMentSkill.ToString();
+            _firstMoveSkill = moveMentSkill.Item1.ToString();
             if (_actionFsm.CurrentState != moveMentSkill.Item1)
                 SetActionState(_firstMoveSkill);
         }
@@ -474,7 +478,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_movementSkills?.Count >= 2)
         {
             var moveMentSkill = _movementSkills[1];
-            _secondMoveSkill = moveMentSkill.ToString();
+            _secondMoveSkill = moveMentSkill.Item1.ToString();
             if (_actionFsm.CurrentState != moveMentSkill.Item1)
                 SetActionState(_secondMoveSkill);
         }

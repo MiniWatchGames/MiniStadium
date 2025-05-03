@@ -19,8 +19,8 @@ public class ActionIdleState : PlayerActionState
     {
         base.Exit();
     }
-    public override void Update()
+    public override void StateUpdate()
     {
-        base.Update();
+        base.StateUpdate();
     }
 }
