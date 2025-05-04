@@ -14,6 +14,9 @@ public enum ActionState
     Dead,
     MovementSkills,
     WeaponSkills,
+    RunSkill,
+    DoubleJumpSkill,
+    TeleportSkill,
     None
 }
 
@@ -72,6 +75,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [SerializeField] private float maxHpIncreaseAmount;
     [SerializeField] private float defenceIncreaseAmount;
     [SerializeField] private float moveSpeedIncreaseAmount;
+    [SerializeField] private float jumpPowerIncreaseAmount;
 
     private Stat baseMaxHp;
     private Stat baseDefence;
@@ -82,7 +86,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public Stat BaseDefence => baseDefence;
     public Stat BaseMoveSpeed => baseMoveSpeed;
     public Stat BaseJumpPower => baseJumpPower;
-
 
     private Dictionary<StatType, Stat> statDictionary;
 
@@ -171,7 +174,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public bool IsGrounded
     {
-        get { return GetDistanceToGround() <= 0.03f; }
+        get {return GetDistanceToGround() <= 0.03f; }
     }
 
     private void Awake()
@@ -207,7 +210,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
-        ReInit();
+        //ReInit();
     }
 
 
@@ -368,11 +371,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 점프 
         if (IsGrounded)
         {
-            _velocity.y = Mathf.Sqrt(BaseJumpPower.Value * -2f * Gravity);
+            Jump(); 
             SetMovementState("Jump");
         }
     }
-
+    public void Jump() {
+        _velocity.y = Mathf.Sqrt(BaseJumpPower.Value * -2f * Gravity);
+    }
     public void OnFirePressed()
     {
         // 공격 (마우스 다운)
@@ -406,7 +411,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_weaponSkills?.Count >= 1)
         {
             var weaponSkill = _weaponSkills[0];
-            _firstWeaponSkill = weaponSkill.ToString();
+            _firstWeaponSkill = weaponSkill.Item1.ToString();
             if (_actionFsm.CurrentState != weaponSkill.Item1)
                 SetActionState(_firstWeaponSkill);
         }
@@ -429,7 +434,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_weaponSkills?.Count >= 2)
         {
             var weaponSkill = _weaponSkills[1];
-            _secondWeaponSkill = weaponSkill.ToString();
+            _secondWeaponSkill = weaponSkill.Item1.ToString();
             if (_actionFsm.CurrentState != weaponSkill.Item1)
                 SetActionState(_secondWeaponSkill);
         }
@@ -451,7 +456,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_movementSkills?.Count >= 1)
         {
             var moveMentSkill = _movementSkills[0];
-            _firstMoveSkill = moveMentSkill.ToString();
+            _firstMoveSkill = moveMentSkill.Item1.ToString();
             if (_actionFsm.CurrentState != moveMentSkill.Item1)
                 SetActionState(_firstMoveSkill);
         }
@@ -473,7 +478,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_movementSkills?.Count >= 2)
         {
             var moveMentSkill = _movementSkills[1];
-            _secondMoveSkill = moveMentSkill.ToString();
+            _secondMoveSkill = moveMentSkill.Item1.ToString();
             if (_actionFsm.CurrentState != moveMentSkill.Item1)
                 SetActionState(_secondMoveSkill);
         }
@@ -681,10 +686,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         var AR = _playerItems.count_AR;
         var mv = _playerItems.count_MV;
         var hp = _playerItems.count_HP;
+        var jp = _playerItems.count_JP;
 
         AddStatDecorates(StatType.MaxHp, hp, maxHpIncreaseAmount);
         AddStatDecorates(StatType.Defence, AR, defenceIncreaseAmount);
         AddStatDecorates(StatType.MoveSpeed, mv, moveSpeedIncreaseAmount);
+        AddStatDecorates(StatType.JumpPower, jp, jumpPowerIncreaseAmount);
     }
 
     public void AddStatDecorates(StatType statype, int count, float amount)
@@ -838,68 +845,67 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         PurchaseManager.ResetPurchasedPlayerItems();
     }
 
+    //public void Init()
+    //{
+    //    //구매내역 가져오기
+    //    _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
+
+    //    // InputManager 구독 
+    //    InputManager.instance.Register(this);
+
+    //    // 카메라 설정
+    //    _cameraController = Camera.main.GetComponent<CameraController>();
+    //    // _cameraController.SetTarget(transform);
+    //    // _cameraController.SetSpineTarget(rotationTarget);
+    //    // _cameraController.IsIdle = IsIdle;
+
+    //    // 무기 설정 
+    //    EquipWeapon(_playerWeapon);
+
+    //    _movementFsm.Run(this);
+    //    _postureFsm.Run(this);
+    //    _actionFsm.Run(this);
+
+    //    // 구매내역에 따른 스텟 분배
+    //    DecorateStatByPlayerItems();
 
 
-    public void Init()
-    {
-        //구매내역 가져오기
-        _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
+    //    // 스텟 + currentHp 옵저버 등록 
+    //    foreach (var stat in statDictionary)
+    //    {
+    //        stat.Value.AddObserver(this);
+    //    }
 
-        // InputManager 구독 
-        InputManager.instance.Register(this);
-
-        // 카메라 설정
-        // _cameraController.SetTarget(transform);
-        // _cameraController.SetSpineTarget(rotationTarget);
-        // _cameraController.IsIdle = IsIdle;
-
-        // 무기 설정 
-        EquipWeapon(_playerWeapon);
-
-        _movementFsm.Run(this);
-        _postureFsm.Run(this);
-        _actionFsm.Run(this);
-
-        // 구매내역에 따른 스텟 분배
-        DecorateStatByPlayerItems();
+    //    currentHp.AddObserver(this);
 
 
-        // 스텟 + currentHp 옵저버 등록 
-        foreach (var stat in statDictionary)
-        {
-            stat.Value.AddObserver(this);
-        }
-
-        currentHp.AddObserver(this);
-
-
-        //구매 목록에 따른 패시브 적용
-        //임시, 구매내역이라 치고 작성
-        //var myArray2 = new (int, string)[] { (1, "HpRegenerationPassive") };
-        _passiveFactory.CreatePassive(this, _playerItems.Skills[2]);
-        foreach (var passive in PassiveList)
-        {
-            passive.ApplyPassive(this);
-        }
-        //스킬 목록 적용
-        //플레이어의 ActionFsm 내에 상태를 넣어야 함
-        //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
-        //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
-        _weaponSkills = ActionFsm.AddSkillState(this, _playerItems.Skills[1], 1);
-        _movementSkills = ActionFsm.AddSkillState(this, _playerItems.Skills[0], 0);
-        //var myArray = new (int, string)[] { (1, "MovementSkills")  };
-        //var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
-        //_weaponSkills = ActionFsm.AddSkillState(myArray);
-        //_movementSkills = ActionFsm.AddSkillState(myArray1);
+    //    //구매 목록에 따른 패시브 적용
+    //    //임시, 구매내역이라 치고 작성
+    //    //var myArray2 = new (int, string)[] { (1, "HpRegenerationPassive") };
+    //    _passiveFactory.CreatePassive(this, _playerItems.Skills[2]);
+    //    foreach (var passive in PassiveList)
+    //    {
+    //        passive.ApplyPassive(this);
+    //    }
+    //    //스킬 목록 적용
+    //    //플레이어의 ActionFsm 내에 상태를 넣어야 함
+    //    //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
+    //    //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
+    //    _weaponSkills = ActionFsm.AddSkillState(this, _playerItems.Skills[1], 1);
+    //    _movementSkills = ActionFsm.AddSkillState(this, _playerItems.Skills[0], 0);
+    //    //var myArray = new (int, string)[] { (1, "MovementSkills")  };
+    //    //var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
+    //    //_weaponSkills = ActionFsm.AddSkillState(myArray);
+    //    //_movementSkills = ActionFsm.AddSkillState(myArray1);
 
 
-        _isDead = false;
+    //    _isDead = false;
 
-        //풀피 만들어주기
-        CurrentHp.Value = baseMaxHp.Value;
-        //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
-        PurchaseManager.ResetPurchasedPlayerItems();
-    }
+    //    //풀피 만들어주기
+    //    CurrentHp.Value = baseMaxHp.Value;
+    //    //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
+    //    PurchaseManager.ResetPurchasedPlayerItems();
+    //}
 
     #endregion
 

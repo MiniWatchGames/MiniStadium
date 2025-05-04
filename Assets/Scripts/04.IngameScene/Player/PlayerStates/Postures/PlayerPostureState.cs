@@ -18,7 +18,7 @@ public class PlayerPostureState : IPlayerState
         _aniStrategy = null;
     }
 
-    public virtual void Update()
+    public virtual void StateUpdate()
     {
     }
 

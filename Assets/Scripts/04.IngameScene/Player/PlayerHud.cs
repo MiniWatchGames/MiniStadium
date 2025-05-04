@@ -40,6 +40,12 @@ public class PlayerHud : MonoBehaviour , IStatObserver
 
         playerStat.CurrentHp.AddObserver(this);
         playerStat.BaseMaxHp.AddObserver(this);
+
+        currentHp = playerStat.CurrentHp.Value;
+        maxHp = playerStat.BaseMaxHp.Value;
+
+        playerHPBar.GetComponent<Image>().fillAmount = currentHp /maxHp;
+        playerHPText.GetComponent<TMP_Text>().text = $"{currentHp.ToString()}| {maxHp.ToString()}";
     }
 
     //public void FixedUpdate()

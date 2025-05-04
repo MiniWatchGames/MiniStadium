@@ -26,16 +26,16 @@ public static class SkillFactory
                     {
                         //"MovementSkills"
                         case 1:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
+                            skill = target.AddComponent<RunSkillState>();
+                            states.Add(new(ActionState.RunSkill, skill));
                             break;
                         case 2:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
+                            skill = target.AddComponent<DoubleJumpSkillState>();
+                            states.Add(new(ActionState.DoubleJumpSkill, skill));
                             break;
                         case 3:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
+                            skill = target.AddComponent<TeleportSkillState>();
+                            states.Add(new(ActionState.TeleportSkill, skill));
                             break;
                     }
                 }
