@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class GunController : MonoBehaviour
+public class GunController : MonoBehaviour , IWeapon
 {
     [SerializeField] private int damage = 20;
     [SerializeField] private float range = 100f;
@@ -18,11 +18,19 @@ public class GunController : MonoBehaviour
     
     private CameraController _camera;
     private RaycastHit _hitInfo;
+    private ObservableFloat _currentAmmo;
+    private ObservableFloat _maxAmmo;
+
+    public int Damage { get => damage; }
+    public ObservableFloat CurrentAmmo { get => _currentAmmo; }
+    public ObservableFloat MaxAmmo { get => _maxAmmo; }
 
     private void Start()
     {
         var pc = GetComponentInParent<PlayerController>();
         _camera = pc.CameraController;
+        _currentAmmo = new ObservableFloat(30, "GunCurrentAmmo");
+        _maxAmmo = new ObservableFloat(30, "GunMaxAmmo");
     }
     public void Fire()
     {

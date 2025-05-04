@@ -13,7 +13,7 @@ public class SwordController : MonoBehaviour, IWeapon
     }
     
     [SerializeField] private SwordTriggerZone[] _triggerZones;
-    [SerializeField] private ObservableFloat _attackPower;
+    [SerializeField] private int _attackPower;
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private ObservableFloat _currentAmmo;
     [SerializeField] private ObservableFloat _maxAmmo;
@@ -29,7 +29,7 @@ public class SwordController : MonoBehaviour, IWeapon
     private RaycastHit[] _hits = new RaycastHit[10];
     private bool _isAttacking = false;
 
-    public ObservableFloat Damage { get => _attackPower;}
+    public int Damage { get => _attackPower;}
     public ObservableFloat CurrentAmmo { get => _currentAmmo;}
     public ObservableFloat MaxAmmo { get => _maxAmmo; }
 
@@ -54,7 +54,7 @@ public class SwordController : MonoBehaviour, IWeapon
             _slashEffects[i] = Instantiate(slashEffectPrefabs[i], transform.position, Quaternion.identity);
         }
 
-        _attackPower = new ObservableFloat(10, "SwordAttackPower");
+        _attackPower = 10;
         _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
         _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
@@ -142,7 +142,7 @@ public class SwordController : MonoBehaviour, IWeapon
             DamageInfo damageInfo = new DamageInfo
             {
                 attacker = gameObject,
-                damage = (int) _attackPower.Value,
+                damage = _attackPower,
                 hitPoint = hitPoint,
                 hitDirection = (target.transform.position - transform.position).normalized
             };
