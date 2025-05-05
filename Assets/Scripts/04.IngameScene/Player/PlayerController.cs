@@ -928,7 +928,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public void ReInit()
     {
         // InputManager 재구독 
-        InputManager.instance?.Register(this);
+        this.transform.GetComponent<InputManager>()?.Register(this);
 
         // 구매내역 할당
         _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();

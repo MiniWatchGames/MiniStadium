@@ -16,7 +16,7 @@ public class DeadState : PlayerActionState
     {
         base.Enter(playerController);
         
-        InputManager.instance.Unregister(_playerController);
+        _playerController.transform.GetComponent<InputManager>().Unregister(_playerController);
         
         _playerController.Animator.SetLayerWeight(1, 0f);
         _playerController.Animator.SetLayerWeight(2, 0f);
