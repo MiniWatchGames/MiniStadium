@@ -778,7 +778,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public void ReInit()
     {
         // InputManager 재구독 
-        InputManager.instance?.Register(this);
+        this.transform.GetComponent<InputManager>()?.Register(this);
 
         // 구매내역 할당
         _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
@@ -846,7 +846,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
 
         // InputManager 구독 
-        InputManager.instance.Register(this);
+        this.transform.GetComponent<InputManager>().Register(this);
 
         // 카메라 설정
         // _cameraController.SetTarget(transform);
