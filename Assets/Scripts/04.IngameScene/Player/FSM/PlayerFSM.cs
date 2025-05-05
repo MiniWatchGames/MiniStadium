@@ -131,7 +131,7 @@ public class PlayerFSM<T> where T : Enum
 
     public void CurrentStateUpdate()
     {
-        _currentState?.Update();
+        _currentState?.StateUpdate();
     }
 
     public void RemoveState(T stateType)

@@ -2175,10 +2175,11 @@ MonoBehaviour:
   fixedFirstMaxHp: 5
   fixedFirstDefence: 5
   fixedFirstMoveSpeed: 1
-  fixedFirstJumpPower: 0.5
+  fixedFirstJumpPower: 1
   maxHpIncreaseAmount: 1
   defenceIncreaseAmount: 1
   moveSpeedIncreaseAmount: 0.1
+  jumpPowerIncreaseAmount: 0.1
   defaultState: Idle
   cameraController: {fileID: 2051301180654909716}
   rotationSpeed: 2
