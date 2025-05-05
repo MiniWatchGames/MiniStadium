@@ -197,7 +197,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //_playerItems = PurchaseManager.PurchasedPlayerItems;
 
         // InputManager 구독 
-        InputManager.instance.Register(this);
+        this.transform.GetComponent<InputManager>().Register(this);
         
         // 카메라 설정
         _cameraController = Camera.main.GetComponent<CameraController>();

@@ -2,17 +2,11 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static InputManager instance;
     private IInputEvents _listener;
     
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
-
-    private void Awake()
-    {
-        instance = this;
-    }
-
+    
     // Input Listener 구독
     public void Register(IInputEvents listener)
     {
