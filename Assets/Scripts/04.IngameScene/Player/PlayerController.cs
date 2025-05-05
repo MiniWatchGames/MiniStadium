@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 // 추가되는 스킬은 여기에도 추가작성 필요
 public enum ActionState
@@ -128,8 +129,27 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private string _firstWeaponSkill;
     private string _secondWeaponSkill;
     private string _firstMoveSkill;
-
     private string _secondMoveSkill;
+
+    private float _firstWeaponSkillCoolTime;
+    private float _secondWeaponSkillCoolTime;
+    private float _firstMovementSkillCoolTime;
+    private float _secondMovementSkillCoolTime;
+
+    private ObservableFloat _currentFirstWeaponSkillCoolTime;
+    private ObservableFloat _currentSecondWeaponSkillCoolTime;
+    private ObservableFloat _currentFirstMovementSkillCoolTime;
+    private ObservableFloat _currentSecondMovementSkillCoolTime;
+
+    public ObservableFloat CurrentFirstWeaponSkillCoolTime { get; }
+    public ObservableFloat CurrentSecondWeaponSkillCoolTime { get; }
+    public ObservableFloat CurrentFirstMovementSkillCoolTime { get; }
+    public ObservableFloat CurrentSecondMovementSkillCoolTime { get; }
+
+    private Coroutine _firstWeaponSkillCoolTimeCoroutine;
+    private Coroutine _secondWeaponSkillCoolTimeCoroutine;
+    private Coroutine _firstMovementSkillCoolTimeCoroutine;
+    private Coroutine _secondMovementSkillCoolTimeCoroutine;
 
     // --------
     // 상태 관련
@@ -411,9 +431,33 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_weaponSkills?.Count >= 1)
         {
             var weaponSkill = _weaponSkills[0];
-            _firstWeaponSkill = weaponSkill.Item1.ToString();
-            if (_actionFsm.CurrentState != weaponSkill.Item1)
-                SetActionState(_firstWeaponSkill);
+            ISkillData weaponSkillData = weaponSkill.Item2 as ISkillData;
+
+            if (_currentFirstWeaponSkillCoolTime?.Value > 0)
+            {
+                return;
+            }
+            else
+            {
+                if (weaponSkillData.CoolTime != null)
+                {
+                    _currentFirstWeaponSkillCoolTime.Value = _firstWeaponSkillCoolTime;
+                    if (_firstWeaponSkillCoolTimeCoroutine == null)
+                    {
+                        _firstWeaponSkillCoolTimeCoroutine =
+                        StartCoroutine(
+                            SkillCoolDown(
+                                _currentFirstWeaponSkillCoolTime, () => { _firstWeaponSkillCoolTimeCoroutine = null; }
+                            )
+                        );
+                    }
+                }
+                _firstWeaponSkill = weaponSkill.Item1.ToString();
+                if (_actionFsm.CurrentState != weaponSkill.Item1)
+                    SetActionState(_firstWeaponSkill);
+
+                return;
+            }
         }
     }
 
@@ -433,10 +477,37 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         if (_weaponSkills?.Count >= 2)
         {
-            var weaponSkill = _weaponSkills[1];
-            _secondWeaponSkill = weaponSkill.Item1.ToString();
-            if (_actionFsm.CurrentState != weaponSkill.Item1)
-                SetActionState(_secondWeaponSkill);
+            if (_weaponSkills?.Count >= 1)
+            {
+                var weaponSkill = _weaponSkills[0];
+                ISkillData weaponSkillData = weaponSkill.Item2 as ISkillData;
+
+                if (_currentSecondWeaponSkillCoolTime?.Value > 0)
+                {
+                    return;
+                }
+                else
+                {
+                    if (weaponSkillData.CoolTime != null)
+                    {
+                        _currentSecondWeaponSkillCoolTime.Value = _secondWeaponSkillCoolTime;
+                        if (_secondWeaponSkillCoolTimeCoroutine == null)
+                        {
+                            _secondWeaponSkillCoolTimeCoroutine =
+                            StartCoroutine(
+                                SkillCoolDown(
+                                    _currentSecondWeaponSkillCoolTime, () => { _secondWeaponSkillCoolTimeCoroutine = null; }
+                                )
+                            );
+                        }
+                    }
+                    _secondWeaponSkill = weaponSkill.Item1.ToString();
+                    if (_actionFsm.CurrentState != weaponSkill.Item1)
+                        SetActionState(_secondWeaponSkill);
+
+                    return;
+                }
+            }
         }
     }
 
@@ -452,13 +523,35 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     }
 
     public void OnFirstMoveSkillPressed()
-    {
+    {        
         if (_movementSkills?.Count >= 1)
-        {
+        {            
             var moveMentSkill = _movementSkills[0];
-            _firstMoveSkill = moveMentSkill.Item1.ToString();
-            if (_actionFsm.CurrentState != moveMentSkill.Item1)
-                SetActionState(_firstMoveSkill);
+            ISkillData moveMentSkillData = moveMentSkill.Item2 as ISkillData;
+
+            if (_currentFirstMovementSkillCoolTime?.Value > 0)
+            {
+                return;
+            }
+            else {
+                if (moveMentSkillData.CoolTime != null) {
+                    _currentFirstMovementSkillCoolTime.Value = _firstMovementSkillCoolTime;
+                    if (_firstMovementSkillCoolTimeCoroutine == null)
+                    {
+                        _firstMovementSkillCoolTimeCoroutine = 
+                        StartCoroutine(
+                            SkillCoolDown(
+                                _currentFirstMovementSkillCoolTime, () => {_firstMovementSkillCoolTimeCoroutine = null;}
+                            )
+                        );
+                    }
+                }
+                _firstMoveSkill = moveMentSkill.Item1.ToString();
+                if (_actionFsm.CurrentState != moveMentSkill.Item1)
+                    SetActionState(_firstMoveSkill);
+
+                return;
+            }
         }
     }
 
@@ -478,9 +571,33 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_movementSkills?.Count >= 2)
         {
             var moveMentSkill = _movementSkills[1];
-            _secondMoveSkill = moveMentSkill.Item1.ToString();
-            if (_actionFsm.CurrentState != moveMentSkill.Item1)
-                SetActionState(_secondMoveSkill);
+            ISkillData moveMentSkillData = moveMentSkill.Item2 as ISkillData;
+
+            if (_currentSecondMovementSkillCoolTime?.Value > 0)
+            {
+                return;
+            }
+            else
+            {
+                if (moveMentSkillData.CoolTime != null)
+                {
+                    _currentSecondMovementSkillCoolTime.Value = _secondMovementSkillCoolTime;
+                    if (_secondMovementSkillCoolTimeCoroutine == null)
+                    {
+                        _secondMovementSkillCoolTimeCoroutine =
+                        StartCoroutine(
+                            SkillCoolDown(
+                                _currentSecondMovementSkillCoolTime, () => { _secondMovementSkillCoolTimeCoroutine = null; }
+                            )
+                        );
+                    }
+                }
+                _secondMoveSkill = moveMentSkill.Item1.ToString();
+                if (_actionFsm.CurrentState != moveMentSkill.Item1)
+                    SetActionState(_secondMoveSkill);
+
+                return;
+            }
         }
     }
 
@@ -495,6 +612,18 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
     }
 
+
+    IEnumerator SkillCoolDown(ObservableFloat value, Action onComplete)
+    {
+        while (value.Value >= 0)
+        {
+            value.Value -= Time.deltaTime;
+            Debug.Log("스킬 쿨타임 : " + value.Value);
+            yield return null;
+        }
+
+        onComplete?.Invoke();
+    }
     #endregion
 
     // 바닥과 거리를 계산하는 함수
@@ -776,6 +905,20 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             //stat.Value.RemoveObserver(this);
         }
 
+        _firstWeaponSkillCoolTime = 0;
+        _secondWeaponSkillCoolTime = 0;
+        _firstMovementSkillCoolTime = 0;
+        _secondMovementSkillCoolTime = 0;
+
+        _currentFirstWeaponSkillCoolTime = null;
+        _currentSecondWeaponSkillCoolTime = null;
+        _currentFirstMovementSkillCoolTime = null;
+        _currentSecondMovementSkillCoolTime = null;
+
+        _firstMovementSkillCoolTimeCoroutine = null;
+        _secondMovementSkillCoolTimeCoroutine = null;
+        _firstWeaponSkillCoolTimeCoroutine = null;
+        _secondWeaponSkillCoolTimeCoroutine = null;
     }
 
 
@@ -837,6 +980,30 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //스킬 목록 적용
         _weaponSkills = ActionFsm?.AddSkillState(this, _playerItems?.Skills[1], 1);
         _movementSkills = ActionFsm?.AddSkillState(this, _playerItems?.Skills[0], 0);
+
+
+        // 스킬 쿨타임 받아오기
+        _firstWeaponSkillCoolTime =
+         _weaponSkills.Count > 0 && _weaponSkills[0].Item2 is ISkillData firstWeaponSkill && firstWeaponSkill.CoolTime?.Value != null
+        ? firstWeaponSkill.CoolTime.Value : 0f;
+
+        _secondWeaponSkillCoolTime =
+            _weaponSkills.Count > 1 && _weaponSkills[1].Item2 is ISkillData secondWeaponSkill && secondWeaponSkill.CoolTime?.Value != null
+                ? secondWeaponSkill.CoolTime.Value : 0f;
+
+        _firstMovementSkillCoolTime =
+            _movementSkills.Count > 0 && _movementSkills[0].Item2 is ISkillData firstMovementSkill && firstMovementSkill.CoolTime?.Value != null
+                ? firstMovementSkill.CoolTime.Value : 0f;
+
+        _secondMovementSkillCoolTime =
+            _movementSkills.Count > 1 && _movementSkills[1].Item2 is ISkillData secondMovementSkill && secondMovementSkill.CoolTime?.Value != null
+                ? secondMovementSkill.CoolTime.Value : 0f;
+
+        _currentFirstWeaponSkillCoolTime = new ObservableFloat(0, "currentFirstWeaponSkillCoolTime");
+        _currentSecondWeaponSkillCoolTime = new ObservableFloat(0, "currentSecondWeaponSkillCoolTime");
+        _currentFirstMovementSkillCoolTime = new ObservableFloat(0, "currentFirstMovementSkillCoolTime");
+        _currentSecondMovementSkillCoolTime = new ObservableFloat(0, "currentSecondMovementSkillCoolTime");
+
         _isDead = false;
 
         //풀피 만들어주기
