@@ -210,7 +210,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
-        //ReInit();
+        ReInit();
     }
 
 

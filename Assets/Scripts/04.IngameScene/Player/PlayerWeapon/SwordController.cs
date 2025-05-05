@@ -91,7 +91,7 @@ public class SwordController : MonoBehaviour, IWeapon
         _isAttacking = false;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (_isAttacking)
         {
@@ -155,9 +155,10 @@ public class SwordController : MonoBehaviour, IWeapon
                 
                 // 크로스헤어 알림용
                 CombatEvents.OnTargetHit?.Invoke(target);
-                
-                _slashEffects[1].transform.position = hitPoint;
-                _slashEffects[1].Play();
+
+                Debug.Log(target.transform.root.name);;
+                _slashEffects[_currentComboIndex].transform.position = hitPoint;
+                _slashEffects[_currentComboIndex].Play();
             }
         }
     }
