@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordController : MonoBehaviour
+public class SwordController : MonoBehaviour, IWeapon
 {
     [Serializable]
     public class SwordTriggerZone
@@ -13,8 +13,11 @@ public class SwordController : MonoBehaviour
     }
     
     [SerializeField] private SwordTriggerZone[] _triggerZones;
-    [SerializeField] private int attackPower = 10;
+    [SerializeField] private int _attackPower;
     [SerializeField] private LayerMask targetLayerMask;
+    [SerializeField] private ObservableFloat _currentAmmo;
+    [SerializeField] private ObservableFloat _maxAmmo;
+    
 
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
     private ParticleSystem[] _slashEffects;
@@ -25,6 +28,11 @@ public class SwordController : MonoBehaviour
     private Ray _ray = new Ray();
     private RaycastHit[] _hits = new RaycastHit[10];
     private bool _isAttacking = false;
+
+    public int Damage { get => _attackPower;}
+    public ObservableFloat CurrentAmmo { get => _currentAmmo;}
+    public ObservableFloat MaxAmmo { get => _maxAmmo; }
+
     public bool IsAttacking => _isAttacking;
     
     private int _maxCombo = 2;
@@ -45,6 +53,10 @@ public class SwordController : MonoBehaviour
         {
             _slashEffects[i] = Instantiate(slashEffectPrefabs[i], transform.position, Quaternion.identity);
         }
+
+        _attackPower = 10;
+        _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
+        _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
     
     public void SetComboIndex(int index)
@@ -57,7 +69,7 @@ public class SwordController : MonoBehaviour
         for (int i = 0; i < _triggerZones.Length; i++)
         {
             _previousPositions[i] = transform.position + transform.TransformVector(_triggerZones[i].position);
-        }
+        }   
     }
 
     // 공격 시작 함수
@@ -130,7 +142,7 @@ public class SwordController : MonoBehaviour
             DamageInfo damageInfo = new DamageInfo
             {
                 attacker = gameObject,
-                damage = attackPower,
+                damage = _attackPower,
                 hitPoint = hitPoint,
                 hitDirection = (target.transform.position - transform.position).normalized
             };

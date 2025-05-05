@@ -22,9 +22,9 @@ public class WalkState : PlayerMovementState
     {
         base.Exit();    
     }
-    public override void Update()
+    public override void StateUpdate()
     {
-        base.Update();
+        base.StateUpdate();
         _smoothedInput = Vector2.Lerp(_smoothedInput, _playerController.CurrentMoveInput, Time.deltaTime * _smoothingSpeed);
 
         // 매우 작은 값은 0으로 처리

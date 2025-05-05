@@ -27,8 +27,8 @@ public class CrouchState : PlayerPostureState
         _playerController.Animator.SetBool(IsCrouch, false);
         base.Exit();
     }
-    public override void Update()
+    public override void StateUpdate()
     {
-        base.Update();
+        base.StateUpdate();
     }
 }
