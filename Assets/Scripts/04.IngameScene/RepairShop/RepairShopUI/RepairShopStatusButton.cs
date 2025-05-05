@@ -24,9 +24,9 @@ public class RepairShopStatusButton : MonoBehaviour, IPointerEnterHandler, IPoin
     public bool isSelected = false;
     public bool isBought = false;
     public Button button;
-    
-    public string description;
 
+    public string description;
+    
     // 정보 설정
     public void Init(int index, RepairShopStatus manager
         , int originalPrice, int addtivePrice, BuyableObject_Status bo)
@@ -36,9 +36,7 @@ public class RepairShopStatusButton : MonoBehaviour, IPointerEnterHandler, IPoin
         boStatus = bo;
         button = GetComponent<Button>();
         _statusType = boStatus.type;
-        
         description = bo.description;
-        
         // 업그레이드 레벨 당 가격 (addtivePrice)g증가
         if (index == 0)
             _price = 0;

@@ -34,5 +34,13 @@ public class InputManager : MonoBehaviour
         if (Input.GetButtonDown("Fire1")) _listener?.OnFirePressed();
         if (Input.GetButtonUp("Fire1")) _listener?.OnFireReleased();
         if (Input.GetKeyDown(KeyCode.C)) _listener?.OnCrouchPressed();
+        if (Input.GetButtonDown("FirstWeaponSkill")) _listener?.OnFirstWeaponSkillPressed();
+        if (Input.GetButtonUp("FirstWeaponSkill")) _listener?.OnFirstWeaponSkillReleased();
+        if (Input.GetButtonDown("SecondWeaponSkill")) _listener?.OnSecondWeaponSkillPressed();
+        if (Input.GetButtonUp("SecondWeaponSkill")) _listener?.OnSecondWeaponSkillReleased();
+        if (Input.GetButtonDown("FirstMoveSkill")) _listener?.OnFirstMoveSkillPressed();
+        if (Input.GetButtonUp("FirstMoveSkill")) _listener?.OnFirstMoveSkillReleased();
+        if (Input.GetButtonDown("SecondMoveSkill")) _listener?.OnSecondMoveSkillPressed();
+        if (Input.GetButtonUp("SecondMoveSkill")) _listener?.OnSecondMoveSkillReleased();
     }
 }

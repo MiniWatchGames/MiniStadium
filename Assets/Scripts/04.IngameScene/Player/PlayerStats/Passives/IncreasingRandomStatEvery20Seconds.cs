@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IncreasingRandomStatEvery20Seconds : MonoBehaviour, IPassive
 {
-    //20ÃÊ ¸¶´Ù ·£´ı ½ºÅİ Áõ°¡
+    //20ì´ˆ ë§ˆë‹¤ ëœë¤ ìŠ¤í…Ÿ ì¦ê°€
 
     Coroutine RandomStat;
 
@@ -23,20 +23,20 @@ public class IncreasingRandomStatEvery20Seconds : MonoBehaviour, IPassive
             int rand = Random.Range(0, 3);
             switch (rand) {
                 case 0:
-                    //ÃÖ´ë Ã¼·Â Áõ°¡, Ã¼·Â 5 È¸º¹
+                    //ìµœëŒ€ ì²´ë ¥ ì¦ê°€, ì²´ë ¥ 5 íšŒë³µ
                     playerController.AddStatDecorate(StatType.MaxHp, 5);
-                    playerController.CurrentHp += 5;
+                    playerController.CurrentHp.Value += 5;
                     break;
                 case 1:
-                    //ÀÌµ¿ ¼Óµµ Áõ°¡
+                    //ì´ë™ ì†ë„ ì¦ê°€
                     playerController.AddStatDecorate(StatType.MoveSpeed, 0.5f);
                     break;
                 case 2:
-                    //Á¡ÇÁ ³ôÀÌ Áõ°¡
+                    //ì í”„ ë†’ì´ ì¦ê°€
                     playerController.AddStatDecorate(StatType.JumpPower, 0.5f);
                     break;
                 case 3:
-                    //¹æ¾î·Â Áõ°¡
+                    //ë°©ì–´ë ¥ ì¦ê°€
                     playerController.AddStatDecorate(StatType.Defence, 0.5f);
                     break;
             }    
@@ -44,7 +44,7 @@ public class IncreasingRandomStatEvery20Seconds : MonoBehaviour, IPassive
             switch (rand)
             {
                 case 0:
-                    //ÃÖ´ë Ã¼·Â Áõ°¡
+                    //ìµœëŒ€ ì²´ë ¥ ì¦ê°€
                     playerController.RemoveStatDecorate(StatType.MaxHp);
                     break;
                 case 1:
