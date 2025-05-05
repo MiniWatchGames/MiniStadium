@@ -42,41 +42,7 @@ public class PlayerHud : MonoBehaviour , IStatObserver
         playerStat.BaseMaxHp.AddObserver(this);
     }
 
-    //public void FixedUpdate()
-    //{
-    //    if (playerStat != null && _detectStat != null)
-    //    {
-    //       // _detectStat.playerHp = playerStat.CurrentHp;
-    //      // _detectStat.playerMaxHp = playerStat.BaseMaxHp;
-    //    }
-    //}
-
-    // public void Update()
-    // {
-    //     
-    // }
-    // Update is called once per frame
-    //private void OnDetectPlayerStatChanged(object sender, PropertyChangedEventArgs e)
-    //{
-    //    //Debug.Log("functioning");
-    //    if(e.PropertyName == "playerHp")
-    //    {
-    //        playerHPBar.GetComponent<Image>().fillAmount = _detectStat.playerHp / _detectStat.playerMaxHp;
-    //        playerHPText.GetComponent<TMP_Text>().text = $"{_detectStat.playerHp.ToString()}|{_detectStat.playerMaxHp.ToString()}";
-
-    //    }
-    //    if(e.PropertyName == "playerName")
-    //    {
-    //        playerName.GetComponent<TMP_Text>().text = _detectStat.playerName;
-    //    }
-        
-    //}
-    //private void UpdateUI()
-    //{
-    //    playerHPBar.GetComponent<Image>().fillAmount = _detectStat.playerHp / _detectStat.playerMaxHp;
-    //    playerHPText.GetComponent<TMP_Text>().text = $"{_detectStat.playerHp.ToString()}|{_detectStat.playerMaxHp.ToString()}";
-    //    playerName.GetComponent<TMP_Text>().text = _detectStat.playerName;
-    //}
+  
 
     public void WhenStatChanged((float, string) data)
     {
