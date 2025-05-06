@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IWeapon 
 {
-   public ObservableFloat Damage { get;}
+   public int Damage { get;}
 
    public ObservableFloat CurrentAmmo { get; }
    public ObservableFloat MaxAmmo { get;}
