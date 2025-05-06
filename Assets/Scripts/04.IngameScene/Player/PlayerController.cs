@@ -56,7 +56,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private Vector3 _velocity = Vector3.zero;
     private bool _isDead = false;
     private PlayerItems _playerItems;
-
+    private PurchaseManager _purchaseManager;
+    public PurchaseManager PurchaseManager { get => _purchaseManager; set => _purchaseManager = value; }
 
     // input값 저장, 전달 
     private Vector2 _currentMoveInput;
@@ -204,6 +205,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
 
+        _purchaseManager = new PurchaseManager();
+
         _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
         _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
         _actionFsm = new PlayerFSM<ActionState>(StateType.Action, _playerWeapon, defaultState);
@@ -230,7 +233,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
-        ReInit();
+        //ReInit();
     }
 
 
@@ -919,6 +922,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _secondMovementSkillCoolTimeCoroutine = null;
         _firstWeaponSkillCoolTimeCoroutine = null;
         _secondWeaponSkillCoolTimeCoroutine = null;
+
+        _purchaseManager = null;
     }
 
 
@@ -983,21 +988,24 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
 
         // 스킬 쿨타임 받아오기
-        _firstWeaponSkillCoolTime =
-         _weaponSkills.Count > 0 && _weaponSkills[0].Item2 is ISkillData firstWeaponSkill && firstWeaponSkill.CoolTime?.Value != null
-        ? firstWeaponSkill.CoolTime.Value : 0f;
 
-        _secondWeaponSkillCoolTime =
-            _weaponSkills.Count > 1 && _weaponSkills[1].Item2 is ISkillData secondWeaponSkill && secondWeaponSkill.CoolTime?.Value != null
-                ? secondWeaponSkill.CoolTime.Value : 0f;
+        switch (_weaponSkills?.Count) {
+            case 1:
+                _firstWeaponSkillCoolTime = _weaponSkills[0].Item2 is ISkillData firstWeaponSkill && firstWeaponSkill.CoolTime?.Value != null ? firstWeaponSkill.CoolTime.Value : 0f;
+                break;
+            case 2:
+                _secondWeaponSkillCoolTime = _weaponSkills[1].Item2 is ISkillData secondWeaponSkill && secondWeaponSkill.CoolTime?.Value != null ? secondWeaponSkill.CoolTime.Value : 0f;
+                break;
+        }
 
-        _firstMovementSkillCoolTime =
-            _movementSkills.Count > 0 && _movementSkills[0].Item2 is ISkillData firstMovementSkill && firstMovementSkill.CoolTime?.Value != null
-                ? firstMovementSkill.CoolTime.Value : 0f;
-
-        _secondMovementSkillCoolTime =
-            _movementSkills.Count > 1 && _movementSkills[1].Item2 is ISkillData secondMovementSkill && secondMovementSkill.CoolTime?.Value != null
-                ? secondMovementSkill.CoolTime.Value : 0f;
+        switch (_movementSkills?.Count) {
+            case 1:
+                _firstMovementSkillCoolTime =  _movementSkills[0].Item2 is ISkillData firstMovementSkill && firstMovementSkill.CoolTime?.Value != null ? firstMovementSkill.CoolTime.Value : 0f;
+                break;
+            case 2:
+                _secondMovementSkillCoolTime = _movementSkills[1].Item2 is ISkillData secondMovementSkill && secondMovementSkill.CoolTime?.Value != null ? secondMovementSkill.CoolTime.Value : 0f;
+                break;
+        }     
 
         _currentFirstWeaponSkillCoolTime = new ObservableFloat(0, "currentFirstWeaponSkillCoolTime");
         _currentSecondWeaponSkillCoolTime = new ObservableFloat(0, "currentSecondWeaponSkillCoolTime");

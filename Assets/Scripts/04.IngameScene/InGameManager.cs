@@ -119,8 +119,7 @@ public class InGameManager : MonoBehaviour
                 break;
             case RoundState.InRound:
                 //Debug.Log("In Round");
-                //구매정보 넘기고, 플레이어 없다면 생성, 플레이어 구매 내역 적용
-                PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
+                // 플레이어 없다면 생성, 플레이어에 구매 내역을 넘기고, 플레이어 구매 내역 적용
                 if (player is null)
                 {
                     player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
@@ -128,7 +127,7 @@ public class InGameManager : MonoBehaviour
                     playerContoroller = player.GetComponent<PlayerController>();
                     playerHud.init(playerContoroller);
                 }
-              
+                playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
                 RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
