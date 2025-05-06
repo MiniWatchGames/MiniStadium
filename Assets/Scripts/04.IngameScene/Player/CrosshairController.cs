@@ -15,12 +15,12 @@ public class CrosshairController : MonoBehaviour
 
     private void OnEnable()
     {
-        CombatEvents.OnTargetHit += ShowHitEffect;
+        //CombatEvents.OnTargetHit += ShowHitEffect;
     }
 
     private void OnDisable()
     {
-        CombatEvents.OnTargetHit -= ShowHitEffect;
+        //CombatEvents.OnTargetHit -= ShowHitEffect;
     }
 
     private void ShowHitEffect(GameObject target)

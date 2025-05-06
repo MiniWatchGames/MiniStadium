@@ -131,10 +131,4 @@ public class CombatManager : MonoBehaviour
         // 최종 값 설정
         playerController.Animator.SetLayerWeight(_upperBodyLayerIndex, targetWeight);
     }
-    
-}
-
-public static class CombatEvents
-{
-    public static Action<GameObject> OnTargetHit;
 }

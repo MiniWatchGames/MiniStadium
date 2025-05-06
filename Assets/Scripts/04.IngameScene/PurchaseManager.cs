@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class PurchaseManager 
+public class PurchaseManager 
 {
-    //±¸¸Å Å¸ÀÌ¸Ó°¡ ³¡³µÀ» ¶§ °ªÀ» ³Ö¾îÁÖ¾î¾ß ÇÔ
-    private static PlayerItems _purchasedPlayerItems;
-    public static PlayerItems PurchasedPlayerItems
+    //êµ¬ë§¤ íƒ€ì´ë¨¸ê°€ ëë‚¬ì„ ë•Œ ê°’ì„ ë„£ì–´ì£¼ì–´ì•¼ í•¨
+    private PlayerItems _purchasedPlayerItems;
+    public PlayerItems PurchasedPlayerItems
     {
         get => _purchasedPlayerItems;
         set => _purchasedPlayerItems = value;
     }
 
-    public static void ResetPurchasedPlayerItems()
+    public void ResetPurchasedPlayerItems()
     {
         _purchasedPlayerItems = null;
     }
