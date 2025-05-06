@@ -257,7 +257,7 @@ public class GunController : MonoBehaviour, IWeapon
             damageable.TakeDamage(damageInfo);
             
             // 크로스헤어 알림용
-            CombatEvents.OnTargetHit?.Invoke(target);
+            //CombatEvents.OnTargetHit?.Invoke(target);
         }
     }
     

@@ -154,7 +154,7 @@ public class SwordController : MonoBehaviour, IWeapon
                 damageable.TakeDamage(damageInfo);
                 
                 // 크로스헤어 알림용
-                CombatEvents.OnTargetHit?.Invoke(target);
+                //CombatEvents.OnTargetHit?.Invoke(target);
 
                 Debug.Log(target.transform.root.name);;
                 _slashEffects[_currentComboIndex].transform.position = hitPoint;
