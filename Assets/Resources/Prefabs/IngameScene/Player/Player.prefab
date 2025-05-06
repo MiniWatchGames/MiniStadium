@@ -2121,7 +2121,7 @@ Animator:
   m_GameObject: {fileID: 7244771892483126651}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 09f1791f994594469896d8b47866a754, type: 3}
-  m_Controller: {fileID: 9100000, guid: ef346e066ab4a41d2bf197b1c172ff3d, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7d752a938992a43bd9f56abe328d736e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2144,18 +2144,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe27eeab998449d1a2abd8dff500d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 0
+  weaponType: 1
   weaponDataList:
   - weaponPrefab: {fileID: 6985989593022072725, guid: 0a63d7a42f093f24cbe46e87652c2493,
       type: 3}
     weaponSocket: {fileID: 3371079071144149785}
     positionOffset: {x: 0.21, y: 0.094, z: 0.03}
     rotationOffset: {x: 175.9, y: 8.8, z: 86.1}
-  - weaponPrefab: {fileID: 2244987814198309560, guid: eaa3a6144c30c4b2d8d9c6355196dc3a,
+  - weaponPrefab: {fileID: 1952224036683604, guid: 138b30ca6cb9e8b488c62f18aac77dd1,
       type: 3}
     weaponSocket: {fileID: 3371079071144149785}
-    positionOffset: {x: -0.038, y: 0.16, z: 0.023}
-    rotationOffset: {x: -85.737, y: 175.455, z: -98.613}
+    positionOffset: {x: -0.02, y: 0.123, z: 0.063}
+    rotationOffset: {x: -94.26, y: -4.544, z: 81.387}
 --- !u!114 &3557174751171254769
 MonoBehaviour:
   m_ObjectHideFlags: 0
