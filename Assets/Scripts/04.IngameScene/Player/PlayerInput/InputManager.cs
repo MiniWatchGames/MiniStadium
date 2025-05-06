@@ -42,5 +42,6 @@ public class InputManager : MonoBehaviour
         if (Input.GetButtonUp("FirstMoveSkill")) _listener?.OnFirstMoveSkillReleased();
         if (Input.GetButtonDown("SecondMoveSkill")) _listener?.OnSecondMoveSkillPressed();
         if (Input.GetButtonUp("SecondMoveSkill")) _listener?.OnSecondMoveSkillReleased();
+        if (Input.GetButtonUp("Reload")) _listener?.OnReloadPressed();
     }
 }

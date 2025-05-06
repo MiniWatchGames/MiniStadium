@@ -230,6 +230,8 @@ public class GunController : MonoBehaviour, IWeapon
             ApplyDamage(_hitInfo.collider.gameObject, _hitInfo.point, firePoint.forward);
         }
         
+        _currentAmmo.Value -= 1;
+
         // 총알 시뮬레이션
         EffectPrefab? bulletPrefab = GetEffectPrefab(EffectType.Bullet);
         if (bulletPrefab.HasValue && bulletPrefab.Value.prefab != null)
