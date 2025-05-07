@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FishNet.Connection;
+using FishNet.Managing.Server;
+using FishNet.Object;
 using UnityEngine;
 
 public enum WeaponType
@@ -19,7 +22,7 @@ public class WeaponData
     public Vector3 rotationOffset;
 }
 
-public class PlayerWeapon : MonoBehaviour
+public class PlayerWeapon : NetworkBehaviour
 {
     [SerializeField]private WeaponType weaponType;
     public WeaponType WeaponType { get => weaponType; set => weaponType = value; }
@@ -32,7 +35,22 @@ public class PlayerWeapon : MonoBehaviour
     
     private void Awake()
     {
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (!base.IsOwner)
+        {
+            GetComponent<PlayerWeapon>().enabled = false;
+        }
         InitWeaponDictionary();
+    }
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        InitWeaponDictionary();
+
     }
 
     private void InitWeaponDictionary()
@@ -44,19 +62,43 @@ public class PlayerWeapon : MonoBehaviour
         //weaponDataDict[WeaponType.Bow] = weaponDataList[2];
     }
 
-    public void CreateWeapon(WeaponType weapon)
+    public bool TryGetWeaponData(WeaponType weaponType, out WeaponData data)
+    {
+        bool result = weaponDataDict.TryGetValue(weaponType, out WeaponData weaponData);
+        data = weaponData;
+        return result;
+    }
+    
+    public void CreateWeapon(WeaponType weapon, PlayerWeapon playerWeapon)
     {
         // 기존 무기 제거
         if (currentWeapon != null)
         {
-            Destroy(currentWeapon);
+            Debug.Log("Despawn currentWeapon");
         }
 
-        if (weaponDataDict.TryGetValue(weapon, out WeaponData weaponData))
+        if (currentWeapon== null && weaponDataDict.TryGetValue(weaponType, out WeaponData weaponData))
         {
-            currentWeapon = Instantiate(weaponData.weaponPrefab, weaponData.weaponSocket);
-            currentWeapon.transform.localPosition = weaponData.positionOffset;
-            currentWeapon.transform.localRotation = Quaternion.Euler(weaponData.rotationOffset);
+            Debug.Log("SpawnWeapon");
+            SpawnWeapon(weapon);
         }
     }
+    [ServerRpc]
+    public void SpawnWeapon(WeaponType weapon)
+    {
+        if (!weaponDataDict.TryGetValue(weaponType, out WeaponData weaponData)) return;
+        GameObject spawned = Instantiate(weaponData.weaponPrefab);
+        NetworkObject spawnedNetworkObject = spawned.GetComponent<NetworkObject>();
+        base.Spawn(spawned, Owner);
+        SetSpawnedObject(spawnedNetworkObject);
+    }
+
+    [ObserversRpc]
+    public void SetSpawnedObject(NetworkObject spawnedObject)
+    {
+        GameObject weapon = spawnedObject.gameObject;
+
+        currentWeapon = weapon;
+    }
+
 }

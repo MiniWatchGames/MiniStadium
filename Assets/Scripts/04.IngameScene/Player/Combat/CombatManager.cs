@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FishNet.Object;
 using UnityEngine;
 
-public class CombatManager : MonoBehaviour
+public class CombatManager : NetworkBehaviour
 {
     [SerializeField] private PlayerController playerController;
     private Dictionary<WeaponType, IAttackStrategy> _attackStrategies = new Dictionary<WeaponType, IAttackStrategy>();

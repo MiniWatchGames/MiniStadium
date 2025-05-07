@@ -238,6 +238,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
             gameObject.GetComponent<PlayerController>().enabled = false;
             
         }
+        ReInit();
     }
 
     private void Start()
@@ -246,7 +247,6 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
-        ReInit();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -296,7 +296,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
     private void EquipWeapon(PlayerWeapon weapon)
     {
         // 무기 생성 
-        _playerWeapon.CreateWeapon(weapon.WeaponType);
+        _playerWeapon.CreateWeapon(weapon.WeaponType, _playerWeapon);
         // 무기에 맞는 애니메이터로 교체 
         ApplyAnimatorController(weapon.WeaponType);
         // 무기별 전략 결정 
