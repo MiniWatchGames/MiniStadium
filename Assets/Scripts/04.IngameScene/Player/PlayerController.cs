@@ -169,6 +169,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public PlayerFSM<PostureState> PostureFsm { get => _postureFsm; }
     public PlayerFSM<ActionState> ActionFsm { get => _actionFsm; }
 
+    public Material RunStateMaterial;
+
     // --------
     // 카메라 관련
     [Header("Camera")]
