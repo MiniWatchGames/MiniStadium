@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FishNet.Object;
 using UnityEngine;
 
-public class GunController : MonoBehaviour, IWeapon
+public class GunController : NetworkBehaviour, IWeapon
 {
     // 이펙트 유형 정의
     public enum EffectType
@@ -68,8 +69,15 @@ public class GunController : MonoBehaviour, IWeapon
 
     private void Start()
     {
-        var pc = GetComponentInParent<PlayerController>();
-        _camera = pc.CameraController;
+        var players = FindObjectsOfType<PlayerController>();
+        foreach (var pc in players)
+        {
+            if (pc.Owner == Owner)
+            {
+                _camera = pc.CameraController;
+                break;
+            }
+        }
         _currentAmmo = new ObservableFloat(30, "GunCurrentAmmo");
         _maxAmmo = new ObservableFloat(30, "GunMaxAmmo");
         

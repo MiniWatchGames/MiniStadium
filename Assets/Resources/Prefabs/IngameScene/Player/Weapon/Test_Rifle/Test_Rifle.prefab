@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8239380741520662273}
   - component: {fileID: -4580190888633566002}
+  - component: {fileID: 6489166638639140541}
+  - component: {fileID: 604696745466217600}
   m_Layer: 0
   m_Name: Test_Rifle
   m_TagString: Untagged
@@ -49,17 +51,83 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0725e531cda744e1ba95930e2b80e719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 6489166638639140541}
+  _networkObjectCache: {fileID: 0}
   damage: 20
   range: 100
   firePoint: {fileID: 2183246324417870781}
   targetMask:
     serializedVersion: 2
     m_Bits: 64
-  rightHandIKTarget: {fileID: 1107978386223457801}
-  leftHandIKTarget: {fileID: 8587706257064314630}
-  bulletTrailPrefab: {fileID: 7217896055414789263}
+  effectPrefabs: []
   bulletSpeed: 120
-  trailDuration: 0.2
+--- !u!114 &6489166638639140541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2244987814198309560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <IsNested>k__BackingField: 0
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 9888421511120063598
+  <SceneId>k__BackingField: 0
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
+--- !u!114 &604696745466217600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2244987814198309560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae67dab2775e3704cbe092b3ea321184, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 6489166638639140541}
+  _networkObjectCache: {fileID: 0}
+  weaponType: 1
 --- !u!1 &2346491082814373627
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,12 +511,6 @@ PrefabInstance:
 --- !u!4 &3947131201690653610 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5173937389435928228, guid: 0d02247664e0a4e7f8969e0c7dda943b,
-    type: 3}
-  m_PrefabInstance: {fileID: 8145466151293512974}
-  m_PrefabAsset: {fileID: 0}
---- !u!96 &7217896055414789263 stripped
-TrailRenderer:
-  m_CorrespondingSourceObject: {fileID: 1522670182691010945, guid: 0d02247664e0a4e7f8969e0c7dda943b,
     type: 3}
   m_PrefabInstance: {fileID: 8145466151293512974}
   m_PrefabAsset: {fileID: 0}

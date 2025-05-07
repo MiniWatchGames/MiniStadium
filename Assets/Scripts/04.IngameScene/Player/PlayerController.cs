@@ -301,8 +301,6 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         ApplyAnimatorController(weapon.WeaponType);
         // 무기별 전략 결정 
         _combatManager.SetWeaponType(weapon.WeaponType);
-
-        _combatManager.CurrentWeapon = _playerWeapon.CurrentWeapon;
     }
 
     // 데이지 계산

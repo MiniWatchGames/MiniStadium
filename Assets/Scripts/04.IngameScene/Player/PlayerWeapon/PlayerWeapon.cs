@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using FishNet.Connection;
 using FishNet.Managing.Server;
 using FishNet.Object;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum WeaponType
@@ -79,7 +80,6 @@ public class PlayerWeapon : NetworkBehaviour
 
         if (currentWeapon== null && weaponDataDict.TryGetValue(weaponType, out WeaponData weaponData))
         {
-            Debug.Log("SpawnWeapon");
             SpawnWeapon(weapon);
         }
     }
@@ -97,8 +97,9 @@ public class PlayerWeapon : NetworkBehaviour
     public void SetSpawnedObject(NetworkObject spawnedObject)
     {
         GameObject weapon = spawnedObject.gameObject;
-
+        CombatManager combatManager = gameObject.GetComponent<CombatManager>();
         currentWeapon = weapon;
+        combatManager.CurrentWeapon = CurrentWeapon;
     }
 
 }
