@@ -12,6 +12,7 @@ public enum ActionState
     Idle,
     Attack,
     Hit,
+    Reload,
     Dead,
     MovementSkills,
     WeaponSkills,
@@ -158,6 +159,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private PlayerFSM<MovementState> _movementFsm;
     private PlayerFSM<PostureState> _postureFsm;
     private PlayerFSM<ActionState> _actionFsm;
+    private bool _CanChangeState = true;
+    public bool CanChangeState { get => _CanChangeState; set => _CanChangeState =  value; }
     [SerializeField] private string defaultState;
 
     public PlayerFSM<MovementState> MovementFsm { get => _movementFsm; }
@@ -258,6 +261,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void SetActionState(string stateName)
     {
+        if (stateName == "Reload") {
+            _CanChangeState = false;
+            _actionFsm.ChangeState(stateName, this);
+            return;
+        }
+        if (!_CanChangeState) return;
         _actionFsm.ChangeState(stateName, this);
     }
 
@@ -271,6 +280,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _combatManager.SetWeaponType(weapon.WeaponType);
 
         _combatManager.CurrentWeapon = _playerWeapon.CurrentWeapon;
+
+        _CanChangeState = true;
     }
 
     // 데이지 계산
@@ -422,6 +433,14 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             _combatManager.ProcessInput(false, false);
         }
     }
+
+    public void OnReloadPressed() {
+        if (_playerWeapon.WeaponType == WeaponType.Gun) { 
+            SetActionState("Reload");
+        }
+    }
+
+
 
     public void OnCrouchPressed()
     {
@@ -922,8 +941,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _secondMovementSkillCoolTimeCoroutine = null;
         _firstWeaponSkillCoolTimeCoroutine = null;
         _secondWeaponSkillCoolTimeCoroutine = null;
-
-        _purchaseManager = null;
     }
 
 

@@ -39,6 +39,7 @@ public static class StateFactory
         (ActionState.Attack, new AttackState(/*_aniStrategy*/)),
         (ActionState.Hit, new HitState(/*_aniStrategy*/)),
         (ActionState.Dead, new DeadState(/*_aniStrategy*/)),
+        (ActionState.Reload, new ReloadState(/*_aniStrategy*/)),
         //(ActionState.MovementSkills, new MovementSkillsState(/*_aniStrategy*/)),
         //(ActionState.WeaponSkills, new WeaponSkillsState(/*_aniStrategy*/))
     };
