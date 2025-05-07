@@ -889,7 +889,7 @@ Transform:
   m_GameObject: {fileID: 3241904498476094219}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2081,8 +2081,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5354969115056258898}
-  - {fileID: 3044608067382862537}
   - {fileID: 3220570809626789506}
+  - {fileID: 3044608067382862537}
   - {fileID: 3547193391383380988}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2182,6 +2182,7 @@ MonoBehaviour:
   moveSpeedIncreaseAmount: 0.1
   jumpPowerIncreaseAmount: 0.1
   defaultState: Idle
+  RunStateMaterial: {fileID: 2100000, guid: b3d49ad9daff7b84280b5f8539122578, type: 2}
   cameraController: {fileID: 2051301180654909716}
   rotationSpeed: 2
   rotationSmoothSpeed: 30
