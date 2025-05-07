@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FishNet.Object;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -46,11 +48,11 @@ public enum StatType
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatObserver
+public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, IStatObserver
 {
     [SerializeField] private Transform head;
     [SerializeField] private LayerMask groundLayer;
-
+    [SerializeField] private LayerMask groundMask;
     private CharacterController _characterController;
     private const float Gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
@@ -108,9 +110,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 Debug.Log("주금..");
                 _isDead = true;
                 OnPlayerDie.Invoke(gameObject);
-                SetMovementState("Idle");
-                SetPostureState("Idle");
-                SetActionState("Dead");
+                SetMovementStateServer("Idle", this);
+                SetPostureStateServer("Idle", this);
+                SetActionStateServer("Dead", this);
             }
         }
     }
@@ -227,13 +229,26 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _passiveList = new List<IPassive>();
     }
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (!base.IsOwner)
+        {
+            cameraController.GameObject().SetActive(false);
+            gameObject.GetComponent<PlayerController>().enabled = false;
+            
+        }
+    }
+
     private void Start()
     {
         //Init();      
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
-        //ReInit();
+        ReInit();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
 
@@ -245,20 +260,37 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _actionFsm?.CurrentStateUpdate();
         DrawRay();
     }
-
-    public void SetMovementState(string stateName)
+    [ServerRpc]
+    public void SetMovementStateServer(string stateName, PlayerController player)
     {
-        _movementFsm.ChangeState(stateName, this);
+        SetMovementState(stateName, player);
     }
-
-    public void SetPostureState(string stateName)
+    [ObserversRpc]
+    public void SetMovementState(string stateName, PlayerController player)
     {
-        _postureFsm.ChangeState(stateName, this);
+        _movementFsm.ChangeState(stateName, player);
     }
-
-    public void SetActionState(string stateName)
+    
+    [ServerRpc]
+    public void SetPostureStateServer(string stateName, PlayerController player)
     {
-        _actionFsm.ChangeState(stateName, this);
+        SetPostureState(stateName, player);
+    }
+    [ObserversRpc]
+    public void SetPostureState(string stateName, PlayerController player)
+    {
+        _postureFsm.ChangeState(stateName, player);
+    }
+    
+    [ServerRpc]
+    public void SetActionStateServer(string stateName, PlayerController player)
+    {
+        SetActionState(stateName, player);
+    }
+    [ObserversRpc]
+    public void SetActionState(string stateName, PlayerController player)
+    {
+        _actionFsm.ChangeState(stateName, player);
     }
 
     private void EquipWeapon(PlayerWeapon weapon)
@@ -354,7 +386,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 _lastInputTime = Time.time;
                 if (_movementFsm.CurrentState != MovementState.Walk)
                 {
-                    SetMovementState("Walk");
+                    SetMovementStateServer("Walk", this);
                 }
                 _currentMoveInput = input;
             }
@@ -365,7 +397,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 {
                     if (_movementFsm.CurrentState != MovementState.Idle)
                     {
-                        SetMovementState("Idle");
+                        SetMovementStateServer("Idle", this);
                     }
                 }
                 // 버퍼 시간 내에는 이전 입력 유지
@@ -395,7 +427,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (IsGrounded)
         {
             Jump(); 
-            SetMovementState("Jump");
+            SetMovementStateServer("Jump", this);
         }
     }
     public void Jump() {
@@ -406,7 +438,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 공격 (마우스 다운)
         if (_actionFsm.CurrentState != ActionState.Attack)
         {
-            SetActionState("Attack");
+            SetActionStateServer("Attack", this);
         }
         else
         {
@@ -425,7 +457,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void OnCrouchPressed()
     {
-        SetPostureState(_postureFsm.CurrentState == PostureState.Idle ? "Crouch" : "Idle");
+        SetPostureStateServer(_postureFsm.CurrentState == PostureState.Idle ? "Crouch" : "Idle", this);
     }
 
 
@@ -457,7 +489,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 }
                 _firstWeaponSkill = weaponSkill.Item1.ToString();
                 if (_actionFsm.CurrentState != weaponSkill.Item1)
-                    SetActionState(_firstWeaponSkill);
+                    SetActionStateServer(_firstWeaponSkill, this);
 
                 return;
             }
@@ -471,7 +503,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _weaponSkills[0].Item1)
             {
-                SetActionState("Idle");
+                SetActionStateServer("Idle", this);
             }
         }
     }
@@ -506,7 +538,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                     }
                     _secondWeaponSkill = weaponSkill.Item1.ToString();
                     if (_actionFsm.CurrentState != weaponSkill.Item1)
-                        SetActionState(_secondWeaponSkill);
+                        SetActionStateServer(_secondWeaponSkill, this);
 
                     return;
                 }
@@ -520,7 +552,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _weaponSkills[1].Item1)
             {
-                SetActionState("Idle");
+                SetActionStateServer("Idle", this);
             }
         }
     }
@@ -551,7 +583,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 }
                 _firstMoveSkill = moveMentSkill.Item1.ToString();
                 if (_actionFsm.CurrentState != moveMentSkill.Item1)
-                    SetActionState(_firstMoveSkill);
+                    SetActionStateServer(_firstMoveSkill, this);
 
                 return;
             }
@@ -564,7 +596,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _movementSkills[0].Item1)
             {
-                SetActionState("Idle");
+                SetActionStateServer("Idle", this);
             }
         }
     }
@@ -597,7 +629,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                 }
                 _secondMoveSkill = moveMentSkill.Item1.ToString();
                 if (_actionFsm.CurrentState != moveMentSkill.Item1)
-                    SetActionState(_secondMoveSkill);
+                    SetActionStateServer(_secondMoveSkill, this);
 
                 return;
             }
@@ -610,7 +642,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _movementSkills[1].Item1)
             {
-                SetActionState("Idle");
+                SetActionStateServer("Idle", this);
             }
         }
     }

@@ -28,7 +28,7 @@ public class AttackState : PlayerActionState
         // 공격 완료 확인 - 여기서 IdleState로 전환
         if (_playerController.CombatManager.IsAttackComplete())
         {
-            _playerController.SetActionState("Idle");
+            _playerController.SetActionStateServer("Idle", _playerController);
         }
     }
 }

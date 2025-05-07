@@ -1,6 +1,7 @@
+using FishNet.Object;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour
+public class InputManager : NetworkBehaviour
 {
     private IInputEvents _listener;
     
@@ -24,6 +25,10 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
+        if (!base.IsOwner)
+        {
+            return;
+        }
         MoveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         LookInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         
