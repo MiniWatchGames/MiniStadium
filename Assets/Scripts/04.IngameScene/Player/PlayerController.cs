@@ -128,6 +128,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private List<(ActionState, IPlayerState)> _weaponSkills;
     private List<(ActionState, IPlayerState)> _movementSkills;
 
+    //다 배열로 변경 가능
+
     private string _firstWeaponSkill;
     private string _secondWeaponSkill;
     private string _firstMoveSkill;
@@ -196,6 +198,14 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private readonly int MoveSpeedHash = Animator.StringToHash("MoveSpeed");
     public Animator Animator { get; private set; }
 
+    // --------
+    // 사운드 관련
+    [Header("Sound")]
+    [SerializeField] private AudioClip[] jumpSound;
+    [SerializeField] private AudioClip[] walkSound;
+    private AudioSource _audioSource;
+    public Action LandSound;
+
     public bool IsGrounded
     {
         get {return GetDistanceToGround() <= 0.03f; }
@@ -207,6 +217,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _characterController = GetComponent<CharacterController>();
         _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
+        _audioSource = GetComponent<AudioSource>();
 
         _purchaseManager = new PurchaseManager();
 
@@ -246,6 +257,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _movementFsm?.CurrentStateUpdate();
         _postureFsm?.CurrentStateUpdate();
         _actionFsm?.CurrentStateUpdate();
+        if (IsGrounded) { 
+            LandSound?.Invoke();
+        }
         DrawRay();
     }
 
@@ -1101,4 +1115,35 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     #endregion
 
+    #region 사운드
+    public void PlayFootstep()
+    {
+        int index = UnityEngine.Random.Range(0, walkSound.Length);
+        _audioSource.volume = 0.1f;
+        _audioSource.PlayOneShot(walkSound[index]);
+    }
+
+    public void PlayFirstJump() {
+        _audioSource.volume = 0.22f;
+        _audioSource.PlayOneShot(jumpSound[0]);
+    }
+
+    public void PlaySecondJump()
+    {
+        _audioSource.volume = 0.25f;
+        _audioSource.PlayOneShot(jumpSound[1]);
+    }
+    public void Playland()
+    {
+        _audioSource.volume = 0.25f;
+        _audioSource.PlayOneShot(jumpSound[2]);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
+            Playland();
+        }
+    }
+    #endregion
 }

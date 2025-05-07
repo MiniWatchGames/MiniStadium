@@ -253,6 +253,7 @@ MonoBehaviour:
     duration: 0.5
   bulletSpeed: 100
   shotSound: {fileID: 8300000, guid: add852624da5145198a7bff8275aaa5b, type: 3}
+  ReloadSound: {fileID: 8300000, guid: 1ad512755994b7b4398bc323d76605fc, type: 3}
 --- !u!82 &1604889059322042027
 AudioSource:
   m_ObjectHideFlags: 0

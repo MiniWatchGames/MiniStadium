@@ -46,6 +46,7 @@ public class GunController : MonoBehaviour, IWeapon
     [SerializeField] private EffectPrefab[] effectPrefabs; // 구조체 배열
     [SerializeField] private float bulletSpeed = 100f;
     [SerializeField ]private AudioClip shotSound;
+    [SerializeField ]private AudioClip ReloadSound;
     private AudioSource _audioSource;
     
     // 풀 관리
@@ -330,7 +331,11 @@ public class GunController : MonoBehaviour, IWeapon
             ReturnToPool(bullet, EffectType.Bullet);
         }
     }
-    
+
+    public void ReloadSoundPlay() {
+        _audioSource.PlayOneShot(ReloadSound);
+    }
+
     // 게임 종료 시 풀 정리
     private void OnDestroy()
     {
