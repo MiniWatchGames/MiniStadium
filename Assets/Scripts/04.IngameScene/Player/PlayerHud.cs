@@ -14,10 +14,10 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     [SerializeField] private GameObject playerArmorBar;
     [SerializeField] private GameObject playerArmor;
     
-    [SerializeField] private GameObject playerSkill1;
-    [SerializeField] private GameObject playerSkill2;
-    [SerializeField] private GameObject playerSkill3;
-    [SerializeField] private GameObject playerWeapon;
+    [SerializeField] private PlayerHudComps moveSkill0;
+    [SerializeField] private PlayerHudComps weaponSkill0;
+    [SerializeField] private PlayerHudComps weaponSkill1;
+    [SerializeField] private PlayerHudComps playerWeapon;
     [SerializeField] private GameObject playerWeaponAmmo;
 
     private float currentHp = 0;
@@ -50,6 +50,39 @@ public class PlayerHud : MonoBehaviour , IStatObserver
 
   
 
+    public void Update_HUD_Comp(RepairShopWeaponSlot currentWeapon, 
+        ReceiptSlot skill1, ReceiptSlot skill2, ReceiptSlot skill3)
+    {
+        PlayerHudComps[] comps = 
+            { moveSkill0, weaponSkill0, weaponSkill1, playerWeapon };
+        ReceiptSlot[] skills = { skill1, skill2, skill3 };
+
+        int i;
+
+        for (i = 0; i < comps.Length; i++)
+        {
+            UpdateCompUI(comps[i]);
+        }
+        
+        return;
+        
+        void UpdateCompUI(PlayerHudComps comp)
+        {
+            if (comp == playerWeapon && currentWeapon != null)
+            {
+                comp.icon.sprite = currentWeapon.iconImage.sprite;
+                if (currentWeapon.type == 2) comp.text.text = "\u221e";
+                                        else comp.text.text = "2 | 6";
+            }
+            else if (i < skills.Length)
+            {
+                if (skills[i] != null)
+                    comp.icon.sprite = skills[i]._icon.sprite;
+            }
+            
+        }
+    }
+    
     public void WhenStatChanged((float, string) data)
     {
         if (data.Item2 == "currentHp")

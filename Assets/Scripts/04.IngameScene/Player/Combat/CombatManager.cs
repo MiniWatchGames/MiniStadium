@@ -8,6 +8,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     private Dictionary<WeaponType, IAttackStrategy> _attackStrategies = new Dictionary<WeaponType, IAttackStrategy>();
     private IAttackStrategy _currentStrategy;
+    public IAttackStrategy CurrentStrategy { get => _currentStrategy; set => _currentStrategy = value; }
     private WeaponType _currentWeaponType;
     public GameObject CurrentWeapon { get; set; }
 

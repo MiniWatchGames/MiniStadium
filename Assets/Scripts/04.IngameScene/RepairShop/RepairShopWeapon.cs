@@ -14,6 +14,7 @@ public class RepairShopWeapon : MonoBehaviour
     private List<RepairShopWeaponSlot> RepairShopWeapons;
     public RepairShopWeaponSlot currentWeapon;
     public RepairShopWeaponSlot selectedWeapon;
+    public RepairShopWeaponSlot baseWeapon;
 
     public void init(RepairShop _repairShop)
     {
@@ -35,6 +36,12 @@ public class RepairShopWeapon : MonoBehaviour
             script.Init(bo, this, i++ + 1);
             RepairShopWeapons.Add(script);
         }
+
+        // 기본 무기 설정
+        baseWeapon = RepairShopWeapons[1];
+        
+        // 초기화 (null 참조 방지)
+        Receipt.ReceiptRefundAll();
     }
     
     // 구현된 무기 정보 로드
