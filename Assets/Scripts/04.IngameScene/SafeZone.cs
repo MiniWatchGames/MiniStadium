@@ -42,7 +42,7 @@ public class SafeZone : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.localScale -= new Vector3(1f,1f,1f) * (magneticShrinkSpeed * Time.deltaTime);
+        gameObject.transform.localScale -= new Vector3(1f,0f,1f) * (magneticShrinkSpeed * Time.deltaTime);
         if (gameObject.transform.localScale == Vector3.zero)
         {
             transform.localScale = DefaultScale;

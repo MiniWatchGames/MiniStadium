@@ -936,7 +936,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         this.transform.GetComponent<InputManager>()?.Register(this);
 
         // 구매내역 할당
-        _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
+        _playerItems = PurchaseManager.PurchasedPlayerItems.DeepCopy();
 
         //카메라 설정 (아마 기존에 이미 들어가 있어서 없어도 괜찮을 듯)
         //_cameraController = Camera.main?.GetComponent<CameraController>();
@@ -1017,7 +1017,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //풀피 만들어주기
         CurrentHp.Value = baseMaxHp.Value;
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
-        PurchaseManager.ResetPurchasedPlayerItems();
+        //PurchaseManager.ResetPurchasedPlayerItems();
     }
 
     //public void Init()

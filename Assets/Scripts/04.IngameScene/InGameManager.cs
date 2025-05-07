@@ -64,7 +64,7 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private RepairShopTimer RepairShopTimer;
     [SerializeField] private float repairShopTime = 5;
     [SerializeField] private PlayerHud playerHud;
-    private PlayerController playerContoroller;
+    public PlayerController playerContoroller;
     private GameObject player;
 
     private GameObject _playerPrefab;
@@ -87,6 +87,7 @@ public class InGameManager : MonoBehaviour
             case GameState.StartGame:
                 //Debug.Log("Start Game");
                 currentGameState = GameState.StartGame;
+                GameRoundInfoUI.gameObject.SetActive(true);
                 SetRoundState(RoundState.RoundStart);
                 break;
             case GameState.InGame:
@@ -107,6 +108,7 @@ public class InGameManager : MonoBehaviour
         switch (state)
         {
             case RoundState.RoundStart:
+                currentRound++;
                 GameRoundInfoUI.gameObject.SetActive(false);
                 //Debug.Log("Round Start");
                 currentRoundState = RoundState.RoundStart;
@@ -127,18 +129,24 @@ public class InGameManager : MonoBehaviour
                     playerContoroller = player.GetComponent<PlayerController>();
                     playerHud.init(playerContoroller);
                 }
+                if( RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy() == null)
+                {
+                    Debug.Log("PlayerItems is null");
+                }
                 playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
-                RepairShopUI.SetActive(!RepairShopUI.activeSelf);
+                //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
                 currentRoundState = RoundState.InRound;
-                SetGameTime(50, RoundState.RoundEnd);
+                SetGameTime(10, RoundState.RoundEnd);
                 break;
             case RoundState.RoundEnd:
                 //Debug.Log("Round End");
                 currentRoundState = RoundState.RoundEnd;
-                currentRound++;
+                
                 GameRoundInfoUI.gameObject.SetActive(true);
+                
+                
                 if (BlueWinCount == 4 || RedWinCount == 4)
                 {
                     SetGameState(GameState.EndGame);
@@ -322,7 +330,7 @@ public class InGameManager : MonoBehaviour
     public void ResetRound()
     {
 
-        currentRound = 1;
+        currentRound = 0;
         BlueWinCount = 0;
         RedWinCount = 0;
     }
