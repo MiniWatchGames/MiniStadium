@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class GunController : MonoBehaviour, IWeapon
 {
     // 이펙트 유형 정의
@@ -44,6 +45,8 @@ public class GunController : MonoBehaviour, IWeapon
     [Header("Effects")]
     [SerializeField] private EffectPrefab[] effectPrefabs; // 구조체 배열
     [SerializeField] private float bulletSpeed = 100f;
+    [SerializeField ]private AudioClip shotSound;
+    private AudioSource _audioSource;
     
     // 풀 관리
     private Dictionary<EffectType, Transform> _poolParents = new Dictionary<EffectType, Transform>();
@@ -64,6 +67,7 @@ public class GunController : MonoBehaviour, IWeapon
         // 풀 컨테이너 생성
         _poolContainer = new GameObject("EffectPools").transform;
         _poolContainer.SetParent(transform);
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -197,7 +201,7 @@ public class GunController : MonoBehaviour, IWeapon
         }
         
         // 발사 효과음
-        // AudioManager.Instance.PlaySound("GunShot", firePoint.position);
+        _audioSource.PlayOneShot(shotSound, 1f);
         
         Vector3 hitPosition = firePoint.position + _camera.transform.forward * range;
         bool hitTarget = false;
