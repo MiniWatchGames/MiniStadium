@@ -75,7 +75,9 @@ public class GunAttackStrategy : IAttackStrategy ,  IStatObserver
         }
 
         public void ReloadAmmo() {
-            _gunController.CurrentAmmo.Value = _gunController.MaxAmmo.Value; 
+            if (_gunController != null) { 
+                _gunController.CurrentAmmo.Value = _gunController.MaxAmmo.Value;
+            }
         }
         public void WhenStatChanged((float, string) data)
         {
