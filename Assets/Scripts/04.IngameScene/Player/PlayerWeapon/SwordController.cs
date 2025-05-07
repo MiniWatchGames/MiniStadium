@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class SwordController : MonoBehaviour, IWeapon
 {
     [Serializable]
@@ -18,9 +19,11 @@ public class SwordController : MonoBehaviour, IWeapon
     [SerializeField] private ObservableFloat _currentAmmo;
     [SerializeField] private ObservableFloat _maxAmmo;
     
-
+    [Header("Effects")]
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
+    [SerializeField] private AudioClip[] slashSounds;
     private ParticleSystem[] _slashEffects;
+    private AudioSource _audioSource;
     
     // 충돌 처리
     private Vector3[] _previousPositions;
@@ -38,6 +41,11 @@ public class SwordController : MonoBehaviour, IWeapon
     private int _maxCombo = 2;
     private int _currentComboIndex = 0;
 
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
+    
     private void Start()
     {
         _previousPositions = new Vector3[_triggerZones.Length];
@@ -53,6 +61,7 @@ public class SwordController : MonoBehaviour, IWeapon
         {
             _slashEffects[i] = Instantiate(slashEffectPrefabs[i], transform.position, Quaternion.identity);
         }
+        _slashEffects[0].gameObject.transform.rotation = Quaternion.Euler(0, -90, 0);
 
         _attackPower = 10;
         _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
@@ -156,11 +165,15 @@ public class SwordController : MonoBehaviour, IWeapon
                 // 크로스헤어 알림용
                 //CombatEvents.OnTargetHit?.Invoke(target);
 
-                Debug.Log(target.transform.root.name);;
                 _slashEffects[_currentComboIndex].transform.position = hitPoint;
                 _slashEffects[_currentComboIndex].Play();
             }
         }
+    }
+
+    public void PlaySlashSound(int index)
+    {
+        _audioSource.PlayOneShot(slashSounds[index], 1f);
     }
     
 #if UNITY_EDITOR

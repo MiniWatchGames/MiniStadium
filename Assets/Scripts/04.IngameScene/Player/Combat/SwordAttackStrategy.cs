@@ -23,6 +23,9 @@ public class SwordAttackStrategy : IAttackStrategy
         _comboActive = false;
         
         _playerController.Animator.SetTrigger(Attack);
+        
+        // 첫번째 공격 사운드 
+        _swordController.PlaySlashSound(0);
     }
 
     public void Update(PlayerController playerController)
@@ -63,12 +66,16 @@ public class SwordAttackStrategy : IAttackStrategy
         {
             // 콤보 카운터 증가
             _currentCombo++;
+            _currentCombo = Mathf.Clamp(_currentCombo, 0, _maxCombo - 1);
             
             // 소드 컨트롤러에 현재 콤보 인덱스 설정
             _swordController.SetComboIndex(_currentCombo);
             
             // 다음 공격 애니메이션 트리거
             _playerController.Animator.SetTrigger(NextAttack);
+            
+            // 콤보 공격 사운드 
+            _swordController.PlaySlashSound(_currentCombo);
             
             // 콤보 활성 상태 리셋 (새 콤보의 콤보 윈도우를 기다리기 위해)
             _comboActive = false;
