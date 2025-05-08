@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordController : MonoBehaviour
+[RequireComponent(typeof(AudioSource))]
+public class SwordController : MonoBehaviour, IWeapon
 {
     [Serializable]
     public class SwordTriggerZone
@@ -13,11 +14,16 @@ public class SwordController : MonoBehaviour
     }
     
     [SerializeField] private SwordTriggerZone[] _triggerZones;
-    [SerializeField] private int attackPower = 10;
+    [SerializeField] private int _attackPower;
     [SerializeField] private LayerMask targetLayerMask;
-
+    [SerializeField] private ObservableFloat _currentAmmo;
+    [SerializeField] private ObservableFloat _maxAmmo;
+    
+    [Header("Effects")]
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
+    [SerializeField] private AudioClip[] slashSounds;
     private ParticleSystem[] _slashEffects;
+    private AudioSource _audioSource;
     
     // 충돌 처리
     private Vector3[] _previousPositions;
@@ -25,11 +31,21 @@ public class SwordController : MonoBehaviour
     private Ray _ray = new Ray();
     private RaycastHit[] _hits = new RaycastHit[10];
     private bool _isAttacking = false;
+
+    public int Damage { get => _attackPower;}
+    public ObservableFloat CurrentAmmo { get => _currentAmmo;}
+    public ObservableFloat MaxAmmo { get => _maxAmmo; }
+
     public bool IsAttacking => _isAttacking;
     
     private int _maxCombo = 2;
     private int _currentComboIndex = 0;
 
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
+    
     private void Start()
     {
         _previousPositions = new Vector3[_triggerZones.Length];
@@ -45,6 +61,11 @@ public class SwordController : MonoBehaviour
         {
             _slashEffects[i] = Instantiate(slashEffectPrefabs[i], transform.position, Quaternion.identity);
         }
+        _slashEffects[0].gameObject.transform.rotation = Quaternion.Euler(0, -90, 0);
+
+        _attackPower = 10;
+        _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
+        _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
     
     public void SetComboIndex(int index)
@@ -57,7 +78,7 @@ public class SwordController : MonoBehaviour
         for (int i = 0; i < _triggerZones.Length; i++)
         {
             _previousPositions[i] = transform.position + transform.TransformVector(_triggerZones[i].position);
-        }
+        }   
     }
 
     // 공격 시작 함수
@@ -79,7 +100,7 @@ public class SwordController : MonoBehaviour
         _isAttacking = false;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (_isAttacking)
         {
@@ -130,7 +151,7 @@ public class SwordController : MonoBehaviour
             DamageInfo damageInfo = new DamageInfo
             {
                 attacker = gameObject,
-                damage = attackPower,
+                damage = _attackPower,
                 hitPoint = hitPoint,
                 hitDirection = (target.transform.position - transform.position).normalized
             };
@@ -142,12 +163,17 @@ public class SwordController : MonoBehaviour
                 damageable.TakeDamage(damageInfo);
                 
                 // 크로스헤어 알림용
-                CombatEvents.OnTargetHit?.Invoke(target);
-                
-                _slashEffects[1].transform.position = hitPoint;
-                _slashEffects[1].Play();
+                //CombatEvents.OnTargetHit?.Invoke(target);
+
+                _slashEffects[_currentComboIndex].transform.position = hitPoint;
+                _slashEffects[_currentComboIndex].Play();
             }
         }
+    }
+
+    public void PlaySlashSound(int index)
+    {
+        _audioSource.PlayOneShot(slashSounds[index], 1f);
     }
     
 #if UNITY_EDITOR

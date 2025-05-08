@@ -21,9 +21,9 @@ public class AttackState : PlayerActionState
         _playerController.CombatManager.EndAttack();
         base.Exit();
     }
-    public override void Update()
+    public override void StateUpdate()
     {
-        base.Update();
+        base.StateUpdate();
         _playerController.CombatManager.UpdateAttack();
         // 공격 완료 확인 - 여기서 IdleState로 전환
         if (_playerController.CombatManager.IsAttackComplete())

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 // 추가되는 스킬은 여기에도 추가작성 필요
 public enum ActionState
@@ -11,9 +12,13 @@ public enum ActionState
     Idle,
     Attack,
     Hit,
+    Reload,
     Dead,
     MovementSkills,
     WeaponSkills,
+    RunSkill,
+    DoubleJumpSkill,
+    TeleportSkill,
     None
 }
 
@@ -52,7 +57,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private Vector3 _velocity = Vector3.zero;
     private bool _isDead = false;
     private PlayerItems _playerItems;
-
+    private PurchaseManager _purchaseManager;
+    public PurchaseManager PurchaseManager { get => _purchaseManager; set => _purchaseManager = value; }
 
     // input값 저장, 전달 
     private Vector2 _currentMoveInput;
@@ -72,17 +78,17 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [SerializeField] private float maxHpIncreaseAmount;
     [SerializeField] private float defenceIncreaseAmount;
     [SerializeField] private float moveSpeedIncreaseAmount;
+    [SerializeField] private float jumpPowerIncreaseAmount;
 
     private Stat baseMaxHp;
     private Stat baseDefence;
     private Stat baseMoveSpeed;
     private Stat baseJumpPower;
 
-    public float BaseMaxHp => baseMaxHp.Value;
-    public float BaseDefence => baseDefence.Value;
-    public float BaseMoveSpeed => baseMoveSpeed.Value;
-    public float BaseJumpPower => baseJumpPower.Value;
-
+    public Stat BaseMaxHp => baseMaxHp;
+    public Stat BaseDefence => baseDefence;
+    public Stat BaseMoveSpeed => baseMoveSpeed;
+    public Stat BaseJumpPower => baseJumpPower;
 
     private Dictionary<StatType, Stat> statDictionary;
 
@@ -92,12 +98,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     
     private ObservableFloat currentHp;
 
-    public float CurrentHp
+    public ObservableFloat CurrentHp
     {
-        get => currentHp.Value;
+        get => currentHp;
         set
         {
-            currentHp.Value = value;
+            currentHp = value;
             if (currentHp.Value <= 0 && !_isDead)
             {
                 Debug.Log("주금..");
@@ -122,11 +128,32 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private List<(ActionState, IPlayerState)> _weaponSkills;
     private List<(ActionState, IPlayerState)> _movementSkills;
 
+    //다 배열로 변경 가능
+
     private string _firstWeaponSkill;
     private string _secondWeaponSkill;
     private string _firstMoveSkill;
-
     private string _secondMoveSkill;
+
+    private float _firstWeaponSkillCoolTime;
+    private float _secondWeaponSkillCoolTime;
+    private float _firstMovementSkillCoolTime;
+    private float _secondMovementSkillCoolTime;
+
+    private ObservableFloat _currentFirstWeaponSkillCoolTime;
+    private ObservableFloat _currentSecondWeaponSkillCoolTime;
+    private ObservableFloat _currentFirstMovementSkillCoolTime;
+    private ObservableFloat _currentSecondMovementSkillCoolTime;
+
+    public ObservableFloat CurrentFirstWeaponSkillCoolTime { get; }
+    public ObservableFloat CurrentSecondWeaponSkillCoolTime { get; }
+    public ObservableFloat CurrentFirstMovementSkillCoolTime { get; }
+    public ObservableFloat CurrentSecondMovementSkillCoolTime { get; }
+
+    private Coroutine _firstWeaponSkillCoolTimeCoroutine;
+    private Coroutine _secondWeaponSkillCoolTimeCoroutine;
+    private Coroutine _firstMovementSkillCoolTimeCoroutine;
+    private Coroutine _secondMovementSkillCoolTimeCoroutine;
 
     // --------
     // 상태 관련
@@ -134,11 +161,15 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private PlayerFSM<MovementState> _movementFsm;
     private PlayerFSM<PostureState> _postureFsm;
     private PlayerFSM<ActionState> _actionFsm;
+    private bool _CanChangeState = true;
+    public bool CanChangeState { get => _CanChangeState; set => _CanChangeState =  value; }
     [SerializeField] private string defaultState;
 
     public PlayerFSM<MovementState> MovementFsm { get => _movementFsm; }
     public PlayerFSM<PostureState> PostureFsm { get => _postureFsm; }
     public PlayerFSM<ActionState> ActionFsm { get => _actionFsm; }
+
+    public Material RunStateMaterial;
 
     // --------
     // 카메라 관련
@@ -165,13 +196,19 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [Header("Animation")]
     [SerializeField] private RuntimeAnimatorController swordAnimatorController;
     [SerializeField] private RuntimeAnimatorController gunAnimatorController;
-    [SerializeField] private float aimWeight = 1f; // IK 가중치 (0-1)
     private readonly int MoveSpeedHash = Animator.StringToHash("MoveSpeed");
     public Animator Animator { get; private set; }
 
+    // --------
+    // 사운드 관련
+    [Header("Sound")]
+    [SerializeField] private AudioClip[] jumpSound;
+    [SerializeField] private AudioClip[] walkSound;
+    private AudioSource _audioSource;
+
     public bool IsGrounded
     {
-        get { return GetDistanceToGround() <= 0.03f; }
+        get {return GetDistanceToGround() <= 0.03f; }
     }
 
     private void Awake()
@@ -180,6 +217,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _characterController = GetComponent<CharacterController>();
         _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
+        _audioSource = GetComponent<AudioSource>();
+
+        _purchaseManager = new PurchaseManager();
 
         _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
         _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
@@ -207,7 +247,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _movementFsm.Run(this);
         _postureFsm.Run(this);
         _actionFsm.Run(this);
-        ReInit();
+        //ReInit();
     }
 
 
@@ -217,6 +257,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _movementFsm?.CurrentStateUpdate();
         _postureFsm?.CurrentStateUpdate();
         _actionFsm?.CurrentStateUpdate();
+    
         DrawRay();
     }
 
@@ -232,6 +273,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void SetActionState(string stateName)
     {
+        if (stateName == "Reload") {
+            _CanChangeState = false;
+            _actionFsm.ChangeState(stateName, this);
+            return;
+        }
+        if (!_CanChangeState) return;
         _actionFsm.ChangeState(stateName, this);
     }
 
@@ -245,6 +292,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _combatManager.SetWeaponType(weapon.WeaponType);
 
         _combatManager.CurrentWeapon = _playerWeapon.CurrentWeapon;
+
+        _CanChangeState = true;
     }
 
     // 데이지 계산
@@ -368,11 +417,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         // 점프 
         if (IsGrounded)
         {
-            _velocity.y = Mathf.Sqrt(BaseJumpPower * -2f * Gravity);
+            Jump(); 
             SetMovementState("Jump");
         }
     }
-
+    public void Jump() {
+        _velocity.y = Mathf.Sqrt(BaseJumpPower.Value * -2f * Gravity);
+    }
     public void OnFirePressed()
     {
         // 공격 (마우스 다운)
@@ -395,6 +446,14 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
     }
 
+    public void OnReloadPressed() {
+        if (_playerWeapon.WeaponType == WeaponType.Gun) { 
+            SetActionState("Reload");
+        }
+    }
+
+
+
     public void OnCrouchPressed()
     {
         SetPostureState(_postureFsm.CurrentState == PostureState.Idle ? "Crouch" : "Idle");
@@ -406,9 +465,33 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_weaponSkills?.Count >= 1)
         {
             var weaponSkill = _weaponSkills[0];
-            _firstWeaponSkill = weaponSkill.ToString();
-            if (_actionFsm.CurrentState != weaponSkill.Item1)
-                SetActionState(_firstWeaponSkill);
+            ISkillData weaponSkillData = weaponSkill.Item2 as ISkillData;
+
+            if (_currentFirstWeaponSkillCoolTime?.Value > 0)
+            {
+                return;
+            }
+            else
+            {
+                if (weaponSkillData.CoolTime != null)
+                {
+                    _currentFirstWeaponSkillCoolTime.Value = _firstWeaponSkillCoolTime;
+                    if (_firstWeaponSkillCoolTimeCoroutine == null)
+                    {
+                        _firstWeaponSkillCoolTimeCoroutine =
+                        StartCoroutine(
+                            SkillCoolDown(
+                                _currentFirstWeaponSkillCoolTime, () => { _firstWeaponSkillCoolTimeCoroutine = null; }
+                            )
+                        );
+                    }
+                }
+                _firstWeaponSkill = weaponSkill.Item1.ToString();
+                if (_actionFsm.CurrentState != weaponSkill.Item1)
+                    SetActionState(_firstWeaponSkill);
+
+                return;
+            }
         }
     }
 
@@ -428,10 +511,37 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         if (_weaponSkills?.Count >= 2)
         {
-            var weaponSkill = _weaponSkills[1];
-            _secondWeaponSkill = weaponSkill.ToString();
-            if (_actionFsm.CurrentState != weaponSkill.Item1)
-                SetActionState(_secondWeaponSkill);
+            if (_weaponSkills?.Count >= 1)
+            {
+                var weaponSkill = _weaponSkills[0];
+                ISkillData weaponSkillData = weaponSkill.Item2 as ISkillData;
+
+                if (_currentSecondWeaponSkillCoolTime?.Value > 0)
+                {
+                    return;
+                }
+                else
+                {
+                    if (weaponSkillData.CoolTime != null)
+                    {
+                        _currentSecondWeaponSkillCoolTime.Value = _secondWeaponSkillCoolTime;
+                        if (_secondWeaponSkillCoolTimeCoroutine == null)
+                        {
+                            _secondWeaponSkillCoolTimeCoroutine =
+                            StartCoroutine(
+                                SkillCoolDown(
+                                    _currentSecondWeaponSkillCoolTime, () => { _secondWeaponSkillCoolTimeCoroutine = null; }
+                                )
+                            );
+                        }
+                    }
+                    _secondWeaponSkill = weaponSkill.Item1.ToString();
+                    if (_actionFsm.CurrentState != weaponSkill.Item1)
+                        SetActionState(_secondWeaponSkill);
+
+                    return;
+                }
+            }
         }
     }
 
@@ -447,13 +557,35 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     }
 
     public void OnFirstMoveSkillPressed()
-    {
+    {        
         if (_movementSkills?.Count >= 1)
-        {
+        {            
             var moveMentSkill = _movementSkills[0];
-            _firstMoveSkill = moveMentSkill.ToString();
-            if (_actionFsm.CurrentState != moveMentSkill.Item1)
-                SetActionState(_firstMoveSkill);
+            ISkillData moveMentSkillData = moveMentSkill.Item2 as ISkillData;
+
+            if (_currentFirstMovementSkillCoolTime?.Value > 0)
+            {
+                return;
+            }
+            else {
+                if (moveMentSkillData.CoolTime != null) {
+                    _currentFirstMovementSkillCoolTime.Value = _firstMovementSkillCoolTime;
+                    if (_firstMovementSkillCoolTimeCoroutine == null)
+                    {
+                        _firstMovementSkillCoolTimeCoroutine = 
+                        StartCoroutine(
+                            SkillCoolDown(
+                                _currentFirstMovementSkillCoolTime, () => {_firstMovementSkillCoolTimeCoroutine = null;}
+                            )
+                        );
+                    }
+                }
+                _firstMoveSkill = moveMentSkill.Item1.ToString();
+                if (_actionFsm.CurrentState != moveMentSkill.Item1)
+                    SetActionState(_firstMoveSkill);
+
+                return;
+            }
         }
     }
 
@@ -473,9 +605,33 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (_movementSkills?.Count >= 2)
         {
             var moveMentSkill = _movementSkills[1];
-            _secondMoveSkill = moveMentSkill.ToString();
-            if (_actionFsm.CurrentState != moveMentSkill.Item1)
-                SetActionState(_secondMoveSkill);
+            ISkillData moveMentSkillData = moveMentSkill.Item2 as ISkillData;
+
+            if (_currentSecondMovementSkillCoolTime?.Value > 0)
+            {
+                return;
+            }
+            else
+            {
+                if (moveMentSkillData.CoolTime != null)
+                {
+                    _currentSecondMovementSkillCoolTime.Value = _secondMovementSkillCoolTime;
+                    if (_secondMovementSkillCoolTimeCoroutine == null)
+                    {
+                        _secondMovementSkillCoolTimeCoroutine =
+                        StartCoroutine(
+                            SkillCoolDown(
+                                _currentSecondMovementSkillCoolTime, () => { _secondMovementSkillCoolTimeCoroutine = null; }
+                            )
+                        );
+                    }
+                }
+                _secondMoveSkill = moveMentSkill.Item1.ToString();
+                if (_actionFsm.CurrentState != moveMentSkill.Item1)
+                    SetActionState(_secondMoveSkill);
+
+                return;
+            }
         }
     }
 
@@ -490,6 +646,18 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
     }
 
+
+    IEnumerator SkillCoolDown(ObservableFloat value, Action onComplete)
+    {
+        while (value.Value >= 0)
+        {
+            value.Value -= Time.deltaTime;
+            Debug.Log("스킬 쿨타임 : " + value.Value);
+            yield return null;
+        }
+
+        onComplete?.Invoke();
+    }
     #endregion
 
     // 바닥과 거리를 계산하는 함수
@@ -622,9 +790,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
         if (stat == StatType.MaxHp)
         {
-            if (CurrentHp >= baseMaxHp.Value)
+            if (CurrentHp.Value >= baseMaxHp.Value)
             {
-                CurrentHp = baseMaxHp.Value;
+                CurrentHp.Value = baseMaxHp.Value;
             }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
@@ -641,9 +809,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
         if (stat == StatType.MaxHp)
         {
-            if (CurrentHp >= baseMaxHp.Value)
+            if (CurrentHp.Value >= baseMaxHp.Value)
             {
-                CurrentHp = baseMaxHp.Value;
+                CurrentHp.Value = baseMaxHp.Value;
             }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
@@ -660,9 +828,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
         if (stat == StatType.MaxHp)
         {
-            if (CurrentHp >= baseMaxHp.Value)
+            if (CurrentHp.Value >= baseMaxHp.Value)
             {
-                CurrentHp = baseMaxHp.Value;
+                CurrentHp.Value = baseMaxHp.Value;
             }
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
@@ -681,10 +849,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         var AR = _playerItems.count_AR;
         var mv = _playerItems.count_MV;
         var hp = _playerItems.count_HP;
+        var jp = _playerItems.count_JP;
 
         AddStatDecorates(StatType.MaxHp, hp, maxHpIncreaseAmount);
         AddStatDecorates(StatType.Defence, AR, defenceIncreaseAmount);
         AddStatDecorates(StatType.MoveSpeed, mv, moveSpeedIncreaseAmount);
+        AddStatDecorates(StatType.JumpPower, jp, jumpPowerIncreaseAmount);
     }
 
     public void AddStatDecorates(StatType statype, int count, float amount)
@@ -769,6 +939,20 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             //stat.Value.RemoveObserver(this);
         }
 
+        _firstWeaponSkillCoolTime = 0;
+        _secondWeaponSkillCoolTime = 0;
+        _firstMovementSkillCoolTime = 0;
+        _secondMovementSkillCoolTime = 0;
+
+        _currentFirstWeaponSkillCoolTime = null;
+        _currentSecondWeaponSkillCoolTime = null;
+        _currentFirstMovementSkillCoolTime = null;
+        _currentSecondMovementSkillCoolTime = null;
+
+        _firstMovementSkillCoolTimeCoroutine = null;
+        _secondMovementSkillCoolTimeCoroutine = null;
+        _firstWeaponSkillCoolTimeCoroutine = null;
+        _secondWeaponSkillCoolTimeCoroutine = null;
     }
 
 
@@ -778,7 +962,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public void ReInit()
     {
         // InputManager 재구독 
-        InputManager.instance?.Register(this);
+        this.transform.GetComponent<InputManager>()?.Register(this);
 
         // 구매내역 할당
         _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
@@ -830,77 +1014,136 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //스킬 목록 적용
         _weaponSkills = ActionFsm?.AddSkillState(this, _playerItems?.Skills[1], 1);
         _movementSkills = ActionFsm?.AddSkillState(this, _playerItems?.Skills[0], 0);
+
+
+        // 스킬 쿨타임 받아오기
+
+        switch (_weaponSkills?.Count) {
+            case 1:
+                _firstWeaponSkillCoolTime = _weaponSkills[0].Item2 is ISkillData firstWeaponSkill && firstWeaponSkill.CoolTime?.Value != null ? firstWeaponSkill.CoolTime.Value : 0f;
+                break;
+            case 2:
+                _secondWeaponSkillCoolTime = _weaponSkills[1].Item2 is ISkillData secondWeaponSkill && secondWeaponSkill.CoolTime?.Value != null ? secondWeaponSkill.CoolTime.Value : 0f;
+                break;
+        }
+
+        switch (_movementSkills?.Count) {
+            case 1:
+                _firstMovementSkillCoolTime =  _movementSkills[0].Item2 is ISkillData firstMovementSkill && firstMovementSkill.CoolTime?.Value != null ? firstMovementSkill.CoolTime.Value : 0f;
+                break;
+            case 2:
+                _secondMovementSkillCoolTime = _movementSkills[1].Item2 is ISkillData secondMovementSkill && secondMovementSkill.CoolTime?.Value != null ? secondMovementSkill.CoolTime.Value : 0f;
+                break;
+        }     
+
+        _currentFirstWeaponSkillCoolTime = new ObservableFloat(0, "currentFirstWeaponSkillCoolTime");
+        _currentSecondWeaponSkillCoolTime = new ObservableFloat(0, "currentSecondWeaponSkillCoolTime");
+        _currentFirstMovementSkillCoolTime = new ObservableFloat(0, "currentFirstMovementSkillCoolTime");
+        _currentSecondMovementSkillCoolTime = new ObservableFloat(0, "currentSecondMovementSkillCoolTime");
+
         _isDead = false;
 
         //풀피 만들어주기
-        CurrentHp = baseMaxHp.Value;
+        CurrentHp.Value = baseMaxHp.Value;
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
         PurchaseManager.ResetPurchasedPlayerItems();
     }
 
-
-
-    public void Init()
+    public void CleanupBeforeReInit()
     {
-        //구매내역 가져오기
-        _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
-
-        // InputManager 구독 
-        InputManager.instance.Register(this);
-
-        // 카메라 설정
-        // _cameraController.SetTarget(transform);
-        // _cameraController.SetSpineTarget(rotationTarget);
-        // _cameraController.IsIdle = IsIdle;
-
-        // 무기 설정 
-        EquipWeapon(_playerWeapon);
-
-        _movementFsm.Run(this);
-        _postureFsm.Run(this);
-        _actionFsm.Run(this);
-
-        // 구매내역에 따른 스텟 분배
-        DecorateStatByPlayerItems();
-
-
-        // 스텟 + currentHp 옵저버 등록 
-        foreach (var stat in statDictionary)
-        {
-            stat.Value.AddObserver(this);
-        }
-
-        currentHp.AddObserver(this);
-
-
-        //구매 목록에 따른 패시브 적용
-        //임시, 구매내역이라 치고 작성
-        //var myArray2 = new (int, string)[] { (1, "HpRegenerationPassive") };
-        _passiveFactory.CreatePassive(this, _playerItems.Skills[2]);
-        foreach (var passive in PassiveList)
-        {
-            passive.ApplyPassive(this);
-        }
-        //스킬 목록 적용
-        //플레이어의 ActionFsm 내에 상태를 넣어야 함
-        //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
-        //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
-        _weaponSkills = ActionFsm.AddSkillState(this, _playerItems.Skills[1], 1);
-        _movementSkills = ActionFsm.AddSkillState(this, _playerItems.Skills[0], 0);
-        //var myArray = new (int, string)[] { (1, "MovementSkills")  };
-        //var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
-        //_weaponSkills = ActionFsm.AddSkillState(myArray);
-        //_movementSkills = ActionFsm.AddSkillState(myArray1);
-
-
-        _isDead = false;
-
-        //풀피 만들어주기
-        CurrentHp = baseMaxHp.Value;
-        //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
-        PurchaseManager.ResetPurchasedPlayerItems();
+        // InputManager 구독 해제 
+        this.transform.GetComponent<InputManager>()?.Unregister(this);
+        SetActionState("Idle");
+        SetMovementState("Idle");
+        SetPostureState("Idle");
     }
+
+    //public void Init()
+    //{
+    //    //구매내역 가져오기
+    //    _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
+
+    //    // InputManager 구독 
+    //    InputManager.instance.Register(this);
+
+    //    // 카메라 설정
+    //    _cameraController = Camera.main.GetComponent<CameraController>();
+    //    // _cameraController.SetTarget(transform);
+    //    // _cameraController.SetSpineTarget(rotationTarget);
+    //    // _cameraController.IsIdle = IsIdle;
+
+    //    // 무기 설정 
+    //    EquipWeapon(_playerWeapon);
+
+    //    _movementFsm.Run(this);
+    //    _postureFsm.Run(this);
+    //    _actionFsm.Run(this);
+
+    //    // 구매내역에 따른 스텟 분배
+    //    DecorateStatByPlayerItems();
+
+
+    //    // 스텟 + currentHp 옵저버 등록 
+    //    foreach (var stat in statDictionary)
+    //    {
+    //        stat.Value.AddObserver(this);
+    //    }
+
+    //    currentHp.AddObserver(this);
+
+
+    //    //구매 목록에 따른 패시브 적용
+    //    //임시, 구매내역이라 치고 작성
+    //    //var myArray2 = new (int, string)[] { (1, "HpRegenerationPassive") };
+    //    _passiveFactory.CreatePassive(this, _playerItems.Skills[2]);
+    //    foreach (var passive in PassiveList)
+    //    {
+    //        passive.ApplyPassive(this);
+    //    }
+    //    //스킬 목록 적용
+    //    //플레이어의 ActionFsm 내에 상태를 넣어야 함
+    //    //AddSkillState에 넣을 스킬 목록을 집어넣으면 알아서 State가 생성됨
+    //    //단 ActionState과 SkillFactory에 등록해두어야 추가 가능
+    //    _weaponSkills = ActionFsm.AddSkillState(this, _playerItems.Skills[1], 1);
+    //    _movementSkills = ActionFsm.AddSkillState(this, _playerItems.Skills[0], 0);
+    //    //var myArray = new (int, string)[] { (1, "MovementSkills")  };
+    //    //var myArray1 = new (int, string)[] { (1, "MovementSkills") , (1, "MovementSkills") };
+    //    //_weaponSkills = ActionFsm.AddSkillState(myArray);
+    //    //_movementSkills = ActionFsm.AddSkillState(myArray1);
+
+
+    //    _isDead = false;
+
+    //    //풀피 만들어주기
+    //    CurrentHp.Value = baseMaxHp.Value;
+    //    //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
+    //    PurchaseManager.ResetPurchasedPlayerItems();
+    //}
 
     #endregion
 
+    #region 사운드
+    public void PlayFootstep()
+    {
+        int index = UnityEngine.Random.Range(0, walkSound.Length);
+        _audioSource.volume = 0.1f;
+        _audioSource.PlayOneShot(walkSound[index]);
+    }
+
+    public void PlayFirstJump() {
+        _audioSource.volume = 0.22f;
+        _audioSource.PlayOneShot(jumpSound[0]);
+    }
+
+    public void PlaySecondJump()
+    {
+        _audioSource.volume = 0.25f;
+        _audioSource.PlayOneShot(jumpSound[1]);
+    }
+    public void Playland()
+    {
+        _audioSource.volume = 0.25f;
+        _audioSource.PlayOneShot(jumpSound[2]);
+    }
+    #endregion
 }

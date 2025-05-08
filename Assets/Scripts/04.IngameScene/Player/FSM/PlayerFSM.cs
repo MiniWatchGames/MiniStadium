@@ -39,6 +39,7 @@ public static class StateFactory
         (ActionState.Attack, new AttackState(/*_aniStrategy*/)),
         (ActionState.Hit, new HitState(/*_aniStrategy*/)),
         (ActionState.Dead, new DeadState(/*_aniStrategy*/)),
+        (ActionState.Reload, new ReloadState(/*_aniStrategy*/)),
         //(ActionState.MovementSkills, new MovementSkillsState(/*_aniStrategy*/)),
         //(ActionState.WeaponSkills, new WeaponSkillsState(/*_aniStrategy*/))
     };
@@ -115,7 +116,7 @@ public class PlayerFSM<T> where T : Enum
     {
         if (_states.ContainsKey(stateType))
         {
-            Debug.LogError($"State {stateType} already exists.");
+            Debug.Log($"State {stateType} already exists.");
             return;
         }
         _states.Add(stateType, state);
@@ -131,7 +132,7 @@ public class PlayerFSM<T> where T : Enum
 
     public void CurrentStateUpdate()
     {
-        _currentState?.Update();
+        _currentState?.StateUpdate();
     }
 
     public void RemoveState(T stateType)

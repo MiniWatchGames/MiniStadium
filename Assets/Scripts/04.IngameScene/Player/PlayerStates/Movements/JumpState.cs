@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class JumpState : PlayerMovementState
 {
-    private static int aniName;
+    //private static int aniName;
     public JumpState() : base() { }
     //public JumpState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
     //{
@@ -13,15 +13,20 @@ public class JumpState : PlayerMovementState
     public override void Enter(PlayerController playerController)
     {
         base.Enter(playerController);
-
+        // _playerController.LandSound = () => {
+        //     _playerController.Playland();
+        //     _playerController.LandSound = null;
+        // };
         _playerController.Animator.SetTrigger(Jump);
+        _playerController.PlayFirstJump();
     }
     public override void Exit()
     {
+        _playerController.Playland();
         base.Exit();
     }
-    public override void Update()
+    public override void StateUpdate()
     {
-        base.Update();
+        base.StateUpdate();
     }
 }

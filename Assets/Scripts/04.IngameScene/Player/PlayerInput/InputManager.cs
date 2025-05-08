@@ -2,17 +2,11 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static InputManager instance;
     private IInputEvents _listener;
     
     public Vector2 MoveInput { get; private set; }
     public Vector2 LookInput { get; private set; }
-
-    private void Awake()
-    {
-        instance = this;
-    }
-
+    
     // Input Listener 구독
     public void Register(IInputEvents listener)
     {
@@ -48,5 +42,6 @@ public class InputManager : MonoBehaviour
         if (Input.GetButtonUp("FirstMoveSkill")) _listener?.OnFirstMoveSkillReleased();
         if (Input.GetButtonDown("SecondMoveSkill")) _listener?.OnSecondMoveSkillPressed();
         if (Input.GetButtonUp("SecondMoveSkill")) _listener?.OnSecondMoveSkillReleased();
+        if (Input.GetButtonUp("Reload")) _listener?.OnReloadPressed();
     }
 }
