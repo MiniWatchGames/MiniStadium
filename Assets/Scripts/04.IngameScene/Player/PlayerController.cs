@@ -42,7 +42,8 @@ public enum StatType
     MaxHp,
     Defence,
     MoveSpeed,
-    JumpPower
+    JumpPower,
+    Damage
 }
 
 [RequireComponent(typeof(CharacterController))]
@@ -86,11 +87,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private Stat baseDefence;
     private Stat baseMoveSpeed;
     private Stat baseJumpPower;
+    private Stat damage;
 
     public Stat BaseMaxHp => baseMaxHp;
     public Stat BaseDefence => baseDefence;
     public Stat BaseMoveSpeed => baseMoveSpeed;
     public Stat BaseJumpPower => baseJumpPower;
+    public Stat Damage => damage;
 
     private Dictionary<StatType, Stat> statDictionary;
 
@@ -147,10 +150,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private ObservableFloat _currentFirstMovementSkillCoolTime;
     private ObservableFloat _currentSecondMovementSkillCoolTime;
 
-    public ObservableFloat CurrentFirstWeaponSkillCoolTime { get; }
-    public ObservableFloat CurrentSecondWeaponSkillCoolTime { get; }
-    public ObservableFloat CurrentFirstMovementSkillCoolTime { get; }
-    public ObservableFloat CurrentSecondMovementSkillCoolTime { get; }
+    public ObservableFloat CurrentFirstWeaponSkillCoolTime { get => _currentFirstWeaponSkillCoolTime; }
+    public ObservableFloat CurrentSecondWeaponSkillCoolTime { get => _currentSecondWeaponSkillCoolTime; }
+    public ObservableFloat CurrentFirstMovementSkillCoolTime { get => _currentFirstMovementSkillCoolTime; }
+    public ObservableFloat CurrentSecondMovementSkillCoolTime { get => _currentSecondMovementSkillCoolTime; }
 
     private Coroutine _firstWeaponSkillCoolTimeCoroutine;
     private Coroutine _secondWeaponSkillCoolTimeCoroutine;
@@ -995,6 +998,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         EquipWeapon(_playerWeapon);
 
+        damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+        statDictionary.Add(StatType.Damage, damage);
 
         // 스텟 + currentHp 옵저버 등록 
         foreach (var stat in statDictionary)

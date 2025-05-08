@@ -37,7 +37,7 @@ public class GunController : MonoBehaviour, IWeapon
         }
     }
     
-    [SerializeField] private int damage = 20;
+    [SerializeField] private Stat damage;
     [SerializeField] private float range = 100f;
     [SerializeField] private Transform firePoint;
     [SerializeField] private LayerMask targetMask;
@@ -59,7 +59,7 @@ public class GunController : MonoBehaviour, IWeapon
     private ObservableFloat _currentAmmo;
     private ObservableFloat _maxAmmo;
 
-    public int Damage { get => damage; }
+    public Stat Damage { get => damage; }
     public ObservableFloat CurrentAmmo { get => _currentAmmo; }
     public ObservableFloat MaxAmmo { get => _maxAmmo; }
 
@@ -69,14 +69,15 @@ public class GunController : MonoBehaviour, IWeapon
         _poolContainer = new GameObject("EffectPools").transform;
         _poolContainer.SetParent(transform);
         _audioSource = GetComponent<AudioSource>();
+        damage = new Stat(20, "GunDamage");
+        _currentAmmo = new ObservableFloat(30, "GunCurrentAmmo");
+        _maxAmmo = new ObservableFloat(30, "GunMaxAmmo");
     }
 
     private void Start()
     {
         var pc = GetComponentInParent<PlayerController>();
         _camera = pc.CameraController;
-        _currentAmmo = new ObservableFloat(30, "GunCurrentAmmo");
-        _maxAmmo = new ObservableFloat(30, "GunMaxAmmo");
         
         // 풀 초기화
         InitializeObjectPools();
@@ -256,7 +257,7 @@ public class GunController : MonoBehaviour, IWeapon
             DamageInfo damageInfo = new DamageInfo
             {
                 attacker = gameObject,
-                damage = damage,
+                damage = damage.Value,
                 hitPoint = hitPoint,
                 hitDirection = hitDirection
             };

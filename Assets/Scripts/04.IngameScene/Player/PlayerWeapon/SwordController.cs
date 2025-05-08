@@ -14,7 +14,7 @@ public class SwordController : MonoBehaviour, IWeapon
     }
     
     [SerializeField] private SwordTriggerZone[] _triggerZones;
-    [SerializeField] private int _attackPower;
+    [SerializeField] private Stat _attackPower;
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private ObservableFloat _currentAmmo;
     [SerializeField] private ObservableFloat _maxAmmo;
@@ -33,7 +33,7 @@ public class SwordController : MonoBehaviour, IWeapon
     private RaycastHit[] _hits = new RaycastHit[10];
     private bool _isAttacking = false;
 
-    public int Damage { get => _attackPower;}
+    public Stat Damage { get => _attackPower;}
     public ObservableFloat CurrentAmmo { get => _currentAmmo;}
     public ObservableFloat MaxAmmo { get => _maxAmmo; }
 
@@ -45,6 +45,9 @@ public class SwordController : MonoBehaviour, IWeapon
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+        _attackPower = new Stat(10, "_attackPower");
+        _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
+        _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
     
     private void Start()
@@ -65,9 +68,7 @@ public class SwordController : MonoBehaviour, IWeapon
             _slashEffects[i] = effect;
         }
 
-        _attackPower = 10;
-        _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
-        _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
+      
     }
     
     public void SetComboIndex(int index)
@@ -153,7 +154,7 @@ public class SwordController : MonoBehaviour, IWeapon
             DamageInfo damageInfo = new DamageInfo
             {
                 attacker = gameObject,
-                damage = _attackPower,
+                damage = _attackPower.Value,
                 hitPoint = hitPoint,
                 hitDirection = (target.transform.position - transform.position).normalized
             };
