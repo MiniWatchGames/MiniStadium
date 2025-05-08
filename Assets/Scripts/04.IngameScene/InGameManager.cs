@@ -137,6 +137,7 @@ public class InGameManager : MonoBehaviour
             case RoundState.RoundEnd:
                 //Debug.Log("Round End");
                 currentRoundState = RoundState.RoundEnd;
+                playerContoroller.CleanupBeforeReInit();    // 입력 방지, 상태 초기화 
                 currentRound++;
                 GameRoundInfoUI.gameObject.SetActive(true);
                 if (BlueWinCount == 4 || RedWinCount == 4)

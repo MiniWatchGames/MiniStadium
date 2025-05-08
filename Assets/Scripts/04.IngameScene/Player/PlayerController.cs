@@ -196,7 +196,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [Header("Animation")]
     [SerializeField] private RuntimeAnimatorController swordAnimatorController;
     [SerializeField] private RuntimeAnimatorController gunAnimatorController;
-    [SerializeField] private float aimWeight = 1f; // IK 가중치 (0-1)
     private readonly int MoveSpeedHash = Animator.StringToHash("MoveSpeed");
     public Animator Animator { get; private set; }
 
@@ -206,7 +205,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [SerializeField] private AudioClip[] jumpSound;
     [SerializeField] private AudioClip[] walkSound;
     private AudioSource _audioSource;
-    public Action LandSound;
 
     public bool IsGrounded
     {
@@ -259,9 +257,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _movementFsm?.CurrentStateUpdate();
         _postureFsm?.CurrentStateUpdate();
         _actionFsm?.CurrentStateUpdate();
-        if (IsGrounded) { 
-            LandSound?.Invoke();
-        }
+    
         DrawRay();
     }
 
@@ -1053,6 +1049,15 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         PurchaseManager.ResetPurchasedPlayerItems();
     }
 
+    public void CleanupBeforeReInit()
+    {
+        // InputManager 구독 해제 
+        this.transform.GetComponent<InputManager>()?.Unregister(this);
+        SetActionState("Idle");
+        SetMovementState("Idle");
+        SetPostureState("Idle");
+    }
+
     //public void Init()
     //{
     //    //구매내역 가져오기
@@ -1139,13 +1144,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         _audioSource.volume = 0.25f;
         _audioSource.PlayOneShot(jumpSound[2]);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
-            Playland();
-        }
     }
     #endregion
 }
