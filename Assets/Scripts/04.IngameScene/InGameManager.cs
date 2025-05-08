@@ -190,13 +190,13 @@ public class InGameManager : MonoBehaviour
 
             SetWinLoseState(WinLoseState.Default);
         }
-        gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
-        {
-            //Debug.Log("Game Time End");
-
-            SetRoundState(state);
-
-        });
+        // gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
+        // {
+        //     //Debug.Log("Game Time End");
+        //
+        //     SetRoundState(state);
+        //
+        // });
     }
 
     void SetTeam(Team team, GameObject playerStat)

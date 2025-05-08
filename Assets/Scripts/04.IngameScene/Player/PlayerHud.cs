@@ -119,7 +119,7 @@ public class PlayerHud : MonoBehaviour , IStatObserver
 
     private void SkillCoolTimer((float, string) data)
     {
-        data.Item1
+        
     }
     
     public void WhenStatChanged((float, string) data)

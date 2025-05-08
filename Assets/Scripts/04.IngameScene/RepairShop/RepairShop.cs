@@ -27,6 +27,7 @@ public class RepairShop : MonoBehaviour
     // 설명 란
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private TMP_Text roundText;
     void Start()
     {
         errorMessage.SetActive(false);
