@@ -125,14 +125,15 @@ public class InGameManager : MonoBehaviour
                     player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
                     SetPlayerTeam(player);
                     playerContoroller = player.GetComponent<PlayerController>();
-                    playerHud.init(playerContoroller);
                 }
                 playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
+                playerHud.init(playerContoroller);
+                playerContoroller.SetSkillGage(playerHud.GetSkillGage());
                 RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
                 currentRoundState = RoundState.InRound;
-                SetGameTime(5, RoundState.RoundEnd);
+                SetGameTime(20, RoundState.RoundEnd);
                 break;
             case RoundState.RoundEnd:
                 //Debug.Log("Round End");

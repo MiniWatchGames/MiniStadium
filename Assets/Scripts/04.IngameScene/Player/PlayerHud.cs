@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,7 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     [SerializeField] private PlayerHudComps weaponSkill1;
     [SerializeField] private PlayerHudComps playerWeapon;
     [SerializeField] private GameObject playerWeaponAmmo;
+    [SerializeField] private GameObject skillGage;
 
     private float currentHp = 0;
     private   float maxHp = 0;
@@ -41,6 +43,15 @@ public class PlayerHud : MonoBehaviour , IStatObserver
 
         playerStat.CurrentHp.AddObserver(this);
         playerStat.BaseMaxHp.AddObserver(this);
+        IWeapon weaponInfo = playerStat.CombatManager.CurrentWeapon.GetComponent<IWeapon>();
+
+        if (weaponInfo.CurrentAmmo != null) { 
+            weaponInfo.CurrentAmmo.AddObserver(this);
+        }
+        if (weaponInfo.MaxAmmo != null) { 
+            weaponInfo.MaxAmmo.AddObserver(this);
+        }
+
 
         currentHp = playerStat.CurrentHp.Value;
         maxHp = playerStat.BaseMaxHp.Value;
@@ -117,7 +128,10 @@ public class PlayerHud : MonoBehaviour , IStatObserver
             
         }
     }
-    
+    public GameObject GetSkillGage() {
+        return skillGage;
+    }
+
     public void WhenStatChanged((float, string) data)
     {
         if (data.Item2 == "currentHp")
