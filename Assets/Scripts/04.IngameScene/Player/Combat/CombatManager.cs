@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class CombatManager : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class CombatManager : MonoBehaviour
             _currentStrategy.Enter(playerController, CurrentWeapon);
             
             // 상체 레이어 가중치 증가 시작
-            FadeInUpperBodyLayer();
+            FadeInUpperBodyLayer(_upperBodyLayerIndex);
         }
     }
     
@@ -75,11 +76,11 @@ public class CombatManager : MonoBehaviour
     {
         _currentStrategy?.Exit();
         // 상체 레이어 가중치 감소 시작
-        FadeOutUpperBodyLayer();
+        FadeOutUpperBodyLayer(_upperBodyLayerIndex);
     }
     
     // 상체 레이어 가중치 증가 (공격 시작)
-    public void FadeInUpperBodyLayer()
+    public void FadeInUpperBodyLayer(int layer)
     {
         // 이전 코루틴 중지
         if (_layerTransitionCoroutine != null)
@@ -88,29 +89,29 @@ public class CombatManager : MonoBehaviour
         }
         
         // 새 코루틴 시작
-        _layerTransitionCoroutine = StartCoroutine(LayerWeightTransition(0f, 1f, attackStartTransitionTime));
+        _layerTransitionCoroutine = StartCoroutine(LayerWeightTransition(0f, 1f, attackStartTransitionTime, layer));
     }
     
     // 상체 레이어 가중치 감소 (공격 종료)
-    public void FadeOutUpperBodyLayer()
+    public void FadeOutUpperBodyLayer(int layer)
     {
         // 이전 코루틴 중지
         if (_layerTransitionCoroutine != null)
         {
             StopCoroutine(_layerTransitionCoroutine);
         }
-        
+
         // 새 코루틴 시작
-        _layerTransitionCoroutine = StartCoroutine(LayerWeightTransition(1f, 0f, attackEndTransitionTime));
+        _layerTransitionCoroutine = StartCoroutine(LayerWeightTransition(1f, 0f, attackEndTransitionTime, layer));
     }
     
     // 레이어 가중치 전환 코루틴
-    private IEnumerator LayerWeightTransition(float startWeight, float targetWeight, float duration)
+    private IEnumerator LayerWeightTransition(float startWeight, float targetWeight, float duration, int layer)
     {
         if (playerController.Animator == null) yield break;
         
         // 시작 가중치 설정
-        playerController.Animator.SetLayerWeight(_upperBodyLayerIndex, startWeight);
+        playerController.Animator.SetLayerWeight(layer, startWeight);
         
         float elapsedTime = 0f;
         
@@ -124,7 +125,7 @@ public class CombatManager : MonoBehaviour
             
             // 가중치 보간
             float newWeight = Mathf.Lerp(startWeight, targetWeight, smoothT);
-            playerController.Animator.SetLayerWeight(_upperBodyLayerIndex, newWeight);
+            playerController.Animator.SetLayerWeight(layer, newWeight);
             
             yield return null;
         }
