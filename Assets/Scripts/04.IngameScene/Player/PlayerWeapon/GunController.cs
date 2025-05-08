@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using FishNet.Object;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class GunController : NetworkBehaviour, IWeapon
 {
     // 이펙트 유형 정의
@@ -45,6 +46,9 @@ public class GunController : NetworkBehaviour, IWeapon
     [Header("Effects")]
     [SerializeField] private EffectPrefab[] effectPrefabs; // 구조체 배열
     [SerializeField] private float bulletSpeed = 100f;
+    [SerializeField ]private AudioClip shotSound;
+    [SerializeField ]private AudioClip ReloadSound;
+    private AudioSource _audioSource;
     
     // 풀 관리
     private Dictionary<EffectType, Transform> _poolParents = new Dictionary<EffectType, Transform>();
@@ -65,6 +69,7 @@ public class GunController : NetworkBehaviour, IWeapon
         // 풀 컨테이너 생성
         _poolContainer = new GameObject("EffectPools").transform;
         _poolContainer.SetParent(transform);
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -205,7 +210,7 @@ public class GunController : NetworkBehaviour, IWeapon
         }
         
         // 발사 효과음
-        // AudioManager.Instance.PlaySound("GunShot", firePoint.position);
+        _audioSource.PlayOneShot(shotSound, 1f);
         
         Vector3 hitPosition = firePoint.position + _camera.transform.forward * range;
         bool hitTarget = false;
@@ -238,6 +243,8 @@ public class GunController : NetworkBehaviour, IWeapon
             ApplyDamage(_hitInfo.collider.gameObject, _hitInfo.point, firePoint.forward);
         }
         
+        _currentAmmo.Value -= 1;
+
         // 총알 시뮬레이션
         EffectPrefab? bulletPrefab = GetEffectPrefab(EffectType.Bullet);
         if (bulletPrefab.HasValue && bulletPrefab.Value.prefab != null)
@@ -332,7 +339,11 @@ public class GunController : NetworkBehaviour, IWeapon
             ReturnToPool(bullet, EffectType.Bullet);
         }
     }
-    
+
+    public void ReloadSoundPlay() {
+        _audioSource.PlayOneShot(ReloadSound);
+    }
+
     // 게임 종료 시 풀 정리
     private void OnDestroy()
     {

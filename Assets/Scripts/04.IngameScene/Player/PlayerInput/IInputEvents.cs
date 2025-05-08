@@ -22,4 +22,6 @@ public interface IInputEvents
 
     void OnSecondMoveSkillPressed();
     void OnSecondMoveSkillReleased();
+
+    void OnReloadPressed();
 }

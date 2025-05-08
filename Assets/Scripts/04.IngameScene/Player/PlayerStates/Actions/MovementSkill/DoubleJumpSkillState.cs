@@ -35,7 +35,8 @@ public class DoubleJumpSkillState : PlayerActionState, ISkillData
         if (!_playerController.IsGrounded && !_isAlreadyPressed)
         {
             _isAlreadyPressed = true;
-            _playerController.Jump();
+            _playerController.Jump(); 
+            _playerController.PlaySecondJump();
             _playerController.Animator.SetTrigger(Jump);
         }
 
