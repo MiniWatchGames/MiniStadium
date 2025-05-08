@@ -63,8 +63,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     // input값 저장, 전달 
     private Vector2 _currentMoveInput;
     public Vector2 CurrentMoveInput => _currentMoveInput;
-    private float _lastInputTime;
-    private float _inputBufferTime = 0.1f; // 100ms의 버퍼 타임
+    private const float InputBufferTime = 0.1f; // 100ms의 버퍼 타임
+    private float _lastInputTime = -Mathf.Infinity;
+    private const float ClickCooldown = 0.9f; // 공격 클릭 간 최소 간격 ( sword일 때만 )
+    private float _lastClickTime = -Mathf.Infinity;
 
     // --------
     // 스탯 관련
@@ -384,7 +386,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             else
             {
                 // 버퍼 시간 내에 입력이 없으면 Idle로 전환
-                if (Time.time - _lastInputTime > _inputBufferTime)
+                if (Time.time - _lastInputTime > InputBufferTime)
                 {
                     if (_movementFsm.CurrentState != MovementState.Idle)
                     {
@@ -426,6 +428,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     }
     public void OnFirePressed()
     {
+        // 클릭 버퍼: 일정 시간 내 중복 클릭 방지 ( 칼 들었을 때만 )
+        if (_playerWeapon.WeaponType == WeaponType.Sword && Time.time - _lastClickTime < ClickCooldown)
+            return;
+
+        _lastClickTime = Time.time;
         // 공격 (마우스 다운)
         if (_actionFsm.CurrentState != ActionState.Attack)
         {

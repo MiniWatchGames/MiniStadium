@@ -21,6 +21,7 @@ public class SwordController : MonoBehaviour, IWeapon
     
     [Header("Effects")]
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
+    [SerializeField] private Vector3[] slashEffectRotations;
     [SerializeField] private AudioClip[] slashSounds;
     private ParticleSystem[] _slashEffects;
     private AudioSource _audioSource;
@@ -59,9 +60,10 @@ public class SwordController : MonoBehaviour, IWeapon
         _slashEffects = new ParticleSystem[slashEffectPrefabs.Length];
         for (int i = 0; i < slashEffectPrefabs.Length; i++)
         {
-            _slashEffects[i] = Instantiate(slashEffectPrefabs[i], transform.position, Quaternion.identity);
+            var rotation = Quaternion.Euler(slashEffectRotations[i]);
+            var effect = Instantiate(slashEffectPrefabs[i], transform.position, rotation);
+            _slashEffects[i] = effect;
         }
-        _slashEffects[0].gameObject.transform.rotation = Quaternion.Euler(0, -90, 0);
 
         _attackPower = 10;
         _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
