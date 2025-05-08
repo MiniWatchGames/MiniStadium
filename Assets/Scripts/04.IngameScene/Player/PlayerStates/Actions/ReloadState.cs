@@ -8,9 +8,14 @@ public class ReloadState : PlayerActionState
     private GunController gunController;
     public ReloadState() : base() { }
   
+    private Coroutine _layerTransitionCoroutine; // 레이어 전환 코루틴
+    private int _upperBodyOverrideLayerIndex=3;
+
+
     public override void Enter(PlayerController playerController)
     {
         base.Enter(playerController);
+        _playerController.CombatManager.FadeInUpperBodyLayer(_upperBodyOverrideLayerIndex);
         if (gunController == null) { 
             gunController = _playerController.PlayerWeapon.CurrentWeapon.GetComponent<GunController>();
         }
@@ -21,6 +26,7 @@ public class ReloadState : PlayerActionState
     public override void Exit()
     {
         base.Exit();
+        _playerController.CombatManager.FadeOutUpperBodyLayer(_upperBodyOverrideLayerIndex);
         var gun = ((GunAttackStrategy)_playerController.CombatManager.CurrentStrategy);
         gun.ReloadAmmo();
         gun.CanAttack = true;

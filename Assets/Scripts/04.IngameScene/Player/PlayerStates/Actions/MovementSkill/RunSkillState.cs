@@ -83,9 +83,6 @@ public class RunSkillState : PlayerActionState ,ISkillData
 
     IEnumerator AnimateMaterialFloat(Material mat, float goal, float rate, float refrehRate)
     {
-        if (this == null || gameObject == null)
-            yield break;
-
         float valueToAnimatie = mat.GetFloat(shaderVarRef);
 
         while (valueToAnimatie > goal) {
