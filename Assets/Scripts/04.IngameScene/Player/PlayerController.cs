@@ -998,8 +998,15 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         EquipWeapon(_playerWeapon);
 
-        damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
-        statDictionary.Add(StatType.Damage, damage);
+        if (statDictionary.ContainsKey(StatType.Damage))
+        {
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary[StatType.Damage] =  damage;
+        }
+        else { 
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary.Add(StatType.Damage, damage);
+        }
 
         // 스텟 + currentHp 옵저버 등록 
         foreach (var stat in statDictionary)
