@@ -10,7 +10,7 @@ public interface IDamageable
 public struct DamageInfo
 {
     public GameObject attacker;
-    public int damage;
+    public float damage;
     public Vector3 hitPoint;
     public Vector3 hitDirection;
     // 필요에 따라 추가 속성(크리티컬, 속성 등)

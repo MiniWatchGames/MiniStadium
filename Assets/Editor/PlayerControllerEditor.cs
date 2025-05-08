@@ -120,6 +120,7 @@ public class PlayerControllerEditor : Editor
             EditorGUILayout.LabelField($"Defence   : {playerController?.BaseDefence.Value}");
             EditorGUILayout.LabelField($"Jump Power: {playerController?.BaseJumpPower.Value}");
             EditorGUILayout.LabelField($"Move Speed: {playerController?.BaseMoveSpeed.Value}");
+            EditorGUILayout.LabelField($"Damage: {playerController?.Damage.Value}");
         }
 
         EditorGUILayout.EndVertical();
