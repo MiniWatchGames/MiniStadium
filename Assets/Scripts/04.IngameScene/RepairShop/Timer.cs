@@ -40,6 +40,7 @@ public class Timer : MonoBehaviour
             OnTimerDelegate?.Invoke(currentTime);
             if (currentTime <= 0)
             {
+                Debug.Log("Timer End");
                 OnTimerEndDelegate?.Invoke();
             }
         }
