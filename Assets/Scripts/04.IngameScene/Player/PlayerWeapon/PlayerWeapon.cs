@@ -103,5 +103,4 @@ public class PlayerWeapon : NetworkBehaviour
         combatManager.CurrentWeapon = CurrentWeapon;
         playerController.CanChangeState = true;
     }
-
 }

@@ -188,8 +188,15 @@ public class GunController : NetworkBehaviour, IWeapon
         }
         return null;
     }
-    
+
+    [ServerRpc]
     public void Fire()
+    {
+        FireVisualize();
+    }
+    
+    [ObserversRpc]
+    public void FireVisualize()
     {
         // 총구 효과
         EffectPrefab? muzzleFlashPrefab = GetEffectPrefab(EffectType.MuzzleFlash);
