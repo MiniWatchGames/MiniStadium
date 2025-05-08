@@ -64,7 +64,6 @@ public class MatchingScenePanelController : PanelController
             progressIcon.transform.Rotate(Vector3.forward, -rotationSpeed * Time.deltaTime);
         }
         
-        /*
         // Versus 패널 이동 애니메이션
         if (isMovingVersus)
         {
@@ -85,7 +84,6 @@ public class MatchingScenePanelController : PanelController
                 StartCoroutine(LoadInGameScene()); // 장면 전환 코루틴
             }
         }
-        */
     }
 
     /// <summary>
@@ -108,8 +106,8 @@ public class MatchingScenePanelController : PanelController
         
         // 회전 멈추기
         StopSpinner();
-        
-        StartCoroutine(LoadInGameScene());
+        // Versus 애니메이션 시작
+        StartVersusAnimation();
     }
 
     /// <summary>
@@ -118,6 +116,14 @@ public class MatchingScenePanelController : PanelController
     private void StopSpinner()
     {
         isSpinning = false;
+    }
+
+    /// <summary>
+    /// Versus 이동 애니메이션 시작 함수
+    /// </summary>
+    private void StartVersusAnimation()
+    {
+        isMovingVersus = true;
     }
 
     private IEnumerator LoadInGameScene()
