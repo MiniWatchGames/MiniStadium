@@ -21,7 +21,8 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     [SerializeField] private GameObject playerWeaponAmmo;
 
     private float currentHp = 0;
-    private   float maxHp = 0;
+    private float maxHp = 0;
+    
     private DetectPlayerStateChanged _detectStat;
     public PlayerController playerStat;
     // Start is called before the first frame update
@@ -40,12 +41,15 @@ public class PlayerHud : MonoBehaviour , IStatObserver
 
         playerStat.CurrentHp.AddObserver(this);
         playerStat.BaseMaxHp.AddObserver(this);
-
+        
+        
         currentHp = playerStat.CurrentHp.Value;
         maxHp = playerStat.BaseMaxHp.Value;
-
+       
+        
         playerHPBar.GetComponent<Image>().fillAmount = currentHp /maxHp;
         playerHPText.GetComponent<TMP_Text>().text = $"{currentHp.ToString()}| {maxHp.ToString()}";
+        
     }
 
   

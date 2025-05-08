@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
+
 public class InGameManager : MonoBehaviour
 {
     #region States
@@ -50,6 +51,7 @@ public class InGameManager : MonoBehaviour
 
     #region 변수
 
+    
     [SerializeField] private GameObject RepairShopUI;
     [SerializeField] private GameObject GameRoundInfoUI;
     [SerializeField] private GameState currentGameState;
@@ -76,6 +78,8 @@ public class InGameManager : MonoBehaviour
     private List<GameObject> maps = new List<GameObject>();
     public Action inGameUIAction;
     public float timer { get => gameTimer.currentTime; }
+    
+    public GameObject GameRoundUI{ get => GameRoundInfoUI; }
     public RoundState roundstate { get => currentRoundState; }
     #endregion
     #region StateChangeFunction
@@ -87,7 +91,6 @@ public class InGameManager : MonoBehaviour
             case GameState.StartGame:
                 //Debug.Log("Start Game");
                 currentGameState = GameState.StartGame;
-                GameRoundInfoUI.gameObject.SetActive(true);
                 SetRoundState(RoundState.RoundStart);
                 break;
             case GameState.InGame:
@@ -133,12 +136,12 @@ public class InGameManager : MonoBehaviour
                 {
                     Debug.Log("PlayerItems is null");
                 }
-                playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
+                //playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
                 currentRoundState = RoundState.InRound;
-                SetGameTime(10, RoundState.RoundEnd);
+                SetGameTime(120, RoundState.RoundEnd);
                 break;
             case RoundState.RoundEnd:
                 //Debug.Log("Round End");
@@ -183,7 +186,7 @@ public class InGameManager : MonoBehaviour
 
         }
     }
-    void SetGameTime(float time, RoundState state)
+    public void SetGameTime(float time, RoundState state)
     {
 
         if (currentRoundState == RoundState.InRound)
@@ -202,6 +205,7 @@ public class InGameManager : MonoBehaviour
             //Debug.Log("Game Time End");
 
             SetRoundState(state);
+            
 
         });
     }
@@ -227,7 +231,7 @@ public class InGameManager : MonoBehaviour
     void Start()
     {
         ResetRound();
-
+        
   
         List<Spawner> countSpanwer = new List<Spawner>
             (FindObjectsByType<Spawner>(FindObjectsInactive.Include, FindObjectsSortMode.None));
@@ -252,11 +256,6 @@ public class InGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B) && currentRoundState == RoundState.RoundStart)
-        {
-           
-        }
-
         if (currentRound == 3)
         {
             SetGameState(GameState.EndGame);
@@ -267,6 +266,7 @@ public class InGameManager : MonoBehaviour
     public void EndRound(GameObject Loser)
     {
         SetRoundState(RoundState.RoundEnd);
+        
         switch (teamDictionary[Loser])
         {
             case Team.Blue:
@@ -320,6 +320,7 @@ public class InGameManager : MonoBehaviour
     {
         //UIPopU[pFor Winning Screen
         EndRound(Enemy);
+       
     }
     public void LoseRound(GameObject player)
     {
