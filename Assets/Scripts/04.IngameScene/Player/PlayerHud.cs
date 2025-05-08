@@ -18,13 +18,14 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     [SerializeField] private PlayerHudComps weaponSkill0;
     [SerializeField] private PlayerHudComps weaponSkill1;
     [SerializeField] private PlayerHudComps playerWeapon;
-    [SerializeField] private GameObject playerWeaponAmmo;
 
+    private float maxAmmo;
+    private float currentAmmo;
     private float currentHp = 0;
-    private   float maxHp = 0;
+    private float maxHp = 0;
     private DetectPlayerStateChanged _detectStat;
     public PlayerController playerStat;
-    private IWeapon _weaponInfo;
+    private IWeapon weaponInfo;
     // Start is called before the first frame update
     public void init(PlayerController player)
     {
@@ -38,6 +39,18 @@ public class PlayerHud : MonoBehaviour , IStatObserver
         //playerWeaponAmmo = playerWeapon.transform.GetChild(1).gameObject;
         //UpdateUI();
         //_detectStat.PropertyChanged += OnDetectPlayerStatChanged;
+
+        weaponInfo = playerStat.CombatManager.CurrentWeapon.GetComponent<IWeapon>();
+
+        if (weaponInfo.CurrentAmmo != null) {
+            weaponInfo.CurrentAmmo.AddObserver(this);
+            currentAmmo = weaponInfo.CurrentAmmo.Value;
+        }
+        if (weaponInfo.MaxAmmo != null) {
+            weaponInfo.MaxAmmo.AddObserver(this);
+            maxAmmo = weaponInfo.MaxAmmo.Value;
+        }
+        playerWeapon.text.text = $"{currentAmmo} | {maxAmmo}";
 
         playerStat.CurrentHp.AddObserver(this);
         playerStat.BaseMaxHp.AddObserver(this);
@@ -107,14 +120,17 @@ public class PlayerHud : MonoBehaviour , IStatObserver
             {
                 comp.icon.sprite = currentWeapon.iconImage.sprite;
                 if (currentWeapon.type == 2) comp.text.text = "\u221e";
-                                        else comp.text.text = "2 | 6";
+                else comp.text.text = "0 | 0";
             }
             else if (i < skills.Length)
             {
                 if (skills[i] != null)
+                {
                     comp.icon.sprite = skills[i]._icon.sprite;
+                    comp.text.text = "";
+                }
             }
-            
+            comp.mask.GetComponent<Image>().fillAmount = 0;
         }
     }
 
@@ -133,6 +149,16 @@ public class PlayerHud : MonoBehaviour , IStatObserver
         {
             maxHp = data.Item1;
         }
+        else if (data.Item2 == "GunMaxAmmo")
+        {
+            maxAmmo = data.Item1;
+        }
+        if (data.Item2  == "GunCurrentAmmo")
+        {
+            currentAmmo = data.Item1;
+        }
+        
+        playerWeapon.text.text = $"{currentAmmo} | {maxAmmo}";
         playerHPBar.GetComponent<Image>().fillAmount = currentHp / maxHp;
         playerHPText.GetComponent<TMP_Text>().text = $"{currentHp.ToString()}|{maxHp.ToString()}";
     }
