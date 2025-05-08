@@ -14,13 +14,14 @@ public class SwordController : MonoBehaviour, IWeapon
     }
     
     [SerializeField] private SwordTriggerZone[] _triggerZones;
-    [SerializeField] private int _attackPower;
+    [SerializeField] private Stat _attackPower;
     [SerializeField] private LayerMask targetLayerMask;
     [SerializeField] private ObservableFloat _currentAmmo;
     [SerializeField] private ObservableFloat _maxAmmo;
     
     [Header("Effects")]
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
+    [SerializeField] private Vector3[] slashEffectRotations;
     [SerializeField] private AudioClip[] slashSounds;
     private ParticleSystem[] _slashEffects;
     private AudioSource _audioSource;
@@ -32,7 +33,7 @@ public class SwordController : MonoBehaviour, IWeapon
     private RaycastHit[] _hits = new RaycastHit[10];
     private bool _isAttacking = false;
 
-    public int Damage { get => _attackPower;}
+    public Stat Damage { get => _attackPower;}
     public ObservableFloat CurrentAmmo { get => _currentAmmo;}
     public ObservableFloat MaxAmmo { get => _maxAmmo; }
 
@@ -44,6 +45,9 @@ public class SwordController : MonoBehaviour, IWeapon
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+        _attackPower = new Stat(10, "_attackPower");
+        _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
+        _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
     
     private void Start()
@@ -59,13 +63,12 @@ public class SwordController : MonoBehaviour, IWeapon
         _slashEffects = new ParticleSystem[slashEffectPrefabs.Length];
         for (int i = 0; i < slashEffectPrefabs.Length; i++)
         {
-            _slashEffects[i] = Instantiate(slashEffectPrefabs[i], transform.position, Quaternion.identity);
+            var rotation = Quaternion.Euler(slashEffectRotations[i]);
+            var effect = Instantiate(slashEffectPrefabs[i], transform.position, rotation);
+            _slashEffects[i] = effect;
         }
-        _slashEffects[0].gameObject.transform.rotation = Quaternion.Euler(0, -90, 0);
 
-        _attackPower = 10;
-        _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
-        _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
+      
     }
     
     public void SetComboIndex(int index)
@@ -151,7 +154,7 @@ public class SwordController : MonoBehaviour, IWeapon
             DamageInfo damageInfo = new DamageInfo
             {
                 attacker = gameObject,
-                damage = _attackPower,
+                damage = _attackPower.Value,
                 hitPoint = hitPoint,
                 hitDirection = (target.transform.position - transform.position).normalized
             };

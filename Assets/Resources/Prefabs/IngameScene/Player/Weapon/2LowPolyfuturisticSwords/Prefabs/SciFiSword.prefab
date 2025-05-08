@@ -147,6 +147,9 @@ MonoBehaviour:
   slashEffectPrefabs:
   - {fileID: 198102920666579688, guid: bf9f848a24682054e9fddc30f1184e46, type: 3}
   - {fileID: 198104556613700186, guid: a8a6ba91edbeef2439175ecf0e08e6fb, type: 3}
+  slashEffectRotations:
+  - {x: 0, y: -90, z: 0}
+  - {x: 0, y: 0, z: 0}
   slashSounds:
   - {fileID: 8300000, guid: 6dcd472d1cefe4e87a5bd22bfe4c66d6, type: 3}
   - {fileID: 8300000, guid: ab3ca4321a3ca4f6cbd063e4f8e85f0b, type: 3}

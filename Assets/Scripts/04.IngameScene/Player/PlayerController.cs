@@ -42,7 +42,8 @@ public enum StatType
     MaxHp,
     Defence,
     MoveSpeed,
-    JumpPower
+    JumpPower,
+    Damage
 }
 
 [RequireComponent(typeof(CharacterController))]
@@ -63,8 +64,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     // input값 저장, 전달 
     private Vector2 _currentMoveInput;
     public Vector2 CurrentMoveInput => _currentMoveInput;
-    private float _lastInputTime;
-    private float _inputBufferTime = 0.1f; // 100ms의 버퍼 타임
+    private const float InputBufferTime = 0.1f; // 100ms의 버퍼 타임
+    private float _lastInputTime = -Mathf.Infinity;
+    private const float ClickCooldown = 0.9f; // 공격 클릭 간 최소 간격 ( sword일 때만 )
+    private float _lastClickTime = -Mathf.Infinity;
 
     // --------
     // 스탯 관련
@@ -84,11 +87,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private Stat baseDefence;
     private Stat baseMoveSpeed;
     private Stat baseJumpPower;
+    private Stat damage;
 
     public Stat BaseMaxHp => baseMaxHp;
     public Stat BaseDefence => baseDefence;
     public Stat BaseMoveSpeed => baseMoveSpeed;
     public Stat BaseJumpPower => baseJumpPower;
+    public Stat Damage => damage;
 
     private Dictionary<StatType, Stat> statDictionary;
 
@@ -145,10 +150,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private ObservableFloat _currentFirstMovementSkillCoolTime;
     private ObservableFloat _currentSecondMovementSkillCoolTime;
 
-    public ObservableFloat CurrentFirstWeaponSkillCoolTime { get; }
-    public ObservableFloat CurrentSecondWeaponSkillCoolTime { get; }
-    public ObservableFloat CurrentFirstMovementSkillCoolTime { get; }
-    public ObservableFloat CurrentSecondMovementSkillCoolTime { get; }
+    public ObservableFloat CurrentFirstWeaponSkillCoolTime { get => _currentFirstWeaponSkillCoolTime; }
+    public ObservableFloat CurrentSecondWeaponSkillCoolTime { get => _currentSecondWeaponSkillCoolTime; }
+    public ObservableFloat CurrentFirstMovementSkillCoolTime { get => _currentFirstMovementSkillCoolTime; }
+    public ObservableFloat CurrentSecondMovementSkillCoolTime { get => _currentSecondMovementSkillCoolTime; }
 
     private Coroutine _firstWeaponSkillCoolTimeCoroutine;
     private Coroutine _secondWeaponSkillCoolTimeCoroutine;
@@ -384,7 +389,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             else
             {
                 // 버퍼 시간 내에 입력이 없으면 Idle로 전환
-                if (Time.time - _lastInputTime > _inputBufferTime)
+                if (Time.time - _lastInputTime > InputBufferTime)
                 {
                     if (_movementFsm.CurrentState != MovementState.Idle)
                     {
@@ -426,6 +431,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     }
     public void OnFirePressed()
     {
+        // 클릭 버퍼: 일정 시간 내 중복 클릭 방지 ( 칼 들었을 때만 )
+        if (_playerWeapon.WeaponType == WeaponType.Sword && Time.time - _lastClickTime < ClickCooldown)
+            return;
+
+        _lastClickTime = Time.time;
         // 공격 (마우스 다운)
         if (_actionFsm.CurrentState != ActionState.Attack)
         {
@@ -988,6 +998,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         EquipWeapon(_playerWeapon);
 
+        damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+        statDictionary.Add(StatType.Damage, damage);
 
         // 스텟 + currentHp 옵저버 등록 
         foreach (var stat in statDictionary)
