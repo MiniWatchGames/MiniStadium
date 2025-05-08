@@ -14,15 +14,15 @@ public struct entityInField
     public float timer;
 } 
 
-public class SafeZone : MonoBehaviour
+public class SafeZone : MonoBehaviour, IStatObserver
 {
     public Collider magneticFieldCollider;
     public Vector3 DefaultScale = new Vector3(100, 100, 100);
     private float defaultShrinkSpeed = 1f;
     private float defaultMagneticFieldDamage = 1f;
+    public InGameManager.GameState currentState;
     
-    
-    public float magneticShrinkSpeed = 2f;
+    public float magneticShrinkSpeed = 3f;
     public float magneticFieldDamage = 1f;
     
     private Dictionary<GameObject, entityInField> objectsInField = new Dictionary<GameObject, entityInField>();
@@ -40,15 +40,20 @@ public class SafeZone : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        gameObject.transform.localScale -= new Vector3(1f,0f,1f) * (magneticShrinkSpeed * Time.deltaTime);
-        if (gameObject.transform.localScale == Vector3.zero)
-        {
-            transform.localScale = DefaultScale;
-        }
-    }
+    
 
+    public void UpdateMagneticField(float time)
+    {
+        if(gameObject.transform.localScale.x <= 0)
+        {
+            return;
+        }
+        
+        gameObject.transform.localScale -= new Vector3(1f,0f,1f) * (magneticShrinkSpeed * Time.deltaTime);
+        
+
+        
+    }
     public void Reset()
     {
         transform.localScale = DefaultScale;
@@ -60,6 +65,7 @@ public class SafeZone : MonoBehaviour
         Debug.Log("OnTriggerEnter" + other.name);
         if (other.CompareTag("Player") || other.CompareTag("Enemy"))
         {
+            
             if (objectsInField.ContainsKey(other.gameObject))
             {
                 var entityInField = objectsInField[other.gameObject];
@@ -74,13 +80,16 @@ public class SafeZone : MonoBehaviour
             }
             else
             {
+                ObservableFloat Damage = new ObservableFloat(other.gameObject.GetComponent<PlayerController>().BaseMaxHp.Value * 0.1f, "MagneticFieldDamage");
                 objectsInField.Add(other.gameObject, new entityInField()
                 {
                     entity = other.gameObject,
                     isInField = true,
                     outoffieldAction = () =>
                     {
-                        //other.gameObject.GetComponent<PlayerController>().CurrentHp -= magneticFieldDamage;
+                        ObservableFloat CurrentHp = other.gameObject.GetComponent<PlayerController>().CurrentHp;
+                        CurrentHp.Value -= other.gameObject.GetComponent<PlayerController>().BaseMaxHp.Value * 0.1f ;
+                        other.gameObject.GetComponent<PlayerController>().CurrentHp = CurrentHp;
                     },
                     timer = 3f
                 });
@@ -117,6 +126,11 @@ public class SafeZone : MonoBehaviour
             //other.gameObject.GetComponent<TestStat>().ChangedHp -= magneticFieldDamage;
             //Debug.Log("OnTriggerEnter" + other.name);
         }
+    }
+
+    public void WhenStatChanged((float, string) data)
+    {
+        
     }
 }
 

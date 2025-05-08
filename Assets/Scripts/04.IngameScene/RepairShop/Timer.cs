@@ -12,9 +12,11 @@ public class Timer : MonoBehaviour
     public TMP_Text text;
 
     public delegate void TimerDelegate();
+
+    public delegate void TimerDelegateWithFloat(float time);
     public TimerDelegate OnTimerEndDelegate;
     public TimerDelegate OnTimerStartDelegate;
-
+    public TimerDelegateWithFloat OnTimerDelegate;
     public enum TimerType { Decrease, Increase }
     public TimerType timerType;
     public float timeLimit;
@@ -34,7 +36,8 @@ public class Timer : MonoBehaviour
         if (_isPaused) return;
         if (timerType == TimerType.Decrease)
         {
-            currentTime -= Time.deltaTime ;
+            currentTime -= Time.deltaTime;
+            OnTimerDelegate?.Invoke(currentTime);
             if (currentTime <= 0)
             {
                 OnTimerEndDelegate?.Invoke();
@@ -43,6 +46,7 @@ public class Timer : MonoBehaviour
         if (timerType == TimerType.Increase)
         {
             currentTime += Time.deltaTime;
+            OnTimerDelegate?.Invoke(currentTime);
             if (currentTime >= timeLimit)
             {
                 OnTimerEndDelegate?.Invoke();
@@ -75,8 +79,9 @@ public class Timer : MonoBehaviour
         _isPaused = false;
 
     }
-    public void SetTimer(float timeLimit, TimerType timerType, TimerDelegate timerDelegate)
+    public void SetTimer(float timeLimit, TimerType timerType, TimerDelegate timerDelegate, TimerDelegateWithFloat timerDelegateWithFloat = null)
     {
+        OnTimerDelegate = timerDelegateWithFloat;
         OnTimerEndDelegate = timerDelegate;
         this.timeLimit = timeLimit;
         this.timerType = timerType;

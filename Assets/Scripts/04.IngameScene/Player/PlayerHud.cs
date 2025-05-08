@@ -31,13 +31,7 @@ public class PlayerHud : MonoBehaviour , IStatObserver
         playerStat = player;
         _detectStat = new DetectPlayerStateChanged(playerStat);
         
-        //playerHPBar = GameObject.Find("[Image] PlayerHpSlider");
-        //playerHPText = GameObject.Find("[Text] PlayerHp");
         playerName.GetComponent<TextMeshProUGUI>().text = playerStat.name;
-        //playerWeapon = GameObject.Find("[GroupLayer] PlayerWeapon");
-        //playerWeaponAmmo = playerWeapon.transform.GetChild(1).gameObject;
-        //UpdateUI();
-        //_detectStat.PropertyChanged += OnDetectPlayerStatChanged;
 
         playerStat.CurrentHp.AddObserver(this);
         playerStat.BaseMaxHp.AddObserver(this);

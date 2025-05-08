@@ -103,7 +103,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         get => currentHp;
         set
         {
-            currentHp = value;
+            Debug.Log("It is On the Run");
+            currentHp.Value = value.Value;
             if (currentHp.Value <= 0 && !_isDead)
             {
                 Debug.Log("주금..");
