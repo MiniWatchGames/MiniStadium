@@ -14,7 +14,7 @@ public class RepairShop : MonoBehaviour
     
     // 하위 탭
     [SerializeField] private RepairShopStatus RepairShopStatus;
-    [SerializeField] private RepairShopWeapon RepairShopWeapon;
+    [SerializeField] public RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
     [SerializeField] private RepairShopReceipt RepairShopReceipt;
     public RepairShopReceipt Receipt { get => RepairShopReceipt; }
@@ -27,6 +27,7 @@ public class RepairShop : MonoBehaviour
     // 설명 란
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private TMP_Text roundText;
     void Start()
     {
         errorMessage.SetActive(false);
@@ -90,6 +91,11 @@ public class RepairShop : MonoBehaviour
             errorMessage.SetActive(true);
         }
     }
+    public void SetRoundText(int round)
+    {
+        roundText.text = $"{round}R 정비소";
+    }
+
     public void SetDescription(string name, string description)
     {
         nameText.text = name;

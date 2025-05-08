@@ -116,19 +116,24 @@ public class InGameManager : MonoBehaviour
                     playerContoroller.ResetCharacter();
                 }
                 SetGameTime(repairShopTime, RoundState.InRound);
+                RepairShopUI.GetComponent<RepairShop>().SetRoundText(currentRound);
                 break;
             case RoundState.InRound:
                 //Debug.Log("In Round");
+                
+                // 무기 미구매 시 기본 무기 상점 내 적용
+                RepairShopUI.GetComponent<RepairShop>().RepairShopWeapon.NoEmptyHands();
+                
                 // 플레이어 없다면 생성, 플레이어에 구매 내역을 넘기고, 플레이어 구매 내역 적용
                 if (player is null)
                 {
                     player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
                     SetPlayerTeam(player);
                     playerContoroller = player.GetComponent<PlayerController>();
-                    playerHud.init(playerContoroller);
                 }
                 playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
+                playerHud.init(playerContoroller);
                 RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
                 currentRoundState = RoundState.InRound;
@@ -193,9 +198,9 @@ public class InGameManager : MonoBehaviour
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
         {
             //Debug.Log("Game Time End");
-
+        
             SetRoundState(state);
-
+        
         });
     }
 
