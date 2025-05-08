@@ -132,7 +132,7 @@ public class InGameManager : MonoBehaviour
                 RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
                 currentRoundState = RoundState.InRound;
-                SetGameTime(50, RoundState.RoundEnd);
+                SetGameTime(5, RoundState.RoundEnd);
                 break;
             case RoundState.RoundEnd:
                 //Debug.Log("Round End");
