@@ -42,7 +42,8 @@ public enum StatType
     MaxHp,
     Defence,
     MoveSpeed,
-    JumpPower
+    JumpPower,
+    Damage
 }
 
 [RequireComponent(typeof(CharacterController))]
@@ -63,8 +64,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     // input값 저장, 전달 
     private Vector2 _currentMoveInput;
     public Vector2 CurrentMoveInput => _currentMoveInput;
-    private float _lastInputTime;
-    private float _inputBufferTime = 0.1f; // 100ms의 버퍼 타임
+    private const float InputBufferTime = 0.1f; // 100ms의 버퍼 타임
+    private float _lastInputTime = -Mathf.Infinity;
+    private const float ClickCooldown = 0.9f; // 공격 클릭 간 최소 간격 ( sword일 때만 )
+    private float _lastClickTime = -Mathf.Infinity;
 
     // --------
     // 스탯 관련
@@ -84,11 +87,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private Stat baseDefence;
     private Stat baseMoveSpeed;
     private Stat baseJumpPower;
+    private Stat damage;
 
     public Stat BaseMaxHp => baseMaxHp;
     public Stat BaseDefence => baseDefence;
     public Stat BaseMoveSpeed => baseMoveSpeed;
     public Stat BaseJumpPower => baseJumpPower;
+    public Stat Damage => damage;
 
     private Dictionary<StatType, Stat> statDictionary;
 
@@ -146,15 +151,18 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private ObservableFloat _currentFirstMovementSkillCoolTime;
     private ObservableFloat _currentSecondMovementSkillCoolTime;
 
-    public ObservableFloat CurrentFirstWeaponSkillCoolTime { get; }
-    public ObservableFloat CurrentSecondWeaponSkillCoolTime { get; }
-    public ObservableFloat CurrentFirstMovementSkillCoolTime { get; }
-    public ObservableFloat CurrentSecondMovementSkillCoolTime { get; }
+    public ObservableFloat CurrentFirstWeaponSkillCoolTime { get => _currentFirstWeaponSkillCoolTime; }
+    public ObservableFloat CurrentSecondWeaponSkillCoolTime { get => _currentSecondWeaponSkillCoolTime; }
+    public ObservableFloat CurrentFirstMovementSkillCoolTime { get => _currentFirstMovementSkillCoolTime; }
+    public ObservableFloat CurrentSecondMovementSkillCoolTime { get => _currentSecondMovementSkillCoolTime; }
 
     private Coroutine _firstWeaponSkillCoolTimeCoroutine;
     private Coroutine _secondWeaponSkillCoolTimeCoroutine;
     private Coroutine _firstMovementSkillCoolTimeCoroutine;
     private Coroutine _secondMovementSkillCoolTimeCoroutine;
+
+    private GameObject _skillGageObj;
+    private SkillGage _skillGage;
 
     // --------
     // 상태 관련
@@ -197,7 +205,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [Header("Animation")]
     [SerializeField] private RuntimeAnimatorController swordAnimatorController;
     [SerializeField] private RuntimeAnimatorController gunAnimatorController;
-    [SerializeField] private float aimWeight = 1f; // IK 가중치 (0-1)
     private readonly int MoveSpeedHash = Animator.StringToHash("MoveSpeed");
     public Animator Animator { get; private set; }
 
@@ -206,8 +213,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [Header("Sound")]
     [SerializeField] private AudioClip[] jumpSound;
     [SerializeField] private AudioClip[] walkSound;
+    [SerializeField] private AudioClip teleportGainSound;
+    [SerializeField] private AudioClip teleportGainSoundRe;
+    [SerializeField] private AudioClip teleportSound;
     private AudioSource _audioSource;
-    public Action LandSound;
 
     public bool IsGrounded
     {
@@ -260,9 +269,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _movementFsm?.CurrentStateUpdate();
         _postureFsm?.CurrentStateUpdate();
         _actionFsm?.CurrentStateUpdate();
-        if (IsGrounded) { 
-            LandSound?.Invoke();
-        }
+    
         DrawRay();
     }
 
@@ -389,7 +396,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             else
             {
                 // 버퍼 시간 내에 입력이 없으면 Idle로 전환
-                if (Time.time - _lastInputTime > _inputBufferTime)
+                if (Time.time - _lastInputTime > InputBufferTime)
                 {
                     if (_movementFsm.CurrentState != MovementState.Idle)
                     {
@@ -431,6 +438,11 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     }
     public void OnFirePressed()
     {
+        // 클릭 버퍼: 일정 시간 내 중복 클릭 방지 ( 칼 들었을 때만 )
+        if (_playerWeapon.WeaponType == WeaponType.Sword && Time.time - _lastClickTime < ClickCooldown)
+            return;
+
+        _lastClickTime = Time.time;
         // 공격 (마우스 다운)
         if (_actionFsm.CurrentState != ActionState.Attack)
         {
@@ -464,6 +476,19 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         SetPostureState(_postureFsm.CurrentState == PostureState.Idle ? "Crouch" : "Idle");
     }
 
+    private  void skillGageSetting(ISkillData skill) {
+        if (skill.IsNeedPresse) {
+            _skillGageObj.SetActive(true);
+            _skillGage.Observing(skill.NeedPressTime);
+            _skillGage.Observing(skill.PressTime);
+        }
+    }
+    public  void skillGageReset(bool isNeedPresse) {
+        if (isNeedPresse) {
+            _skillGageObj.SetActive(false);
+            _skillGage.ResetSkillGage();
+        }
+    }
 
     public void OnFirstWeaponSkillPressed()
     {
@@ -471,7 +496,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             var weaponSkill = _weaponSkills[0];
             ISkillData weaponSkillData = weaponSkill.Item2 as ISkillData;
-
+                       
             if (_currentFirstWeaponSkillCoolTime?.Value > 0)
             {
                 return;
@@ -492,8 +517,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                     }
                 }
                 _firstWeaponSkill = weaponSkill.Item1.ToString();
-                if (_actionFsm.CurrentState != weaponSkill.Item1)
+                if (_actionFsm.CurrentState != weaponSkill.Item1) {
+                    skillGageSetting(weaponSkillData);
                     SetActionState(_firstWeaponSkill);
+                }
 
                 return;
             }
@@ -502,11 +529,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void OnFirstWeaponSkillReleased()
     {
-
         if (_weaponSkills?.Count >= 1)
         {
             if (_actionFsm.CurrentState == _weaponSkills[0].Item1)
             {
+                ISkillData weaponSkillData = _weaponSkills[0].Item2 as ISkillData;
+                skillGageReset(weaponSkillData.IsNeedPresse);
                 SetActionState("Idle");
             }
         }
@@ -518,7 +546,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_weaponSkills?.Count >= 1)
             {
-                var weaponSkill = _weaponSkills[0];
+                var weaponSkill = _weaponSkills[1];
                 ISkillData weaponSkillData = weaponSkill.Item2 as ISkillData;
 
                 if (_currentSecondWeaponSkillCoolTime?.Value > 0)
@@ -541,8 +569,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                         }
                     }
                     _secondWeaponSkill = weaponSkill.Item1.ToString();
-                    if (_actionFsm.CurrentState != weaponSkill.Item1)
+                    if (_actionFsm.CurrentState != weaponSkill.Item1) {
+                        skillGageSetting(weaponSkillData);
                         SetActionState(_secondWeaponSkill);
+                    }
 
                     return;
                 }
@@ -556,6 +586,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _weaponSkills[1].Item1)
             {
+                ISkillData weaponSkillData = _weaponSkills[1].Item2 as ISkillData;
+                skillGageReset(weaponSkillData.IsNeedPresse);
                 SetActionState("Idle");
             }
         }
@@ -586,8 +618,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                     }
                 }
                 _firstMoveSkill = moveMentSkill.Item1.ToString();
-                if (_actionFsm.CurrentState != moveMentSkill.Item1)
+                if (_actionFsm.CurrentState != moveMentSkill.Item1) {
+                    skillGageSetting(moveMentSkillData);
                     SetActionState(_firstMoveSkill);
+                }
 
                 return;
             }
@@ -600,6 +634,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _movementSkills[0].Item1)
             {
+                ISkillData movementSkillData = _movementSkills[0].Item2 as ISkillData;
+                skillGageReset(movementSkillData.IsNeedPresse);
                 SetActionState("Idle");
             }
         }
@@ -632,8 +668,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                     }
                 }
                 _secondMoveSkill = moveMentSkill.Item1.ToString();
-                if (_actionFsm.CurrentState != moveMentSkill.Item1)
+                if (_actionFsm.CurrentState != moveMentSkill.Item1) {
+                    skillGageSetting(moveMentSkillData);
                     SetActionState(_secondMoveSkill);
+                }
 
                 return;
             }
@@ -646,6 +684,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _movementSkills[1].Item1)
             {
+                ISkillData movementSkillData = _movementSkills[1].Item2 as ISkillData;
+                skillGageReset(movementSkillData.IsNeedPresse);
                 SetActionState("Idle");
             }
         }
@@ -906,6 +946,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     /// </summary>
     public void ResetCharacter()
     {
+        _skillGageObj?.SetActive(false);
+
         // 추가 생성한 스킬, 패시브 제거
         if (_movementSkills?.Count > 0)
         {
@@ -960,7 +1002,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _secondWeaponSkillCoolTimeCoroutine = null;
     }
 
-
+    public void SetSkillGage(GameObject gage) {
+        _skillGageObj = gage;
+        _skillGage = _skillGageObj.GetComponent<SkillGage>();
+    }
     /// <summary>
     /// ResetCharacter 후 새로운 구매내역이 생길 때 Init 대신 ReInit호출
     /// </summary>
@@ -993,6 +1038,15 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         EquipWeapon(_playerWeapon);
 
+        if (statDictionary.ContainsKey(StatType.Damage))
+        {
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary[StatType.Damage] =  damage;
+        }
+        else { 
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary.Add(StatType.Damage, damage);
+        }
 
         // 스텟 + currentHp 옵저버 등록 
         foreach (var stat in statDictionary)
@@ -1052,6 +1106,15 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         CurrentHp.Value = baseMaxHp.Value;
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
         //PurchaseManager.ResetPurchasedPlayerItems();
+    }
+
+    public void CleanupBeforeReInit()
+    {
+        // InputManager 구독 해제 
+        this.transform.GetComponent<InputManager>()?.Unregister(this);
+        SetActionState("Idle");
+        SetMovementState("Idle");
+        SetPostureState("Idle");
     }
 
     //public void Init()
@@ -1142,11 +1205,21 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _audioSource.PlayOneShot(jumpSound[2]);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")){
-            Playland();
-        }
+    public void PlayTeleportGain() {
+        _audioSource.volume = 0.25f;
+        _audioSource.PlayOneShot(teleportGainSound);
+    }    
+    public void PlayTeleport() {
+        _audioSource.volume = 0.5f;
+        _audioSource.PlayOneShot(teleportSound);
+    }  
+    public void PlayTeleportGainRe() {
+        _audioSource.volume = 0.25f;
+        _audioSource.PlayOneShot(teleportGainSoundRe);
+    }
+
+    public void StopSound() {
+        _audioSource.Stop();
     }
     #endregion
 }

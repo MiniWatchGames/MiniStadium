@@ -134,10 +134,15 @@ public class InGameManager : MonoBehaviour
                 }
                 //시간초가 지난후 다음 게임스테이트로 넘어가기
                 SetGameTime(repairShopTime, RoundState.InRound);
+                RepairShopUI.GetComponent<RepairShop>().SetRoundText(currentRound);
                 break;
             case RoundState.InRound:
                 inGameUIAction?.Invoke();
                 //Debug.Log("In Round");
+                
+                // 무기 미구매 시 기본 무기 상점 내 적용
+                RepairShopUI.GetComponent<RepairShop>().RepairShopWeapon.NoEmptyHands();
+                
                 // 플레이어 없다면 생성, 플레이어에 구매 내역을 넘기고, 플레이어 구매 내역 적용
                 if (player is null)
                 {
@@ -145,7 +150,6 @@ public class InGameManager : MonoBehaviour
                     Debug.Log("Istantiate Player");
                     SetPlayerTeam(player);
                     playerContoroller = player.GetComponent<PlayerController>();
-                    playerHud.init(playerContoroller);
                 }
                 if(RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy() == null)
                 {
@@ -153,6 +157,7 @@ public class InGameManager : MonoBehaviour
                 }
                 //playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
+
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
                 currentRoundState = RoundState.InRound;
@@ -162,12 +167,26 @@ public class InGameManager : MonoBehaviour
                 currentRoundState = RoundState.SuddenDeath;
                 
                 SetGameTime(30, RoundState.SuddenDeath);
+
+                playerHud.init(playerContoroller);
+                playerContoroller.SetSkillGage(playerHud.GetSkillGage());
+                RepairShopUI.SetActive(!RepairShopUI.activeSelf);
+
+                currentRoundState = RoundState.InRound;
+                SetGameTime(20, RoundState.RoundEnd);
+
                 break;
             case RoundState.RoundEnd:
                 //Debug.Log("Round End");
                 inGameUIAction?.Invoke();
                 currentRoundState = RoundState.RoundEnd;
+
                 
+
+                playerContoroller.CleanupBeforeReInit();    // 입력 방지, 상태 초기화 
+                currentRound++;
+                GameRoundInfoUI.gameObject.SetActive(true);
+
                 if (BlueWinCount == 4 || RedWinCount == 4)
                 {
                     SetGameState(GameState.EndGame);
@@ -223,6 +242,7 @@ public class InGameManager : MonoBehaviour
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
         {
             //Debug.Log("Game Time End");
+
             SetRoundState(state);
             
         },(time) =>
@@ -233,6 +253,11 @@ public class InGameManager : MonoBehaviour
                 Damagefield.GetComponent<SafeZone>().UpdateMagneticField(time);
             }
            
+
+        
+            SetRoundState(state);
+        
+
         });
     }
 

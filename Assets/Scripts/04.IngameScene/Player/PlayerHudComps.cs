@@ -9,5 +9,5 @@ public class PlayerHudComps : MonoBehaviour
 {
     [SerializeField] public TextMeshProUGUI text;
     [SerializeField] public Image icon;
-    [SerializeField] public GameObject mask;
+    [SerializeField] public Image mask;
 }
