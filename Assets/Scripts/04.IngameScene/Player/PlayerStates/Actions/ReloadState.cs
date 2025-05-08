@@ -36,6 +36,6 @@ public class ReloadState : PlayerActionState
             yield return  null;
         }
         _playerController.CanChangeState = true;
-        _playerController.SetActionState("Idle");
+        _playerController.SetActionStateServer("Idle",_playerController);
     }
 }

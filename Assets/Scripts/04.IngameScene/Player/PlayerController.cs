@@ -163,7 +163,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
     private PlayerFSM<MovementState> _movementFsm;
     private PlayerFSM<PostureState> _postureFsm;
     private PlayerFSM<ActionState> _actionFsm;
-    private bool _CanChangeState = true;
+    private bool _CanChangeState = true;  
     public bool CanChangeState { get => _CanChangeState; set => _CanChangeState =  value; }
     [SerializeField] private string defaultState;
 
@@ -480,7 +480,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
 
     public void OnReloadPressed() {
         if (_playerWeapon.WeaponType == WeaponType.Gun) { 
-            SetActionState("Reload");
+            SetActionStateServer("Reload", this);
         }
     }
 

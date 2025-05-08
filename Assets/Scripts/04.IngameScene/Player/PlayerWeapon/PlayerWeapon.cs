@@ -98,8 +98,10 @@ public class PlayerWeapon : NetworkBehaviour
     {
         GameObject weapon = spawnedObject.gameObject;
         CombatManager combatManager = gameObject.GetComponent<CombatManager>();
+        PlayerController playerController = gameObject.GetComponent<PlayerController>();
         currentWeapon = weapon;
         combatManager.CurrentWeapon = CurrentWeapon;
+        playerController.CanChangeState = true;
     }
 
 }

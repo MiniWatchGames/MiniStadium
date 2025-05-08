@@ -84,7 +84,7 @@ public class GunAttackStrategy : IAttackStrategy ,  IStatObserver
             //총알이 0이 되면 
             if (data.Item1 <= 0) {
                 _CanAttack = false;
-                _playerController.SetActionState("Reload");
+                _playerController.SetActionStateServer("Reload", _playerController);
             }
         }
 }
