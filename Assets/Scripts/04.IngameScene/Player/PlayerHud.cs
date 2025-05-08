@@ -31,6 +31,7 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     {
         playerStat = player;
         _detectStat = new DetectPlayerStateChanged(playerStat);
+        weaponInfo = null;
         
         //playerHPBar = GameObject.Find("[Image] PlayerHpSlider");
         //playerHPText = GameObject.Find("[Text] PlayerHp");
@@ -41,23 +42,24 @@ public class PlayerHud : MonoBehaviour , IStatObserver
         //_detectStat.PropertyChanged += OnDetectPlayerStatChanged;
 
         weaponInfo = playerStat.CombatManager.CurrentWeapon.GetComponent<IWeapon>();
-
         if (weaponInfo.CurrentAmmo != null) {
             weaponInfo.CurrentAmmo.AddObserver(this);
-            currentAmmo = weaponInfo.CurrentAmmo.Value;
-        }
+            currentAmmo = weaponInfo.CurrentAmmo.Value; }
         if (weaponInfo.MaxAmmo != null) {
             weaponInfo.MaxAmmo.AddObserver(this);
-            maxAmmo = weaponInfo.MaxAmmo.Value;
+            maxAmmo = weaponInfo.MaxAmmo.Value; 
+            playerWeapon.text.text = $"{currentAmmo} | {maxAmmo}";
         }
-        playerWeapon.text.text = $"{currentAmmo} | {maxAmmo}";
 
+        playerStat.CurrentFirstMovementSkillCoolTime.AddObserver(this);
+        playerStat.CurrentSecondMovementSkillCoolTime.AddObserver(this);
+        playerStat.CurrentFirstWeaponSkillCoolTime.AddObserver(this);
+        playerStat.CurrentSecondWeaponSkillCoolTime.AddObserver(this);
+        
         playerStat.CurrentHp.AddObserver(this);
         playerStat.BaseMaxHp.AddObserver(this);
-
         currentHp = playerStat.CurrentHp.Value;
         maxHp = playerStat.BaseMaxHp.Value;
-
         playerHPBar.GetComponent<Image>().fillAmount = currentHp /maxHp;
         playerHPText.GetComponent<TMP_Text>().text = $"{currentHp.ToString()}| {maxHp.ToString()}";
     }
@@ -119,8 +121,10 @@ public class PlayerHud : MonoBehaviour , IStatObserver
             if (comp == playerWeapon && currentWeapon != null)
             {
                 comp.icon.sprite = currentWeapon.iconImage.sprite;
-                if (currentWeapon.type == 2) comp.text.text = "\u221e";
-                else comp.text.text = "0 | 0";
+                if (currentWeapon.type == 2)
+                {
+                    comp.text.text = "\u221e";
+                }
             }
             else if (i < skills.Length)
             {
@@ -130,13 +134,8 @@ public class PlayerHud : MonoBehaviour , IStatObserver
                     comp.text.text = "";
                 }
             }
-            comp.mask.GetComponent<Image>().fillAmount = 0;
+            comp.mask.fillAmount = 0;
         }
-    }
-
-    private void SkillCoolTimer((float, string) data)
-    {
-        
     }
     
     public void WhenStatChanged((float, string) data)
@@ -152,14 +151,54 @@ public class PlayerHud : MonoBehaviour , IStatObserver
         else if (data.Item2 == "GunMaxAmmo")
         {
             maxAmmo = data.Item1;
+            playerWeapon.text.text = $"{currentAmmo} | {maxAmmo}";
+            return;
         }
-        if (data.Item2  == "GunCurrentAmmo")
+        else if (data.Item2  == "GunCurrentAmmo")
         {
             currentAmmo = data.Item1;
+            playerWeapon.text.text = $"{currentAmmo} | {maxAmmo}";
+            return;
         }
-        
-        playerWeapon.text.text = $"{currentAmmo} | {maxAmmo}";
+        else if (data.Item2  == "currentFirstMovementSkillCoolTime")
+        {
+            //moveSkill0.mask.fillAmount = Mathf.Lerp(0, 1, data.Item1/);
+            HudCoolTimer(data.Item1, moveSkill0);
+            return;
+        }
+        else if (data.Item2  == "currentSecondMovementSkillCoolTime")
+        {
+            return;
+        }
+        else if (data.Item2  == "currentFirstWeaponSkillCoolTime")
+        {
+            //weaponSkill0.mask.fillAmount = Mathf.Lerp(0, 1, data.Item1/);
+            HudCoolTimer(data.Item1, weaponSkill0);
+            return;
+        }
+        else if (data.Item2  == "currentSecondWeaponSkillCoolTime")
+        {
+            //weaponSkill1.mask.fillAmount = Mathf.Lerp(0, 1, data.Item1/);
+            HudCoolTimer(data.Item1, weaponSkill1);
+            return;
+        }
         playerHPBar.GetComponent<Image>().fillAmount = currentHp / maxHp;
         playerHPText.GetComponent<TMP_Text>().text = $"{currentHp.ToString()}|{maxHp.ToString()}";
+    }
+    
+    private void HudCoolTimer(float count, PlayerHudComps comp)
+    {
+        if (count >= 1)
+        {
+            comp.text.text = count.ToString("F0");
+        }
+        else if (count < 0.1)
+        {
+            comp.text.text = "";
+        }
+        else
+        {
+            comp.text.text = $".{(count * 10):F0}";
+        }
     }
 }

@@ -34,8 +34,8 @@ public class SwordController : MonoBehaviour, IWeapon
     private bool _isAttacking = false;
 
     public Stat Damage { get => _attackPower;}
-    public ObservableFloat CurrentAmmo { get => _currentAmmo;}
-    public ObservableFloat MaxAmmo { get => _maxAmmo; }
+    public ObservableFloat CurrentAmmo { get => null;}
+    public ObservableFloat MaxAmmo { get => null; }
 
     public bool IsAttacking => _isAttacking;
     
