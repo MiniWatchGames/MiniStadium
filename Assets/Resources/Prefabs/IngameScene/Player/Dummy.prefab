@@ -282,6 +282,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 09f1791f994594469896d8b47866a754,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: ef346e066ab4a41d2bf197b1c172ff3d, type: 2}
     - target: {fileID: 6240733294840144465, guid: 09f1791f994594469896d8b47866a754,
         type: 3}
       propertyPath: m_Layer
@@ -339,6 +344,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6835055807958862}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 09f1791f994594469896d8b47866a754,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2644463950910470588}
     - targetCorrespondingSourceObject: {fileID: -203856693384778745, guid: 09f1791f994594469896d8b47866a754,
         type: 3}
       insertIndex: -1
@@ -417,3 +426,41 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &-2644463950910470588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5151202947783974543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72b16a8e943de4d8d88b6ddb16c2b834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  head: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  fixedFirstMaxHp: 10
+  fixedFirstDefence: 10
+  fixedFirstMoveSpeed: 10
+  fixedFirstJumpPower: 10
+  maxHpIncreaseAmount: 10
+  defenceIncreaseAmount: 10
+  moveSpeedIncreaseAmount: 10
+  jumpPowerIncreaseAmount: 10
+  defaultState: 10
+  RunStateMaterial: {fileID: 0}
+  cameraController: {fileID: 0}
+  rotationSpeed: 2
+  rotationSmoothSpeed: 30
+  minAngle: 0
+  maxAngle: 0
+  swordAnimatorController: {fileID: 0}
+  gunAnimatorController: {fileID: 0}
+  jumpSound: []
+  walkSound: []
+  teleportGainSound: {fileID: 0}
+  teleportGainSoundRe: {fileID: 0}
+  teleportSound: {fileID: 0}

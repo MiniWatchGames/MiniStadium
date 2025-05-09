@@ -32,7 +32,6 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
-
         if (_isPaused) return;
         if (timerType == TimerType.Decrease)
         {
@@ -82,7 +81,9 @@ public class Timer : MonoBehaviour
     }
     public void SetTimer(float timeLimit, TimerType timerType, TimerDelegate timerDelegate, TimerDelegateWithFloat timerDelegateWithFloat = null)
     {
+        //시간이 지날때마다 실행되는 함수
         OnTimerDelegate = timerDelegateWithFloat;
+        //시간이 끝났을때 실행되는 함수
         OnTimerEndDelegate = timerDelegate;
         this.timeLimit = timeLimit;
         this.timerType = timerType;
