@@ -139,6 +139,9 @@ public class InGameManager : MonoBehaviour
                 RepairShopUI.GetComponent<RepairShop>().SetRoundText(currentRound);
                 break;
             case RoundState.InRound:
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+
                 inGameUIAction?.Invoke();
                 //Debug.Log("In Round");
                 
@@ -153,9 +156,6 @@ public class InGameManager : MonoBehaviour
                     
                     playerContoroller = player.GetComponent<PlayerController>();
                     SetPlayerTeam(player);
-                    
-                    
-                    
                 }
                 if(RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy() == null)
                 {
@@ -177,7 +177,8 @@ public class InGameManager : MonoBehaviour
 
                 break;
             case RoundState.RoundEnd:
-                
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 inGameUIAction?.Invoke();
                 currentRoundState = RoundState.RoundEnd;
                 
