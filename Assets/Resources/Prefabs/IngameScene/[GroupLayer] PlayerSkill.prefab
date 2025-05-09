@@ -267,7 +267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 0.21176471}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.5882353}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -473,3 +473,4 @@ MonoBehaviour:
   text: {fileID: 5004258846736251153}
   icon: {fileID: 5300104327878277022}
   mask: {fileID: 7559654845604679541}
+  coolTime: 0
