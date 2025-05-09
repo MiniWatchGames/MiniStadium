@@ -79,6 +79,17 @@ public class RepairShopWeapon : MonoBehaviour
         }
     }
 
+    // 빈 손 방지
+    public void NoEmptyHands()
+    {
+        if (currentWeapon == null)
+        {
+            selectedWeapon = baseWeapon;
+        }
+        BuyingWeapon();
+        Receipt.ReceiptUpdateSlot(true, 3);
+    }
+    
     // 체크 박스의 투명도 제어
     public void CheckboxAlpha(bool buying)
     {

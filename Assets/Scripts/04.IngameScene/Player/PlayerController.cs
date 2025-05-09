@@ -108,7 +108,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         get => currentHp;
         set
         {
-            currentHp = value;
+            Debug.Log("It is On the Run");
+            currentHp.Value = value.Value;
             if (currentHp.Value <= 0 && !_isDead)
             {
                 Debug.Log("주금..");
@@ -160,6 +161,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     private Coroutine _firstMovementSkillCoolTimeCoroutine;
     private Coroutine _secondMovementSkillCoolTimeCoroutine;
 
+    private GameObject _skillGageObj;
+    private SkillGage _skillGage;
+
     // --------
     // 상태 관련
     [Header("FSM")]
@@ -209,6 +213,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     [Header("Sound")]
     [SerializeField] private AudioClip[] jumpSound;
     [SerializeField] private AudioClip[] walkSound;
+    [SerializeField] private AudioClip teleportGainSound;
+    [SerializeField] private AudioClip teleportGainSoundRe;
+    [SerializeField] private AudioClip teleportSound;
     private AudioSource _audioSource;
 
     public bool IsGrounded
@@ -469,6 +476,19 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         SetPostureState(_postureFsm.CurrentState == PostureState.Idle ? "Crouch" : "Idle");
     }
 
+    private  void skillGageSetting(ISkillData skill) {
+        if (skill.IsNeedPresse) {
+            _skillGageObj.SetActive(true);
+            _skillGage.Observing(skill.NeedPressTime);
+            _skillGage.Observing(skill.PressTime);
+        }
+    }
+    public  void skillGageReset(bool isNeedPresse) {
+        if (isNeedPresse) {
+            _skillGageObj.SetActive(false);
+            _skillGage.ResetSkillGage();
+        }
+    }
 
     public void OnFirstWeaponSkillPressed()
     {
@@ -476,7 +496,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             var weaponSkill = _weaponSkills[0];
             ISkillData weaponSkillData = weaponSkill.Item2 as ISkillData;
-
+                       
             if (_currentFirstWeaponSkillCoolTime?.Value > 0)
             {
                 return;
@@ -497,8 +517,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                     }
                 }
                 _firstWeaponSkill = weaponSkill.Item1.ToString();
-                if (_actionFsm.CurrentState != weaponSkill.Item1)
+                if (_actionFsm.CurrentState != weaponSkill.Item1) {
+                    skillGageSetting(weaponSkillData);
                     SetActionState(_firstWeaponSkill);
+                }
 
                 return;
             }
@@ -507,11 +529,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void OnFirstWeaponSkillReleased()
     {
-
         if (_weaponSkills?.Count >= 1)
         {
             if (_actionFsm.CurrentState == _weaponSkills[0].Item1)
             {
+                ISkillData weaponSkillData = _weaponSkills[0].Item2 as ISkillData;
+                skillGageReset(weaponSkillData.IsNeedPresse);
                 SetActionState("Idle");
             }
         }
@@ -523,7 +546,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_weaponSkills?.Count >= 1)
             {
-                var weaponSkill = _weaponSkills[0];
+                var weaponSkill = _weaponSkills[1];
                 ISkillData weaponSkillData = weaponSkill.Item2 as ISkillData;
 
                 if (_currentSecondWeaponSkillCoolTime?.Value > 0)
@@ -546,8 +569,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                         }
                     }
                     _secondWeaponSkill = weaponSkill.Item1.ToString();
-                    if (_actionFsm.CurrentState != weaponSkill.Item1)
+                    if (_actionFsm.CurrentState != weaponSkill.Item1) {
+                        skillGageSetting(weaponSkillData);
                         SetActionState(_secondWeaponSkill);
+                    }
 
                     return;
                 }
@@ -561,6 +586,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _weaponSkills[1].Item1)
             {
+                ISkillData weaponSkillData = _weaponSkills[1].Item2 as ISkillData;
+                skillGageReset(weaponSkillData.IsNeedPresse);
                 SetActionState("Idle");
             }
         }
@@ -591,8 +618,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                     }
                 }
                 _firstMoveSkill = moveMentSkill.Item1.ToString();
-                if (_actionFsm.CurrentState != moveMentSkill.Item1)
+                if (_actionFsm.CurrentState != moveMentSkill.Item1) {
+                    skillGageSetting(moveMentSkillData);
                     SetActionState(_firstMoveSkill);
+                }
 
                 return;
             }
@@ -605,6 +634,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _movementSkills[0].Item1)
             {
+                ISkillData movementSkillData = _movementSkills[0].Item2 as ISkillData;
+                skillGageReset(movementSkillData.IsNeedPresse);
                 SetActionState("Idle");
             }
         }
@@ -637,8 +668,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
                     }
                 }
                 _secondMoveSkill = moveMentSkill.Item1.ToString();
-                if (_actionFsm.CurrentState != moveMentSkill.Item1)
+                if (_actionFsm.CurrentState != moveMentSkill.Item1) {
+                    skillGageSetting(moveMentSkillData);
                     SetActionState(_secondMoveSkill);
+                }
 
                 return;
             }
@@ -651,6 +684,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _movementSkills[1].Item1)
             {
+                ISkillData movementSkillData = _movementSkills[1].Item2 as ISkillData;
+                skillGageReset(movementSkillData.IsNeedPresse);
                 SetActionState("Idle");
             }
         }
@@ -911,6 +946,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     /// </summary>
     public void ResetCharacter()
     {
+        _skillGageObj?.SetActive(false);
+
         // 추가 생성한 스킬, 패시브 제거
         if (_movementSkills?.Count > 0)
         {
@@ -965,7 +1002,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _secondWeaponSkillCoolTimeCoroutine = null;
     }
 
-
+    public void SetSkillGage(GameObject gage) {
+        _skillGageObj = gage;
+        _skillGage = _skillGageObj.GetComponent<SkillGage>();
+    }
     /// <summary>
     /// ResetCharacter 후 새로운 구매내역이 생길 때 Init 대신 ReInit호출
     /// </summary>
@@ -975,7 +1015,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         this.transform.GetComponent<InputManager>()?.Register(this);
 
         // 구매내역 할당
-        _playerItems = PurchaseManager.PurchasedPlayerItems?.DeepCopy();
+        _playerItems = PurchaseManager.PurchasedPlayerItems.DeepCopy();
 
         //카메라 설정 (아마 기존에 이미 들어가 있어서 없어도 괜찮을 듯)
         //_cameraController = Camera.main?.GetComponent<CameraController>();
@@ -998,8 +1038,15 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         EquipWeapon(_playerWeapon);
 
-        damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
-        statDictionary.Add(StatType.Damage, damage);
+        if (statDictionary.ContainsKey(StatType.Damage))
+        {
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary[StatType.Damage] =  damage;
+        }
+        else { 
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary.Add(StatType.Damage, damage);
+        }
 
         // 스텟 + currentHp 옵저버 등록 
         foreach (var stat in statDictionary)
@@ -1058,7 +1105,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //풀피 만들어주기
         CurrentHp.Value = baseMaxHp.Value;
         //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
-        PurchaseManager.ResetPurchasedPlayerItems();
+        //PurchaseManager.ResetPurchasedPlayerItems();
     }
 
     public void CleanupBeforeReInit()
@@ -1156,6 +1203,23 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     {
         _audioSource.volume = 0.25f;
         _audioSource.PlayOneShot(jumpSound[2]);
+    }
+
+    public void PlayTeleportGain() {
+        _audioSource.volume = 0.25f;
+        _audioSource.PlayOneShot(teleportGainSound);
+    }    
+    public void PlayTeleport() {
+        _audioSource.volume = 0.5f;
+        _audioSource.PlayOneShot(teleportSound);
+    }  
+    public void PlayTeleportGainRe() {
+        _audioSource.volume = 0.25f;
+        _audioSource.PlayOneShot(teleportGainSoundRe);
+    }
+
+    public void StopSound() {
+        _audioSource.Stop();
     }
     #endregion
 }
