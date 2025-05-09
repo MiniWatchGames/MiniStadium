@@ -72,6 +72,7 @@ public class InGameManager : MonoBehaviour
     
     [SerializeField] private Timer gameTimer;
     [SerializeField] private GameObject PlayerPrefab;
+    [SerializeField] private GameObject EnemyPrefab;
     [SerializeField] private RepairShopTimer RepairShopTimer;
     [SerializeField] private float repairShopTime = 5;
     [SerializeField] private PlayerHud playerHud;
@@ -109,7 +110,7 @@ public class InGameManager : MonoBehaviour
             case GameState.EndGame:
                 // Debug.Log("End Game");
                 currentGameState = GameState.EndGame;
-                SceneManager.LoadScene("MainmenuScene");
+               // SceneManager.LoadScene("MainmenuScene");
                 break;
         }
     }
@@ -148,32 +149,28 @@ public class InGameManager : MonoBehaviour
                 {
                     player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
                     Debug.Log("Istantiate Player");
-                    SetPlayerTeam(player);
                     playerContoroller = player.GetComponent<PlayerController>();
+                    SetPlayerTeam(player);
                 }
-                if(RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy() == null)
-                {
-                    Debug.Log("PlayerItems is null");
-                }
-                //playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
+                //if (RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy() == null)
+                //{
+                //    Debug.Log("PlayerItems is null");
+                //}
+                playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
-
-                //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
-
-                currentRoundState = RoundState.InRound;
-                SetGameTime(10, RoundState.SuddenDeath);
-                break;
-            case RoundState.SuddenDeath:
-                currentRoundState = RoundState.SuddenDeath;
-                
-                SetGameTime(30, RoundState.SuddenDeath);
-
                 playerHud.init(playerContoroller);
                 playerContoroller.SetSkillGage(playerHud.GetSkillGage());
                 RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
+                //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
+
                 currentRoundState = RoundState.InRound;
-                SetGameTime(20, RoundState.RoundEnd);
+                SetGameTime(30, RoundState.SuddenDeath);
+                break;
+            case RoundState.SuddenDeath:
+                currentRoundState = RoundState.SuddenDeath;
+                currentRoundState = RoundState.InRound;
+                SetGameTime(5, RoundState.RoundEnd);
 
                 break;
             case RoundState.RoundEnd:
@@ -252,12 +249,6 @@ public class InGameManager : MonoBehaviour
                 //Debug.Log("Sudden Death");
                 Damagefield.GetComponent<SafeZone>().UpdateMagneticField(time);
             }
-           
-
-        
-            SetRoundState(state);
-        
-
         });
     }
 
@@ -367,11 +358,11 @@ public class InGameManager : MonoBehaviour
         if(player == null) return;
         int tmpRandom = Random.Range(0, 1);
         //int Enemy = tmpRandom == 0 ? 1 : 0;
-        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy") is null ? Instantiate(player,new Vector3(16, 9, 3), Quaternion.identity) :  GameObject.FindWithTag("Enemy");
+        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy") is null ? Instantiate(EnemyPrefab, new Vector3(20, 9, 3), Quaternion.identity) : GameObject.FindWithTag("Enemy");
         if(EnemyPlayer == null) return;
         EnemyPlayer.tag = "Enemy";
         Debug.Log("Player got the Team");
-
+        
         teamDictionary[player.gameObject] = Team.Player;
         //playerStat.team = (Team)tmpRandom;
         teamDictionary[EnemyPlayer] = Team.Enemy;
