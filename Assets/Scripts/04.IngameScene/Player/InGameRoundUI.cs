@@ -12,6 +12,9 @@ public class InGameRoundUI : MonoBehaviour
     [SerializeField] private GameObject BlueWinCount;
     [SerializeField] private GameObject RedWinCount;
     [SerializeField] private InGameManager inGameManager;
+
+    [Header("Optional UI Elements")]
+    [SerializeField] private GameObject FinishRoundTimer;
     
     private InGameUIDetect inGameUIDetect;
 
@@ -21,6 +24,11 @@ public class InGameRoundUI : MonoBehaviour
         inGameUIDetect = new InGameUIDetect(inGameManager);
         inGameUIDetect.PropertyChanged += OnIngameChanged;
         inGameManager.inGameUIAction += () => UIUpdate();
+        
+        // 타이머 비활성화
+        if (FinishRoundTimer != null)
+            FinishRoundTimer.SetActive(false);
+        
         InitUI();
     }
 

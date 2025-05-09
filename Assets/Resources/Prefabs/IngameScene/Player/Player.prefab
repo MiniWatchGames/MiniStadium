@@ -2106,7 +2106,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.8
-  m_Radius: 0.16
+  m_Radius: 0.26
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.02
@@ -2183,6 +2183,7 @@ MonoBehaviour:
   jumpPowerIncreaseAmount: 0.1
   defaultState: Idle
   RunStateMaterial: {fileID: 2100000, guid: b3d49ad9daff7b84280b5f8539122578, type: 2}
+  IsReloadFinished: 0
   cameraController: {fileID: 2051301180654909716}
   rotationSpeed: 2
   rotationSmoothSpeed: 30

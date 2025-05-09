@@ -54,6 +54,7 @@ public class InGameManager : MonoBehaviour
 
     
     [SerializeField] private GameObject RepairShopUI;
+    // [SerializeField] private GameObject FinishRoundUI;
     [SerializeField] private GameObject GameRoundInfoUI;
     [SerializeField] private GameState currentGameState;
     [SerializeField] private WinLoseState currentWinLoseState;
@@ -123,6 +124,7 @@ public class InGameManager : MonoBehaviour
                 currentRound++;
                 Debug.Log("Round Start");
                 GameRoundInfoUI.gameObject.SetActive(false);
+                playerHud.GetComponent<CanvasGroup>().alpha = 1;
                 //자기장 필드 크기 초기화 및 대기
                 Damagefield.GetComponent<SafeZone>().Reset();
                 //RepairShopUI.SetActive(true);
@@ -139,6 +141,9 @@ public class InGameManager : MonoBehaviour
                 RepairShopUI.GetComponent<RepairShop>().SetRoundText(currentRound);
                 break;
             case RoundState.InRound:
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+
                 inGameUIAction?.Invoke();
                 //Debug.Log("In Round");
                 
@@ -153,9 +158,6 @@ public class InGameManager : MonoBehaviour
                     
                     playerContoroller = player.GetComponent<PlayerController>();
                     SetPlayerTeam(player);
-                    
-                    
-                    
                 }
                 if(RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy() == null)
                 {
@@ -177,12 +179,13 @@ public class InGameManager : MonoBehaviour
 
                 break;
             case RoundState.RoundEnd:
-                
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 inGameUIAction?.Invoke();
                 currentRoundState = RoundState.RoundEnd;
                 
                 playerContoroller.CleanupBeforeReInit();    // 입력 방지, 상태 초기화 
-                
+                playerHud.GetComponent<CanvasGroup>().alpha = 0;
 
                 if (BlueWinCount == 4 || RedWinCount == 4)
                 {
@@ -194,6 +197,9 @@ public class InGameManager : MonoBehaviour
 
                     //TODO: 이겼는지 졌는지 UI 띄우기
                 }
+
+                // FinishRoundUI.SetActive(true);
+                
                 SetGameTime(5, RoundState.RoundStart);
 
                 break;
