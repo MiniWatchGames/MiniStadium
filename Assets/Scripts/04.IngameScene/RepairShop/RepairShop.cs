@@ -52,6 +52,7 @@ public class RepairShop : MonoBehaviour
         RepairShopWeapon.WeaponShopReset(true);
         RepairShopSkill.SkillShopReset(true);
         RepairShopReceipt.ReceiptRefundAll();
+        RepairShopReceipt.FromReceiptToHud();
 		SetDescription("", "");
         ResetPrice();
     }
@@ -82,6 +83,7 @@ public class RepairShop : MonoBehaviour
             RepairShopStatus.StatusPurchasing();
             RepairShopSkill.BuyingSkill();
             RepairShopReceipt.ReceiptUpdateSlot(true, 0);
+            RepairShopReceipt.FromReceiptToHud();
             SetDescription("", "");
             ResetPrice();
         }

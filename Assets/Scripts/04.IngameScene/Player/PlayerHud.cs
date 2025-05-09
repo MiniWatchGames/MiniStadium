@@ -131,11 +131,17 @@ public class PlayerHud : MonoBehaviour , IStatObserver
             }
             else if (i < skills.Length)
             {
-                if (skills[i] != null)
+                if (skills[i] == null || skills[i].ID == -1)
                 {
+                    comp.gameObject.SetActive(false);
+                }
+                else if (skills[i] != null)
+                {
+                    comp.gameObject.SetActive(true);
                     comp.icon.sprite = skills[i]._icon.sprite;
                     comp.text.text = "";
                 }
+                
             }
             comp.mask.fillAmount = 0;
         }

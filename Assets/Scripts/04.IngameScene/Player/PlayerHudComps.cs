@@ -10,4 +10,9 @@ public class PlayerHudComps : MonoBehaviour
     [SerializeField] public TextMeshProUGUI text;
     [SerializeField] public Image icon;
     [SerializeField] public Image mask;
+    
+    public void TurnVisibility(bool isVisible)
+    {
+        gameObject.SetActive(isVisible);
+    }
 }
