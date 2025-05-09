@@ -640,6 +640,12 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &20660105 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3247468476374369941, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+    type: 3}
+  m_PrefabInstance: {fileID: 313618461}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &29736118
 Mesh:
   m_ObjectHideFlags: 0
@@ -15695,6 +15701,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -70.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7040712908871951702, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+        type: 3}
+      propertyPath: FinishRoundTimer
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8408206433110112542, guid: 4e2f70a69d3144d4a9b7d04427bad570,
         type: 3}
       propertyPath: m_Name
@@ -15832,6 +15843,12 @@ PrefabInstance:
 --- !u!224 &313618462 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5668302620803195836, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+    type: 3}
+  m_PrefabInstance: {fileID: 313618461}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &313618463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2880254285287731699, guid: 4e2f70a69d3144d4a9b7d04427bad570,
     type: 3}
   m_PrefabInstance: {fileID: 313618461}
   m_PrefabAsset: {fileID: 0}
@@ -49467,10 +49484,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7162ae6848252c84892450e9b6795964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RoundCount: {fileID: 0}
-  BlueWinCount: {fileID: 0}
-  RedWinCount: {fileID: 0}
-  inGameManager: {fileID: 0}
+  RoundCount: {fileID: 1481643157}
+  BlueWinCount: {fileID: 1409689893}
+  RedWinCount: {fileID: 20660105}
+  inGameManager: {fileID: 1570132923}
+  FinishRoundTimer: {fileID: 313618463}
 --- !u!114 &1002773538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71897,6 +71915,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1399283977}
   m_CullTransparentMesh: 1
+--- !u!1 &1409689893 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6754341641093213174, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+    type: 3}
+  m_PrefabInstance: {fileID: 313618461}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1410640847
 GameObject:
   m_ObjectHideFlags: 0
@@ -74499,6 +74523,12 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1481643157 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3113697177028035543, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+    type: 3}
+  m_PrefabInstance: {fileID: 313618461}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1484053502
 GameObject:
   m_ObjectHideFlags: 0
@@ -79373,6 +79403,18 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &1570132923 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
+    type: 3}
+  m_PrefabInstance: {fileID: 739460939}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bdddfd5e975e4041b4029faa7d5180b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &1573452664
 Mesh:
   m_ObjectHideFlags: 0
@@ -84313,7 +84355,7 @@ PrefabInstance:
         type: 3}
       propertyPath: text
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1164896372}
     - target: {fileID: 9199906874807287824, guid: 4e2f70a69d3144d4a9b7d04427bad570,
         type: 3}
       propertyPath: m_Pivot.x
@@ -93402,6 +93444,7 @@ GameObject:
   - component: {fileID: 1915014497}
   - component: {fileID: 1915014498}
   - component: {fileID: 1915014496}
+  - component: {fileID: 1915014499}
   m_Layer: 5
   m_Name: '[Panel]PlayerHud'
   m_TagString: Untagged
@@ -93466,6 +93509,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1915014495}
   m_CullTransparentMesh: 1
+--- !u!225 &1915014499
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1915014495}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1918332915
 GameObject:
   m_ObjectHideFlags: 0

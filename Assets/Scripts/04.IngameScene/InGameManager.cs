@@ -54,6 +54,7 @@ public class InGameManager : MonoBehaviour
 
     
     [SerializeField] private GameObject RepairShopUI;
+    // [SerializeField] private GameObject FinishRoundUI;
     [SerializeField] private GameObject GameRoundInfoUI;
     [SerializeField] private GameState currentGameState;
     [SerializeField] private WinLoseState currentWinLoseState;
@@ -196,6 +197,9 @@ public class InGameManager : MonoBehaviour
 
                     //TODO: 이겼는지 졌는지 UI 띄우기
                 }
+
+                // FinishRoundUI.SetActive(true);
+                
                 SetGameTime(5, RoundState.RoundStart);
 
                 break;
