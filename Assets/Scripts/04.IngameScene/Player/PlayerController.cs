@@ -110,6 +110,14 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             Debug.Log("It is On the Run");
             currentHp.Value = value.Value;
+            if (OnPlayerDie != null)
+            {
+                Debug.Log("OnPlayerDie has Value");
+            }
+            else
+            {
+                Debug.Log("OnPlayerDie is null");
+            }
             if (currentHp.Value <= 0 && !_isDead)
             {
                 Debug.Log("주금..");

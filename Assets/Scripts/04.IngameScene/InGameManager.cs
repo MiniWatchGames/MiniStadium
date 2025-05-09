@@ -110,7 +110,7 @@ public class InGameManager : MonoBehaviour
             case GameState.EndGame:
                 // Debug.Log("End Game");
                 currentGameState = GameState.EndGame;
-               // SceneManager.LoadScene("MainmenuScene");
+                SceneManager.LoadScene("MainmenuScene");
                 break;
         }
     }
@@ -121,11 +121,12 @@ public class InGameManager : MonoBehaviour
         {
             case RoundState.RoundStart:
                 currentRound++;
+                Debug.Log("Round Start");
                 GameRoundInfoUI.gameObject.SetActive(false);
                 playerHud.GetComponent<CanvasGroup>().alpha = 1;
                 //자기장 필드 크기 초기화 및 대기
                 Damagefield.GetComponent<SafeZone>().Reset();
-                
+                //RepairShopUI.SetActive(true);
                 //현재 라운드 상태 저장
                 currentRoundState = RoundState.RoundStart;
                 //정비소 타이머 리셋
@@ -150,41 +151,39 @@ public class InGameManager : MonoBehaviour
                 {
                     player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
                     Debug.Log("Istantiate Player");
+                    
                     playerContoroller = player.GetComponent<PlayerController>();
                     SetPlayerTeam(player);
+                    
+                    
+                    
                 }
-                //if (RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy() == null)
-                //{
-                //    Debug.Log("PlayerItems is null");
-                //}
+                if(RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy() == null)
+                {
+                    Debug.Log("PlayerItems is null");
+                }
                 playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
                 playerHud.init(playerContoroller);
                 playerContoroller.SetSkillGage(playerHud.GetSkillGage());
-                RepairShopUI.SetActive(!RepairShopUI.activeSelf);
-
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
                 currentRoundState = RoundState.InRound;
-                SetGameTime(8, RoundState.SuddenDeath);
+                SetGameTime(10, RoundState.SuddenDeath);
                 break;
             case RoundState.SuddenDeath:
                 currentRoundState = RoundState.SuddenDeath;
-                currentRoundState = RoundState.InRound;
-                SetGameTime(5, RoundState.RoundEnd);
+                
+                SetGameTime(30, RoundState.SuddenDeath);
 
                 break;
             case RoundState.RoundEnd:
-                //Debug.Log("Round End");
+                
                 inGameUIAction?.Invoke();
                 currentRoundState = RoundState.RoundEnd;
-
                 
-
                 playerContoroller.CleanupBeforeReInit();    // 입력 방지, 상태 초기화 
-                currentRound++;
                 playerHud.GetComponent<CanvasGroup>().alpha = 0;
-                GameRoundInfoUI.gameObject.SetActive(true);
 
                 if (BlueWinCount == 4 || RedWinCount == 4)
                 {
@@ -251,6 +250,7 @@ public class InGameManager : MonoBehaviour
                 //Debug.Log("Sudden Death");
                 Damagefield.GetComponent<SafeZone>().UpdateMagneticField(time);
             }
+        
         });
     }
 
@@ -308,10 +308,10 @@ public class InGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentRound == 3)
-        {
-            SetGameState(GameState.EndGame);
-        }
+        // if (currentRound == 3)
+        // {
+        //     SetGameState(GameState.EndGame);
+        // }
     }
 
     //플레이어가 죽을때 또는 죽였을 때 호출되야한다.
@@ -357,18 +357,22 @@ public class InGameManager : MonoBehaviour
     }
     public void SetPlayerTeam(GameObject player)
     {
-        if(player == null) return;
+        if (player is null)
+        {
+            Debug.Log("Player is null");
+            return;
+        }
         int tmpRandom = Random.Range(0, 1);
-        //int Enemy = tmpRandom == 0 ? 1 : 0;
-        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy") is null ? Instantiate(EnemyPrefab, new Vector3(20, 9, 3), Quaternion.identity) : GameObject.FindWithTag("Enemy");
-        if(EnemyPlayer == null) return;
+       
+        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy") is null ? Instantiate(EnemyPrefab,new Vector3(5, 9, 3), Quaternion.identity) :  GameObject.FindWithTag("Enemy");
+        //if(EnemyPlayer == null) return;
         EnemyPlayer.tag = "Enemy";
         Debug.Log("Player got the Team");
-        
+
         teamDictionary[player.gameObject] = Team.Player;
-        //playerStat.team = (Team)tmpRandom;
+        
         teamDictionary[EnemyPlayer] = Team.Enemy;
-        //EnemyPlayer.GetComponent<TestStat>().team = (Team)Enemy;
+      
         //플레이어가 죽었을때 패배 표시
         player.GetComponent<PlayerController>().OnPlayerDie = (player) =>
         {
@@ -380,7 +384,7 @@ public class InGameManager : MonoBehaviour
             LoseRound(player);
             SetWinLoseState(WinLoseState.Lose);
         };
-        EnemyPlayer.GetComponent<PlayerController>().OnPlayerDie = (enemy) =>
+        EnemyPlayer.GetComponent<DummyController>().OnDieCallBack = (enemy) =>
         {
             if (currentWinLoseState == WinLoseState.Lose)
             {
