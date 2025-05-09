@@ -44,7 +44,10 @@ public class TeleportSkillState : PlayerActionState, ISkillData
         if (_pressTime.Value >= _needPressTime.Value)
         {
             _playerController.PlayTeleport();
-            _characterController.Move(_playerController.transform.forward * _skillMount);
+            Vector3 teleportDirection = _playerController.transform.forward * _skillMount;
+            _characterController.enabled = false;
+            _playerController.transform.position += teleportDirection;
+            _characterController.enabled = true;
 
         }
         else { 
