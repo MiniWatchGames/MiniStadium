@@ -7,7 +7,7 @@ using UnityEngine;
 public class GunController : MonoBehaviour, IWeapon
 {
     // 이펙트 유형 정의
-    public enum EffectType
+    protected enum EffectType
     {
         MuzzleFlash,
         HitEffect,
@@ -16,7 +16,7 @@ public class GunController : MonoBehaviour, IWeapon
     
     // 이펙트 프리팹 구조체
     [Serializable]
-    public struct EffectPrefab
+    protected struct EffectPrefab
     {
         public EffectType type;
         public GameObject prefab;
@@ -156,7 +156,7 @@ public class GunController : MonoBehaviour, IWeapon
     }
     
     // 오브젝트 풀로 반환
-    public void ReturnToPool(GameObject obj, EffectType type)
+    protected void ReturnToPool(GameObject obj, EffectType type)
     {
         if (obj == null) 
             return;

@@ -67,8 +67,6 @@ public class SwordController : MonoBehaviour, IWeapon
             var effect = Instantiate(slashEffectPrefabs[i], transform.position, rotation);
             _slashEffects[i] = effect;
         }
-
-      
     }
     
     public void SetComboIndex(int index)
@@ -177,6 +175,17 @@ public class SwordController : MonoBehaviour, IWeapon
     public void PlaySlashSound(int index)
     {
         _audioSource.PlayOneShot(slashSounds[index], 1f);
+    }
+    
+    private void OnDestroy()
+    {
+        if (_slashEffects != null)
+        {
+            foreach (var slashEffect in _slashEffects)
+            {
+                Destroy(slashEffect.gameObject);
+            }
+        }
     }
     
 #if UNITY_EDITOR
