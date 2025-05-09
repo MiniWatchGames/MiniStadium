@@ -123,6 +123,7 @@ public class InGameManager : MonoBehaviour
                 currentRound++;
                 Debug.Log("Round Start");
                 GameRoundInfoUI.gameObject.SetActive(false);
+                playerHud.GetComponent<CanvasGroup>().alpha = 1;
                 //자기장 필드 크기 초기화 및 대기
                 Damagefield.GetComponent<SafeZone>().Reset();
                 //RepairShopUI.SetActive(true);
@@ -182,7 +183,7 @@ public class InGameManager : MonoBehaviour
                 currentRoundState = RoundState.RoundEnd;
                 
                 playerContoroller.CleanupBeforeReInit();    // 입력 방지, 상태 초기화 
-                
+                playerHud.GetComponent<CanvasGroup>().alpha = 0;
 
                 if (BlueWinCount == 4 || RedWinCount == 4)
                 {

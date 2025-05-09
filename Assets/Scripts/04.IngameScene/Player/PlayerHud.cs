@@ -53,7 +53,6 @@ public class PlayerHud : MonoBehaviour , IStatObserver
             maxAmmo = weaponInfo.MaxAmmo.Value; 
             playerWeapon.text.text = $"{currentAmmo} | {maxAmmo}";
         }
-
         playerStat.CurrentFirstMovementSkillCoolTime.AddObserver(this);
         playerStat.CurrentSecondMovementSkillCoolTime.AddObserver(this);
         playerStat.CurrentFirstWeaponSkillCoolTime.AddObserver(this);
@@ -131,12 +130,19 @@ public class PlayerHud : MonoBehaviour , IStatObserver
             }
             else if (i < skills.Length)
             {
-                if (skills[i] != null)
+                if (skills[i] == null || skills[i].ID == -1)
                 {
+                    comp.gameObject.SetActive(false);
+                }
+                else if (skills[i] != null)
+                {
+                    comp.gameObject.SetActive(true);
                     comp.icon.sprite = skills[i]._icon.sprite;
                     comp.text.text = "";
                 }
+                
             }
+            comp.coolTime = 0;
             comp.mask.fillAmount = 0;
         }
     }
@@ -178,13 +184,11 @@ public class PlayerHud : MonoBehaviour , IStatObserver
         }
         else if (data.Item2  == "currentFirstWeaponSkillCoolTime")
         {
-            //weaponSkill0.mask.fillAmount = Mathf.Lerp(0, 1, data.Item1/);
             HudCoolTimer(data.Item1, weaponSkill0);
             return;
         }
         else if (data.Item2  == "currentSecondWeaponSkillCoolTime")
         {
-            //weaponSkill1.mask.fillAmount = Mathf.Lerp(0, 1, data.Item1/);
             HudCoolTimer(data.Item1, weaponSkill1);
             return;
         }
@@ -194,6 +198,11 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     
     private void HudCoolTimer(float count, PlayerHudComps comp)
     {
+        if (count > comp.coolTime)
+            comp.coolTime = count;
+        
+        comp.mask.fillAmount = Mathf.Lerp(0, 1, count/comp.coolTime);
+        
         if (count >= 1)
         {
             comp.text.text = count.ToString("F0");
