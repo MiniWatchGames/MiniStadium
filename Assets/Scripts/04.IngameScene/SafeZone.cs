@@ -80,7 +80,7 @@ public class SafeZone : MonoBehaviour, IStatObserver
             }
             else
             {
-                ObservableFloat Damage = new ObservableFloat(other.gameObject.GetComponent<PlayerController>().BaseMaxHp.Value * 0.1f, "MagneticFieldDamage");
+                
                 objectsInField.Add(other.gameObject, new entityInField()
                 {
                     entity = other.gameObject,

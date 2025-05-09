@@ -28,7 +28,7 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     private float maxHp = 0;
     private DetectPlayerStateChanged _detectStat;
     public PlayerController playerStat;
-    private IWeapon weaponInfo;
+    [SerializeField] private IWeapon weaponInfo;
     // Start is called before the first frame update
     public void init(PlayerController player)
     {
