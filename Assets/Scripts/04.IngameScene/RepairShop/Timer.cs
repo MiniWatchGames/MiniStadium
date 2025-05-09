@@ -32,7 +32,6 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
-
         if (_isPaused) return;
         if (timerType == TimerType.Decrease)
         {

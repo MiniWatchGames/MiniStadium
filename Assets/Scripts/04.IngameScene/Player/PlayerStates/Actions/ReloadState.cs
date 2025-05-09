@@ -41,6 +41,7 @@ public class ReloadState : PlayerActionState
             Debug.Log($"{f}초 재장전 중");
             yield return  null;
         }
+        _playerController.IsReloadFinished = true;
         _playerController.CanChangeState = true;
         _playerController.SetActionState("Idle");
     }

@@ -188,6 +188,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public Material RunStateMaterial;
 
+    public bool IsReloadFinished;
     // --------
     // 카메라 관련
     [Header("Camera")]
@@ -293,7 +294,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void SetActionState(string stateName)
     {
-        if (stateName == "Reload") {
+        if (stateName == "Reload" && IsReloadFinished) {
+            IsReloadFinished = false;
             _CanChangeState = false;
             _actionFsm.ChangeState(stateName, this);
             return;
@@ -1019,6 +1021,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     /// </summary>
     public void ReInit()
     {
+        IsReloadFinished = true;
         // InputManager 재구독 
         this.transform.GetComponent<InputManager>()?.Register(this);
 
