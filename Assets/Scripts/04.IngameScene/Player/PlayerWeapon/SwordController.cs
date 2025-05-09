@@ -19,6 +19,15 @@ public class SwordController : MonoBehaviour, IWeapon
     [SerializeField] private ObservableFloat _currentAmmo;
     [SerializeField] private ObservableFloat _maxAmmo;
     
+    [Header("First Skill - Wall Creation")]
+    [SerializeField] private GameObject _wallPrefab; // 생성할 벽 프리팹
+    [SerializeField] private float _minWallDistance = 2f; // 최소 벽 생성 거리
+    [SerializeField] private float _maxWallDistance = 5f; // 최대 벽 생성 거리
+    [SerializeField] private float _wallDuration = 10f; // 벽 지속 시간
+    
+    private GameObject _previewWall; // 미리보기 벽
+    private GameObject _currentWall; // 현재 생성된 벽
+    
     [Header("Effects")]
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
     [SerializeField] private Vector3[] slashEffectRotations;
@@ -41,6 +50,8 @@ public class SwordController : MonoBehaviour, IWeapon
     
     private int _maxCombo = 2;
     private int _currentComboIndex = 0;
+    
+    private CameraController _camera;
 
     private void Awake()
     {
@@ -52,6 +63,9 @@ public class SwordController : MonoBehaviour, IWeapon
     
     private void Start()
     {
+        var pc = GetComponentInParent<PlayerController>();
+        _camera = pc.CameraController;
+        
         _previousPositions = new Vector3[_triggerZones.Length];
         
         _comboHitColliders = new HashSet<Collider>[_maxCombo];
@@ -176,9 +190,152 @@ public class SwordController : MonoBehaviour, IWeapon
     {
         _audioSource.PlayOneShot(slashSounds[index], 1f);
     }
+
+    public void FirstSkillStart()
+    {
+        Debug.Log("Sword -- First Skill Start");
+        // 이미 미리보기가 있다면 제거
+        if (_previewWall != null)
+        {
+            Destroy(_previewWall);
+        }
+        
+        // 미리보기 벽 생성
+        _previewWall = Instantiate(_wallPrefab);
+        
+        // 모든 렌더러 컴포넌트를 찾아 반투명하게 설정
+        MeshRenderer[] renderers = _previewWall.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer renderer in renderers)
+        {
+            // 기존 머티리얼의 복사본 생성
+            Material previewMaterial = new Material(renderer.material);
+            
+            // 알파값 조정 (50% 투명)
+            Color color = previewMaterial.color;
+            color.a = 0.5f;
+            previewMaterial.color = color;
+            
+            // 새 머티리얼 적용
+            renderer.material = previewMaterial;
+        }
+        
+        // 콜라이더 비활성화 (미리보기에서는 충돌이 일어나지 않도록)
+        Collider[] colliders = _previewWall.GetComponentsInChildren<Collider>();
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = false;
+        }
+        
+        // 미리보기 위치 업데이트 코루틴 시작
+        StartCoroutine(UpdatePreviewWallRoutine());
+    }
+
+    // 미리보기 벽 위치 업데이트 코루틴
+    private IEnumerator UpdatePreviewWallRoutine()
+    {
+        while (_previewWall != null)
+        {
+            UpdatePreviewWallPosition();
+            yield return null;
+        }
+    }
+    
+    // 미리보기 벽 위치 업데이트
+    private void UpdatePreviewWallPosition()
+    {
+        if (_previewWall != null)
+        {
+            float wallDistance = _maxWallDistance / 2; // 기본 거리
+            var pitch = _camera.Pitch;
+            float normalizedPitch = 1- ((pitch + 90) / 180f); // 0~1
+            wallDistance = Mathf.Lerp(_minWallDistance, _maxWallDistance, normalizedPitch);
+            
+            //Debug.Log($"Camera Pitch: {pitch}, Normalized: {normalizedPitch}, Wall Distance: {wallDistance}");
+            
+            // 플레이어(루트) 트랜스폼 가져오기
+            Transform rootTransform = transform.root;
+            
+            // 플레이어 앞에 위치
+            Vector3 playerForward = rootTransform.forward;
+            Vector3 spawnPosition = rootTransform.position + playerForward * wallDistance;
+            
+            // 벽 높이 조정 (바닥에서부터 적절한 높이)
+            spawnPosition.y = _previewWall.transform.localScale.y / 2;
+            
+            // 위치와 회전 설정
+            _previewWall.transform.position = spawnPosition;
+            _previewWall.transform.rotation = Quaternion.LookRotation(playerForward);
+        }
+    }
+    
+    public void FirstSkillEnd()
+    {
+        Debug.Log("Sword -- First Skill End");
+        // 실제 벽 생성 위치 저장 (미리보기 위치와 동일)
+        Vector3 wallPosition = Vector3.zero;
+        Quaternion wallRotation = Quaternion.identity;
+        Vector3 wallScale = Vector3.one;
+        
+        if (_previewWall != null)
+        {
+            wallPosition = _previewWall.transform.position;
+            wallRotation = _previewWall.transform.rotation;
+            wallScale = _previewWall.transform.localScale;
+            
+            // 미리보기 제거
+            Destroy(_previewWall);
+            _previewWall = null;
+        }
+        
+        // 이전 벽 제거
+        if (_currentWall != null)
+        {
+            Destroy(_currentWall);
+        }
+        
+        // 실제 벽 생성
+        _currentWall = Instantiate(_wallPrefab, wallPosition, wallRotation);
+        _currentWall.transform.localScale = wallScale;
+        
+        // 콜라이더 활성화 (미리보기와 달리 실제 벽은 충돌이 일어나도록)
+        Collider[] colliders = _currentWall.GetComponentsInChildren<Collider>();
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = true;
+        }
+        
+        // 모든 렌더러의 투명도 복원
+        MeshRenderer[] renderers = _currentWall.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer renderer in renderers)
+        {
+            Color color = renderer.material.color;
+            color.a = 1.0f; // 완전 불투명
+            renderer.material.color = color;
+        }
+        
+        // 벽 효과음 재생
+        
+        
+        // 이펙트 재생
+        
+        // 일정 시간 후 벽 제거
+        Destroy(_currentWall, _wallDuration);
+    }
     
     private void OnDestroy()
     {
+        // 미리보기 벽 제거
+        if (_previewWall != null)
+        {
+            Destroy(_previewWall);
+        }
+        
+        // 실제 벽 제거
+        if (_currentWall != null)
+        {
+            Destroy(_currentWall);
+        }
+        
         if (_slashEffects != null)
         {
             foreach (var slashEffect in _slashEffects)
@@ -186,16 +343,6 @@ public class SwordController : MonoBehaviour, IWeapon
                 Destroy(slashEffect.gameObject);
             }
         }
-    }
-
-    public void FirstSkillStart()
-    {
-        Debug.Log("Sword -- First Skill Start");
-    }
-
-    public void FirstSkillEnd()
-    {
-        Debug.Log("Sword -- First Skill End");
     }
     
 #if UNITY_EDITOR
