@@ -346,6 +346,16 @@ public class GunController : MonoBehaviour, IWeapon
         }
     }
     
+    public void FirstSkillStart()
+    {
+        Debug.Log("Gun -- First Skill Start");
+    }
+
+    public void FirstSkillEnd()
+    {
+        Debug.Log("Gun -- First Skill End");
+    }
+    
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

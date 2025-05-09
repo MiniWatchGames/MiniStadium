@@ -187,6 +187,16 @@ public class SwordController : MonoBehaviour, IWeapon
             }
         }
     }
+
+    public void FirstSkillStart()
+    {
+        Debug.Log("Sword -- First Skill Start");
+    }
+
+    public void FirstSkillEnd()
+    {
+        Debug.Log("Sword -- First Skill End");
+    }
     
 #if UNITY_EDITOR
     
