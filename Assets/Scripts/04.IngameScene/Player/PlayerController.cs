@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             {
                 Debug.Log("주금..");
                 _isDead = true;
-                OnPlayerDie.Invoke(gameObject);
+                OnPlayerDie?.Invoke(gameObject);
                 SetMovementState("Idle");
                 SetPostureState("Idle");
                 SetActionState("Dead");
@@ -957,6 +957,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public void ResetCharacter()
     {
         _skillGageObj?.SetActive(false);
+
+        SetActionState("Idle");
+        SetMovementState("Idle");
+        SetPostureState("Idle");
 
         // 추가 생성한 스킬, 패시브 제거
         if (_movementSkills?.Count > 0)

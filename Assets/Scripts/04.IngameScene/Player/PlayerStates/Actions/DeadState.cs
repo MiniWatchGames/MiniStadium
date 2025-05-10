@@ -6,7 +6,6 @@ public class DeadState : PlayerActionState
 {
     private static int aniName;
     private static readonly int Dead = Animator.StringToHash("Dead");
-    private static readonly int ReturnIdle = Animator.StringToHash("ReturnIdle");
 
     public DeadState() : base() { }
     //public DeadState(IWeaponAnimationStrategy iWeaponAnimationStrategy) : base(iWeaponAnimationStrategy)
@@ -25,7 +24,7 @@ public class DeadState : PlayerActionState
     }
     public override void Exit()
     {
-        _playerController.Animator.SetTrigger(ReturnIdle);
+        _playerController.Animator.SetTrigger("BackIdle");
         base.Exit();
     }
     public override void StateUpdate()

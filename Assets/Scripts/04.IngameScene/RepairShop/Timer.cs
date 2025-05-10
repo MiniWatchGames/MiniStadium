@@ -21,7 +21,6 @@ public class Timer : MonoBehaviour
     public TimerType timerType;
     public float timeLimit;
     public float currentTime;
-    public RepairShopTimer repairShopTimer;
     private bool _isPaused;
     // Start is called before the first frame update
     void Start()
