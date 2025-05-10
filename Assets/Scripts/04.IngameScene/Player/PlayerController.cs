@@ -15,7 +15,7 @@ public enum ActionState
     Reload,
     Dead,
     MovementSkills,
-    WeaponSkills,
+    FirstWeaponSkill,
     RunSkill,
     DoubleJumpSkill,
     TeleportSkill,
@@ -473,13 +473,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
     }
 
-    public void OnReloadPressed() {
-        if (_playerWeapon.WeaponType == WeaponType.Gun) { 
+    public void OnReloadPressed() 
+    {
+        if (_playerWeapon.WeaponType == WeaponType.Gun) 
+        { 
             SetActionState("Reload");
         }
     }
-
-
 
     public void OnCrouchPressed()
     {
@@ -543,9 +543,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _weaponSkills[0].Item1)
             {
+                _combatManager.ProcessSkillInput(false, false);
                 ISkillData weaponSkillData = _weaponSkills[0].Item2 as ISkillData;
                 skillGageReset(weaponSkillData.IsNeedPresse);
-                SetActionState("Idle");
             }
         }
     }
