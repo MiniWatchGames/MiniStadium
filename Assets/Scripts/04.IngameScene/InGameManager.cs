@@ -100,17 +100,13 @@ public class InGameManager : MonoBehaviour
         switch (state)
         {
             case GameState.StartGame:
-                //Debug.Log("Start Game");
                 currentGameState = GameState.StartGame;
                 SetRoundState(RoundState.RoundStart);
                 break;
             case GameState.InGame:
-                //Debug.Log("In Game");
                 currentGameState = GameState.InGame;
-
                 break;
             case GameState.EndGame:
-                // Debug.Log("End Game");
                 currentGameState = GameState.EndGame;
                 SceneManager.LoadScene("MainmenuScene");
                 break;
@@ -123,12 +119,14 @@ public class InGameManager : MonoBehaviour
         {
             case RoundState.RoundStart:
                 currentRound++;
-                Debug.Log("Round Start");
+                
                 //플레이어 초기화
                 if (playerContoroller is not null)
                 {
                     playerContoroller.ResetCharacter();
+                    
                 }
+                
                 GameRoundInfoUI.gameObject.SetActive(false);
                 playerHud.GetComponent<CanvasGroup>().alpha = 1;
                 //자기장 필드 크기 초기화 및 대기
@@ -147,7 +145,7 @@ public class InGameManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
 
                 inGameUIAction?.Invoke();
-                //Debug.Log("In Round");
+                
 
                 // 무기 미구매 시 기본 무기 상점 내 적용
                 RepairShopUI.GetComponent<RepairShop>().RepairShopWeapon.NoEmptyHands();
@@ -156,8 +154,6 @@ public class InGameManager : MonoBehaviour
                 if (player is null)
                 {
                     player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
-                    Debug.Log("Istantiate Player");
-
                     playerContoroller = player.GetComponent<PlayerController>();
                     SetPlayerTeam(player);
                 }
@@ -166,7 +162,9 @@ public class InGameManager : MonoBehaviour
                 playerHud.init(playerContoroller);
                 playerContoroller.SetSkillGage(playerHud.GetSkillGage());
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
-
+                player.gameObject.transform.position = new Vector3(16, 9, 3);
+                Debug.Log("player spawned ");
+                
                 currentRoundState = RoundState.InRound;
                 SetGameTime(InRoundTime, RoundState.SuddenDeath);
                 break;
@@ -179,7 +177,7 @@ public class InGameManager : MonoBehaviour
             case RoundState.RoundEnd:
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
-                inGameUIAction?.Invoke();
+                
                 currentRoundState = RoundState.RoundEnd;
 
                 playerContoroller.CleanupBeforeReInit();    // 입력 방지, 상태 초기화 
@@ -197,7 +195,7 @@ public class InGameManager : MonoBehaviour
                 }
 
                 // FinishRoundUI.SetActive(true);
-
+                inGameUIAction?.Invoke();
                 SetGameTime(5, RoundState.RoundStart);
 
                 break;
@@ -311,6 +309,7 @@ public class InGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         // if (currentRound == 3)
         // {
         //     SetGameState(GameState.EndGame);
@@ -320,19 +319,22 @@ public class InGameManager : MonoBehaviour
     //플레이어가 죽을때 또는 죽였을 때 호출되야한다.
     public void EndRound(GameObject Loser)
     {
-        SetRoundState(RoundState.RoundEnd);
+        
+        
         //라운드가 끝날때 마다 라운트 인포를 켜줘야 하니까.
         GameRoundInfoUI.gameObject.SetActive(true);
         switch (teamDictionary[Loser])
         {
             case Team.Player:
+                Debug.Log("Player Lose");
                 RedWinCount++;
                 break;
             case Team.Enemy:
                 BlueWinCount++;
                 break;
         }
-
+        SetRoundState(RoundState.RoundEnd);
+        Debug.Log($"RedWin{RedWinCount} : Blue Win : {BlueWinCount}");
         //ResetRound();
     }
 
@@ -386,6 +388,7 @@ public class InGameManager : MonoBehaviour
             }
             LoseRound(player);
             SetWinLoseState(WinLoseState.Lose);
+           
         };
         EnemyPlayer.GetComponent<DummyController>().OnDieCallBack = (enemy) =>
         {
@@ -407,6 +410,7 @@ public class InGameManager : MonoBehaviour
     public void LoseRound(GameObject player)
     {
         //UIPopUpFor Losing Screen
+        
         EndRound(player);
     }
 
