@@ -15,7 +15,7 @@ public enum ActionState
     Reload,
     Dead,
     MovementSkills,
-    WeaponSkills,
+    FirstWeaponSkill,
     RunSkill,
     DoubleJumpSkill,
     TeleportSkill,
@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             {
                 Debug.Log("주금..");
                 _isDead = true;
-                OnPlayerDie.Invoke(gameObject);
+                OnPlayerDie?.Invoke(gameObject);
                 SetMovementState("Idle");
                 SetPostureState("Idle");
                 SetActionState("Dead");
@@ -473,13 +473,13 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         }
     }
 
-    public void OnReloadPressed() {
-        if (_playerWeapon.WeaponType == WeaponType.Gun) { 
+    public void OnReloadPressed() 
+    {
+        if (_playerWeapon.WeaponType == WeaponType.Gun) 
+        { 
             SetActionState("Reload");
         }
     }
-
-
 
     public void OnCrouchPressed()
     {
@@ -543,9 +543,9 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             if (_actionFsm.CurrentState == _weaponSkills[0].Item1)
             {
+                _combatManager.ProcessSkillInput(false, false);
                 ISkillData weaponSkillData = _weaponSkills[0].Item2 as ISkillData;
                 skillGageReset(weaponSkillData.IsNeedPresse);
-                SetActionState("Idle");
             }
         }
     }
@@ -957,6 +957,10 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public void ResetCharacter()
     {
         _skillGageObj?.SetActive(false);
+
+        SetActionState("Idle");
+        SetMovementState("Idle");
+        SetPostureState("Idle");
 
         // 추가 생성한 스킬, 패시브 제거
         if (_movementSkills?.Count > 0)

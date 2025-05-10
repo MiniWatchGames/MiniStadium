@@ -52,7 +52,7 @@ public class InGameManager : MonoBehaviour
 
     #region 변수
 
-    
+
     [SerializeField] private GameObject RepairShopUI;
     // [SerializeField] private GameObject FinishRoundUI;
     [SerializeField] private GameObject GameRoundInfoUI;
@@ -61,21 +61,22 @@ public class InGameManager : MonoBehaviour
     [SerializeField] private Team currentTeam;
     [SerializeField] private RoundState currentRoundState;
     [SerializeField] private GameObject Damagefield;
-    
+
     //맵 세팅용 딕셔너리 start()문에서 적용
     Dictionary<GameObject, List<Spawner>> mapSpawners = new Dictionary<GameObject, List<Spawner>>();
     //맵 센터찾기
-    
-    
+
+
     //팀 세팅용 딕셔너리
     Dictionary<GameObject, Team> teamDictionary = new Dictionary<GameObject, Team>();
-    
-    
+
+
     [SerializeField] private Timer gameTimer;
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private GameObject EnemyPrefab;
     [SerializeField] private RepairShopTimer RepairShopTimer;
     [SerializeField] private float repairShopTime = 5;
+    [SerializeField] private float InRoundTime = 5;
     [SerializeField] private PlayerHud playerHud;
     public PlayerController playerContoroller;
     private GameObject player;
@@ -88,8 +89,8 @@ public class InGameManager : MonoBehaviour
     private List<GameObject> maps = new List<GameObject>();
     public Action inGameUIAction;
     public float timer { get => gameTimer.currentTime; }
-    
-    public GameObject GameRoundUI{ get => GameRoundInfoUI; }
+
+    public GameObject GameRoundUI { get => GameRoundInfoUI; }
     public RoundState roundstate { get => currentRoundState; }
     #endregion
     #region StateChangeFunction
@@ -117,12 +118,17 @@ public class InGameManager : MonoBehaviour
     }
     void SetRoundState(RoundState state)
     {
-        
+
         switch (state)
         {
             case RoundState.RoundStart:
                 currentRound++;
                 Debug.Log("Round Start");
+                //플레이어 초기화
+                if (playerContoroller is not null)
+                {
+                    playerContoroller.ResetCharacter();
+                }
                 GameRoundInfoUI.gameObject.SetActive(false);
                 playerHud.GetComponent<CanvasGroup>().alpha = 1;
                 //자기장 필드 크기 초기화 및 대기
@@ -132,10 +138,6 @@ public class InGameManager : MonoBehaviour
                 currentRoundState = RoundState.RoundStart;
                 //정비소 타이머 리셋
                 RepairShopTimer.SetTime = repairShopTime;
-                //플레이어 초기화
-                if (playerContoroller is not null) {
-                    playerContoroller.ResetCharacter();
-                }
                 //시간초가 지난후 다음 게임스테이트로 넘어가기
                 SetGameTime(repairShopTime, RoundState.InRound);
                 RepairShopUI.GetComponent<RepairShop>().SetRoundText(currentRound);
@@ -146,22 +148,18 @@ public class InGameManager : MonoBehaviour
 
                 inGameUIAction?.Invoke();
                 //Debug.Log("In Round");
-                
+
                 // 무기 미구매 시 기본 무기 상점 내 적용
                 RepairShopUI.GetComponent<RepairShop>().RepairShopWeapon.NoEmptyHands();
-                
+
                 // 플레이어 없다면 생성, 플레이어에 구매 내역을 넘기고, 플레이어 구매 내역 적용
                 if (player is null)
                 {
                     player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
                     Debug.Log("Istantiate Player");
-                    
+
                     playerContoroller = player.GetComponent<PlayerController>();
                     SetPlayerTeam(player);
-                }
-                if(RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy() == null)
-                {
-                    Debug.Log("PlayerItems is null");
                 }
                 playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
@@ -170,12 +168,12 @@ public class InGameManager : MonoBehaviour
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
 
                 currentRoundState = RoundState.InRound;
-                SetGameTime(10, RoundState.SuddenDeath);
+                SetGameTime(InRoundTime, RoundState.SuddenDeath);
                 break;
             case RoundState.SuddenDeath:
                 currentRoundState = RoundState.SuddenDeath;
-                
-                SetGameTime(30, RoundState.SuddenDeath);
+
+                SetGameTime(100, RoundState.SuddenDeath);
 
                 break;
             case RoundState.RoundEnd:
@@ -183,7 +181,7 @@ public class InGameManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
                 inGameUIAction?.Invoke();
                 currentRoundState = RoundState.RoundEnd;
-                
+
                 playerContoroller.CleanupBeforeReInit();    // 입력 방지, 상태 초기화 
                 playerHud.GetComponent<CanvasGroup>().alpha = 0;
 
@@ -199,7 +197,7 @@ public class InGameManager : MonoBehaviour
                 }
 
                 // FinishRoundUI.SetActive(true);
-                
+
                 SetGameTime(5, RoundState.RoundStart);
 
                 break;
@@ -241,21 +239,21 @@ public class InGameManager : MonoBehaviour
             SetWinLoseState(WinLoseState.Default);
         }
 
-        
+
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
         {
             //Debug.Log("Game Time End");
 
             SetRoundState(state);
-            
-        },(time) =>
+
+        }, (time) =>
         {
-            if(currentRoundState == RoundState.SuddenDeath)
+            if (currentRoundState == RoundState.SuddenDeath)
             {
                 //Debug.Log("Sudden Death");
                 Damagefield.GetComponent<SafeZone>().UpdateMagneticField(time);
             }
-        
+
         });
     }
 
@@ -300,14 +298,14 @@ public class InGameManager : MonoBehaviour
     void Start()
     {
         ResetRound();
-        
+
         FindAndMappingSpawner();
-        
+
         //실제 게임이 실행되게 하는 문장. 게임 상태를 스타트로 만들어준다.
         SetGameState(GameState.StartGame);
-        
+
         //이거는 없어도 될 듯 하다.쓰이는데가 없어요..
-        
+
     }
 
     // Update is called once per frame
@@ -348,7 +346,7 @@ public class InGameManager : MonoBehaviour
                 if (playerSpawn.playerPrefab is null)
                 {
                     playerSpawn.playerPrefab = PlayerPrefab;
-                    
+
                 }
                 //Debug.Log("Map1");
                 break;
@@ -368,16 +366,16 @@ public class InGameManager : MonoBehaviour
             return;
         }
         int tmpRandom = Random.Range(0, 1);
-       
-        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy") is null ? Instantiate(EnemyPrefab,new Vector3(5, 9, 3), Quaternion.identity) :  GameObject.FindWithTag("Enemy");
+
+        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy") is null ? Instantiate(EnemyPrefab, new Vector3(5, 9, 3), Quaternion.identity) : GameObject.FindWithTag("Enemy");
         //if(EnemyPlayer == null) return;
         EnemyPlayer.tag = "Enemy";
         Debug.Log("Player got the Team");
 
         teamDictionary[player.gameObject] = Team.Player;
-        
+
         teamDictionary[EnemyPlayer] = Team.Enemy;
-      
+
         //플레이어가 죽었을때 패배 표시
         player.GetComponent<PlayerController>().OnPlayerDie = (player) =>
         {
@@ -404,7 +402,7 @@ public class InGameManager : MonoBehaviour
     {
         //UIPopU[pFor Winning Screen
         EndRound(Enemy);
-       
+
     }
     public void LoseRound(GameObject player)
     {
