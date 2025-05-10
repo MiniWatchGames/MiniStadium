@@ -93,6 +93,8 @@ public class CombatManager : MonoBehaviour
         if (_firstWeaponSkillStrategy != null)
         {
             _firstWeaponSkillStrategy.Enter(playerController, CurrentWeapon);
+            // 상체 레이어 가중치 증가 시작
+            FadeInUpperBodyLayer(_upperBodyLayerIndex);
         }
     }
 
@@ -120,6 +122,8 @@ public class CombatManager : MonoBehaviour
     public void EndFirstSkill()
     {
         _firstWeaponSkillStrategy?.Exit();
+        // 상체 레이어 가중치 감소 시작
+        FadeOutUpperBodyLayer(_upperBodyLayerIndex);
     }
 
     #endregion

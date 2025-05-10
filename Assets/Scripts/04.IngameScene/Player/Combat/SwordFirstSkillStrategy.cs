@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SwordFirstSkillStrategy : IWeaponSkillStrategy
@@ -38,14 +39,22 @@ public class SwordFirstSkillStrategy : IWeaponSkillStrategy
     {
         if (!isSkillHeld && _isSkillActive)
         {
+            _playerController.Animator.SetTrigger("FirstSkill");
             _swordController.FirstSkillEnd();
             _isSkillActive = false;
-            _isComplete = true;
+            //_isComplete = true;
+            CompleteWithDelay(500);
         }
     }
 
     public bool IsComplete()
     {
         return _isComplete;
+    }
+
+    public async void CompleteWithDelay(int delay)
+    {
+        await System.Threading.Tasks.Task.Delay(delay);
+        _isComplete = true;
     }
 }
