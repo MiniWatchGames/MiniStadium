@@ -62,4 +62,8 @@ public class TeleportSkillState : PlayerActionState, ISkillData
         _pressTime.Value = Mathf.Min(_pressTime.Value, _needPressTime.Value);
         Debug.Log(_pressTime.Value);
     }
+
+    public void ResetSkill()
+    {
+    }
 }
