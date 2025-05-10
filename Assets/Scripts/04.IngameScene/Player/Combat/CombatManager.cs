@@ -10,6 +10,8 @@ public class CombatManager : MonoBehaviour
     private Dictionary<WeaponType, IAttackStrategy> _attackStrategies = new Dictionary<WeaponType, IAttackStrategy>();
     private IAttackStrategy _currentStrategy;
     public IAttackStrategy CurrentStrategy { get => _currentStrategy; set => _currentStrategy = value; }
+    private Dictionary<WeaponType, IWeaponSkillStrategy> _firstWeaponSkillStrategies = new();
+    private IWeaponSkillStrategy _firstWeaponSkillStrategy;
     private WeaponType _currentWeaponType;
     public GameObject CurrentWeapon { get; set; }
 
@@ -32,14 +34,18 @@ public class CombatManager : MonoBehaviour
     {
         _attackStrategies[WeaponType.Sword] = new SwordAttackStrategy();
         _attackStrategies[WeaponType.Gun] = new GunAttackStrategy();
+        _firstWeaponSkillStrategies[WeaponType.Sword] = new SwordFirstSkillStrategy();
+        _firstWeaponSkillStrategies[WeaponType.Gun] = new GunFirstSkillStrategy();
     }
     
     public void SetWeaponType(WeaponType type)
     {
         _currentWeaponType = type;
         _currentStrategy = _attackStrategies[type];
+        _firstWeaponSkillStrategy = _firstWeaponSkillStrategies[type];
     }
-    
+
+    #region Normal_Attack
     public void StartAttack()
     {
         if (_currentStrategy != null)
@@ -78,7 +84,49 @@ public class CombatManager : MonoBehaviour
         // 상체 레이어 가중치 감소 시작
         FadeOutUpperBodyLayer(_upperBodyLayerIndex);
     }
-    
+    #endregion
+
+    #region First_Skill
+
+    public void StartFirstSkill()
+    {
+        if (_firstWeaponSkillStrategy != null)
+        {
+            _firstWeaponSkillStrategy.Enter(playerController, CurrentWeapon);
+            // 상체 레이어 가중치 증가 시작
+            FadeInUpperBodyLayer(_upperBodyLayerIndex);
+        }
+    }
+
+    public void UpdateFirstSkill()
+    {
+        if (_firstWeaponSkillStrategy != null)
+        {
+            _firstWeaponSkillStrategy.Update(playerController);
+        }
+    }
+
+    public void ProcessSkillInput(bool isSkillPressed, bool isSkillHeld)
+    {
+        if (_firstWeaponSkillStrategy != null)
+        {
+            _firstWeaponSkillStrategy.HandleInput(isSkillPressed, isSkillHeld);
+        }
+    }
+
+    public bool IsFirstSkillComplete()
+    {
+        return _firstWeaponSkillStrategy.IsComplete();
+    }
+
+    public void EndFirstSkill()
+    {
+        _firstWeaponSkillStrategy?.Exit();
+        // 상체 레이어 가중치 감소 시작
+        FadeOutUpperBodyLayer(_upperBodyLayerIndex);
+    }
+
+    #endregion
     // 상체 레이어 가중치 증가 (공격 시작)
     public void FadeInUpperBodyLayer(int layer)
     {

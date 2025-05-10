@@ -140,10 +140,41 @@ MonoBehaviour:
     radius: 0.15
   - position: {x: 0, y: 0.44, z: 0}
     radius: 0.15
-  _attackPower: 0
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  _wallPrefab: {fileID: 2241337565284646605, guid: 70563c86d6d4f43fca5b961c46b8c74a,
+    type: 3}
+  _previewPrefab: {fileID: 999142466502684380, guid: c2924f2560cea44218f2e56a1833922d,
+    type: 3}
+  _minWallDistance: 0.3
+  _maxWallDistance: 8
+  _wallDuration: 10
+  _wallRiseSpeed: 5
+  _riseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   slashEffectPrefabs:
   - {fileID: 198102920666579688, guid: bf9f848a24682054e9fddc30f1184e46, type: 3}
   - {fileID: 198104556613700186, guid: a8a6ba91edbeef2439175ecf0e08e6fb, type: 3}
