@@ -14,6 +14,8 @@ public class CameraController : MonoBehaviour
     private Transform _head; // 플레이어의 머리
     private float _pitch = 0f;
     private float _yaw = 0f;
+    public float Pitch => _pitch;
+    public float Yaw => _yaw;
     private Vector3 _currentVelocity; // 위치 스무딩용 속도 변수
     private Quaternion _targetRotation;
     

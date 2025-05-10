@@ -19,6 +19,21 @@ public class SwordController : MonoBehaviour, IWeapon
     [SerializeField] private ObservableFloat _currentAmmo;
     [SerializeField] private ObservableFloat _maxAmmo;
     
+    [Header("First Skill - Wall Creation")]
+    [SerializeField] private GameObject _wallPrefab; // 생성할 벽 프리팹
+    [SerializeField] private GameObject _previewPrefab; // 미리보기 프리팹 
+    [SerializeField] private float _minWallDistance = 2f; // 최소 벽 생성 거리
+    [SerializeField] private float _maxWallDistance = 5f; // 최대 벽 생성 거리
+    [SerializeField] private float _wallDuration = 10f; // 벽 지속 시간
+    [SerializeField] private float _wallRiseSpeed = 5f; // 벽이 올라오는 속도
+    [SerializeField] private AnimationCurve _riseCurve = AnimationCurve.EaseInOut(0, 0, 1, 1); // 올라오는 애니메이션 커브
+    
+    private GameObject _previewObject; // 미리보기 오브젝트
+    private GameObject _currentWall; // 현재 생성된 벽
+    private PlayerController _playerController; // 플레이어 컨트롤러 참조
+    private Vector3 _wallSpawnPosition; // 벽 생성 위치 저장
+    private Quaternion _wallSpawnRotation; // 벽 생성 회전 저장
+    
     [Header("Effects")]
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
     [SerializeField] private Vector3[] slashEffectRotations;
@@ -41,6 +56,8 @@ public class SwordController : MonoBehaviour, IWeapon
     
     private int _maxCombo = 2;
     private int _currentComboIndex = 0;
+    
+    private CameraController _camera;
 
     private void Awake()
     {
@@ -52,6 +69,9 @@ public class SwordController : MonoBehaviour, IWeapon
     
     private void Start()
     {
+        var pc = GetComponentInParent<PlayerController>();
+        _camera = pc.CameraController;
+        
         _previousPositions = new Vector3[_triggerZones.Length];
         
         _comboHitColliders = new HashSet<Collider>[_maxCombo];
@@ -67,8 +87,6 @@ public class SwordController : MonoBehaviour, IWeapon
             var effect = Instantiate(slashEffectPrefabs[i], transform.position, rotation);
             _slashEffects[i] = effect;
         }
-
-      
     }
     
     public void SetComboIndex(int index)
@@ -177,6 +195,167 @@ public class SwordController : MonoBehaviour, IWeapon
     public void PlaySlashSound(int index)
     {
         _audioSource.PlayOneShot(slashSounds[index], 1f);
+    }
+
+    public void FirstSkillStart()
+    {
+        // 이미 미리보기가 있다면 제거
+        if (_previewObject != null)
+        {
+            Destroy(_previewObject);
+        }
+        
+        // 미리보기 오브젝트 생성
+        _previewObject = Instantiate(_previewPrefab);
+        _previewObject.SetActive(true);
+        
+        // 미리보기 위치 업데이트 코루틴 시작
+        StartCoroutine(UpdatePreviewRoutine());
+    }
+
+    // 미리보기 위치 업데이트 코루틴
+    private IEnumerator UpdatePreviewRoutine()
+    {
+        while (_previewObject != null)
+        {
+            UpdatePreviewPosition();
+            yield return null;
+        }
+    }
+    
+    // 미리보기 벽 위치 업데이트
+    private void UpdatePreviewPosition()
+    {
+        if (_previewObject != null)
+        {
+            float wallDistance = _maxWallDistance / 2; // 기본 거리
+            var pitch = _camera.Pitch;
+            float normalizedPitch = 1- ((pitch + 90) / 180f); // 0~1
+            wallDistance = Mathf.Lerp(_minWallDistance, _maxWallDistance, normalizedPitch);
+            
+            //Debug.Log($"Camera Pitch: {pitch}, Normalized: {normalizedPitch}, Wall Distance: {wallDistance}");
+            
+            // 플레이어(루트) 트랜스폼 가져오기
+            Transform rootTransform = transform.root;
+            
+            // 플레이어 앞에 위치
+            Vector3 playerForward = rootTransform.forward;
+            Vector3 spawnPosition = rootTransform.position + playerForward * wallDistance;
+            
+            // 바닥 높이에 배치 (약간 위로 올려서 Z-fighting 방지)
+            spawnPosition.y = 0.01f;
+            
+            // 위치 설정
+            _previewObject.transform.position = spawnPosition;
+            
+            // 플레이어 방향에 맞춰 회전 (바닥에 평평하게)
+            _previewObject.transform.rotation = Quaternion.Euler(90, rootTransform.eulerAngles.y, 0);
+            
+            // 생성될 벽의 위치와 회전 저장
+            _wallSpawnPosition = spawnPosition;
+            _wallSpawnRotation = Quaternion.LookRotation(playerForward);
+        }
+    }
+    
+    public void FirstSkillEnd()
+    {
+        // 미리보기 제거
+        if (_previewObject != null)
+        {
+            Destroy(_previewObject);
+            _previewObject = null;
+        }
+        
+        // 이전 벽 제거
+        if (_currentWall != null)
+        {
+            Destroy(_currentWall);
+        }
+        
+        // 실제 벽 생성
+        _currentWall = Instantiate(_wallPrefab, _wallSpawnPosition, _wallSpawnRotation);
+        
+        // 벽 효과음 재생
+        
+        // 바닥에서 올라오는 애니메이션 시작
+        StartCoroutine(RiseWallAnimation());
+    }
+    
+    // 벽이 바닥에서 올라오는 애니메이션
+    private IEnumerator RiseWallAnimation()
+    {
+        if (_currentWall == null) yield break;
+        
+        // 벽의 초기 위치와 최종 위치 계산
+        Vector3 startPosition = _wallSpawnPosition;
+        Vector3 endPosition = _wallSpawnPosition;
+        float wallHeight = _currentWall.transform.localScale.y;
+        
+        // 시작 위치는 바닥 아래
+        startPosition.y = -wallHeight / 2;
+        
+        // 최종 위치는 벽 높이의 절반 (중심이 바닥에서 벽 높이의 절반 위치)
+        endPosition.y = wallHeight / 2;
+        
+        // 벽을 시작 위치에 배치
+        _currentWall.transform.position = startPosition;
+        
+        // 이펙트 재생 (바닥 위치)
+        
+        
+        // 올라오는 애니메이션
+        float elapsedTime = 0f;
+        float duration = 1f / _wallRiseSpeed; // 속도에 따른 지속 시간
+        
+        while (elapsedTime < duration)
+        {
+            if (_currentWall == null) yield break;
+            
+            float t = elapsedTime / duration;
+            float curveValue = _riseCurve.Evaluate(t);
+            
+            // 벽 위치 보간
+            Vector3 currentPosition = Vector3.Lerp(startPosition, endPosition, curveValue);
+            _currentWall.transform.position = currentPosition;
+            
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        // 최종 위치 확정
+        if (_currentWall != null)
+        {
+            _currentWall.transform.position = endPosition;
+        }
+        
+        // 일정 시간 후 벽 제거
+        if (_currentWall != null)
+        {
+            Destroy(_currentWall, _wallDuration);
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        // 미리보기 벽 제거
+        if (_previewObject != null)
+        {
+            Destroy(_previewObject);
+        }
+        
+        // 실제 벽 제거
+        if (_currentWall != null)
+        {
+            Destroy(_currentWall);
+        }
+        
+        if (_slashEffects != null)
+        {
+            foreach (var slashEffect in _slashEffects)
+            {
+                Destroy(slashEffect.gameObject);
+            }
+        }
     }
     
 #if UNITY_EDITOR

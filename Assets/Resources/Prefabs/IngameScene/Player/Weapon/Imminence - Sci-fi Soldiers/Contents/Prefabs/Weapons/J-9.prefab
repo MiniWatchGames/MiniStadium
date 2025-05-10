@@ -232,7 +232,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0725e531cda744e1ba95930e2b80e719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
   range: 100
   firePoint: {fileID: 5616332189590976570}
   targetMask:

@@ -46,10 +46,10 @@ public static class SkillFactory
                     IPlayerState skill = null;
                     switch (skillName.Item1)
                     {
-                        //"MovementSkills"
+                        // WeaponSkills
                         case 1:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
+                            skill = target.AddComponent<FirstWeaponSkillState>();
+                            states.Add(new(ActionState.FirstWeaponSkill, skill));
                             break;
                         case 2:
                             skill = target.AddComponent<MovementSkillsState>();
@@ -60,8 +60,8 @@ public static class SkillFactory
                             states.Add(new(ActionState.MovementSkills, skill));
                             break;
                         case 4:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
+                            skill = target.AddComponent<FirstWeaponSkillState>();
+                            states.Add(new(ActionState.FirstWeaponSkill, skill));
                             break;
                         case 5:
                             skill = target.AddComponent<MovementSkillsState>();
