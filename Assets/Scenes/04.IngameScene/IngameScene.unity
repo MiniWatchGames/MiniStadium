@@ -9280,7 +9280,7 @@ PrefabInstance:
     - target: {fileID: 4011957088015942197, guid: 59edf98c1769b4dc4a81a9eb6f9b6a7d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4011957088015942197, guid: 59edf98c1769b4dc4a81a9eb6f9b6a7d,
         type: 3}
@@ -15831,8 +15831,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedComponents:
+    - {fileID: 7040712908871951702, guid: 4e2f70a69d3144d4a9b7d04427bad570, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 2880254285287731699, guid: 4e2f70a69d3144d4a9b7d04427bad570, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5668302620803195836, guid: 4e2f70a69d3144d4a9b7d04427bad570,
         type: 3}
@@ -15843,12 +15845,6 @@ PrefabInstance:
 --- !u!224 &313618462 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5668302620803195836, guid: 4e2f70a69d3144d4a9b7d04427bad570,
-    type: 3}
-  m_PrefabInstance: {fileID: 313618461}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &313618463 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2880254285287731699, guid: 4e2f70a69d3144d4a9b7d04427bad570,
     type: 3}
   m_PrefabInstance: {fileID: 313618461}
   m_PrefabAsset: {fileID: 0}
@@ -33321,7 +33317,7 @@ PrefabInstance:
         type: 3}
       propertyPath: gameTimer
       value: 
-      objectReference: {fileID: 1718136684}
+      objectReference: {fileID: 1164896374}
     - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
       propertyPath: playerHud
@@ -33340,13 +33336,18 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
+      propertyPath: InRoundTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
+        type: 3}
       propertyPath: RepairShopUI
       value: 
       objectReference: {fileID: 2125210254}
     - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
       propertyPath: repairShopTime
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
@@ -49488,7 +49489,7 @@ MonoBehaviour:
   BlueWinCount: {fileID: 1409689893}
   RedWinCount: {fileID: 20660105}
   inGameManager: {fileID: 1570132923}
-  FinishRoundTimer: {fileID: 313618463}
+  FinishRoundTimer: {fileID: 0}
 --- !u!114 &1002773538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57494,7 +57495,6 @@ MonoBehaviour:
   timerType: 0
   timeLimit: 10
   currentTime: 0
-  repairShopTimer: {fileID: 0}
 --- !u!1 &1171356627
 GameObject:
   m_ObjectHideFlags: 0
@@ -84345,11 +84345,16 @@ PrefabInstance:
         type: 3}
       propertyPath: inGameManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1570132923}
     - target: {fileID: 8408206433110112542, guid: 4e2f70a69d3144d4a9b7d04427bad570,
         type: 3}
       propertyPath: m_Name
       value: '[GroupLayer] RoundInform'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8681372706313857457, guid: 4e2f70a69d3144d4a9b7d04427bad570,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 57.5
       objectReference: {fileID: 0}
     - target: {fileID: 8840512631343688905, guid: 4e2f70a69d3144d4a9b7d04427bad570,
         type: 3}
@@ -84466,7 +84471,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8840512631343688905, guid: 4e2f70a69d3144d4a9b7d04427bad570, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -84475,18 +84481,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1164896374}
   m_SourcePrefab: {fileID: 100100000, guid: 4e2f70a69d3144d4a9b7d04427bad570, type: 3}
---- !u!114 &1718136684 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8840512631343688905, guid: 4e2f70a69d3144d4a9b7d04427bad570,
-    type: 3}
-  m_PrefabInstance: {fileID: 1718136681}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1164896370}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 865d3de32cc9760448ceb8f9eb712f38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!43 &1727467038
 Mesh:
   m_ObjectHideFlags: 0

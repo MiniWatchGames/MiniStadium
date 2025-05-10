@@ -20,7 +20,6 @@ public class InGameRoundUI : MonoBehaviour
 
     void Start()
     {
-        inGameManager = FindObjectsByType<InGameManager>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
         inGameUIDetect = new InGameUIDetect(inGameManager);
         inGameUIDetect.PropertyChanged += OnIngameChanged;
         inGameManager.inGameUIAction += () => UIUpdate();
