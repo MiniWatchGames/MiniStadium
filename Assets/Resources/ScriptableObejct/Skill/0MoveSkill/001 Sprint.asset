@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eac3f510134e57458e71407c3298bfc, type: 3}
   m_Name: 001 Sprint
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 77cddb7abc45a5b4c8b0d22f0afa31cf, type: 3}
+  icon: {fileID: 21300000, guid: 02121f9cd9720854bb0fb0d3a5979329, type: 3}
   _name: "\uB2EC\uB9AC\uAE30"
   price: 300
   description: "Shift \uD0A4\uB97C \uB20C\uB7EC \uBE60\uB974\uAC8C \uC6C0\uC9C1\uC778\uB2E4."

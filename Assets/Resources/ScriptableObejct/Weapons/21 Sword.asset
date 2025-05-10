@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9884913bedf484c8827dd15ecfd538, type: 3}
   m_Name: 21 Sword
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 24c9bae98ec00f54bbc9076f0167880b, type: 3}
+  icon: {fileID: 21300000, guid: 8647d5f85b4d8d64e85309209408062b, type: 3}
   _name: "\uAC80"
   price: 0
   description: "\uADFC\uC811 \uBB34\uAE30"

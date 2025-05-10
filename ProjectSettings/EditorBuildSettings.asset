@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/03.MatchingScene/MatchingScene.unity
     guid: f98959f8dba029547a9d5c86d090fd4b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/04.IngameScene/IngameSceneHW2.unity
     guid: a6432eba33d5fa3489f64e6eae0310fa
   - enabled: 0
