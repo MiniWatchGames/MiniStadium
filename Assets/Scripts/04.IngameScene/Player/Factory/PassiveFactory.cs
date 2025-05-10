@@ -21,6 +21,15 @@ public class PassiveFactory
                 case 3:
                     target.PassiveList.Add(target.AddComponent<IncreasingDamagePassive>());
                 break;
+                case 4:
+                    target.PassiveList.Add(target.AddComponent<Passive_Healer>());
+                break;
+                case 5:
+                    target.PassiveList.Add(target.AddComponent<Passive_Berserker>());
+                break;
+                case 6:
+                    target.PassiveList.Add(target.AddComponent<Passive_Marathoner>());
+                break;
             }
         }
     }
