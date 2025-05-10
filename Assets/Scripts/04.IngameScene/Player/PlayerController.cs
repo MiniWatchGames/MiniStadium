@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public Stat BaseDefence => baseDefence;
     public Stat BaseMoveSpeed => baseMoveSpeed;
     public Stat BaseJumpPower => baseJumpPower;
-    public Stat Damage => damage;
+    public Stat Damage { get => damage; set => damage = value; }
 
     private Dictionary<StatType, Stat> statDictionary;
 
@@ -967,6 +967,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             foreach (var skill in _movementSkills)
             {
+                ((ISkillData)skill.Item2)?.ResetSkill();
                 Destroy((UnityEngine.Object)skill.Item2);
                 ActionFsm.RemoveState(skill.Item1);
             }
@@ -977,6 +978,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         {
             foreach (var skill in _weaponSkills)
             {
+                ((ISkillData)skill.Item2)?.ResetSkill();
                 Destroy((UnityEngine.Object)skill.Item2);
                 ActionFsm.RemoveState(skill.Item1);
             }

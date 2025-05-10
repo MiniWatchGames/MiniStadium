@@ -23,6 +23,11 @@ public class FirstWeaponSkillState : PlayerActionState, ISkillData
         _playerController.CombatManager.EndFirstSkill();
         base.Exit();
     }
+
+    public void ResetSkill()
+    {
+    }
+
     public override void StateUpdate()
     {
         base.StateUpdate();

@@ -46,4 +46,8 @@ public class MovementSkillsState : PlayerActionState, ISkillData
     {
         base.StateUpdate();
     }
+
+    public void ResetSkill()
+    {
+    }
 }

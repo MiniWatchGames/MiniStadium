@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eac3f510134e57458e71407c3298bfc, type: 3}
   m_Name: 003 Teleport
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 77cddb7abc45a5b4c8b0d22f0afa31cf, type: 3}
+  icon: {fileID: 21300000, guid: 94c905a69b135564093cc31cc1fffaa1, type: 3}
   _name: "\uC21C\uAC04\uC774\uB3D9"
   price: 300
   description: "Shift\uD0A4\uB97C 3\uCD08\uAC04 \uB20C\uB800\uB2E4 \uB5C4 \uB54C
