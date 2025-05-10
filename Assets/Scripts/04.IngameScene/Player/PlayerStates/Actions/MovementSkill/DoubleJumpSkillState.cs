@@ -60,4 +60,8 @@ public class DoubleJumpSkillState : PlayerActionState, ISkillData
         }
 
     }
+
+    public void ResetSkill()
+    {
+    }
 }

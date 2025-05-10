@@ -13,5 +13,7 @@ public interface ISkillData
     public ObservableFloat PressTime { get; }
     public float SkillMount { get; }
 
+    // 스킬 사용시 생겼던 오브젝트,클래스를 삭제합니다(PlayerController 초기화에서 자동 호출)
+    public void ResetSkill();
 
 }
