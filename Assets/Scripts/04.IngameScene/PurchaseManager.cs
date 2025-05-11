@@ -13,6 +13,10 @@ public class PurchaseManager
         set => _purchasedPlayerItems = value;
     }
 
+    public PurchaseManager()
+    {
+        _purchasedPlayerItems = new PlayerItems();
+    }
     public void ResetPurchasedPlayerItems()
     {
         _purchasedPlayerItems = null;

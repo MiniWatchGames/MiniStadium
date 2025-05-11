@@ -36,22 +36,34 @@ public class TeleportSkillState : PlayerActionState, ISkillData
         base.Enter(playerController);
         if(_characterController == null)
             _characterController = _playerController.GetComponent<CharacterController>();
+        _playerController.PlayTeleportGain();
     }
     public override void Exit()
     {
+        _playerController.StopSound();
         if (_pressTime.Value >= _needPressTime.Value)
         {
-            _characterController.Move(_playerController.transform.forward * _skillMount);
-            _pressTime.Value = 0;
+            _playerController.PlayTeleport();
+            Vector3 teleportDirection = _playerController.transform.forward * _skillMount;
+            _characterController.enabled = false;
+            _playerController.transform.position += teleportDirection;
+            _characterController.enabled = true;
+
         }
-        base.Exit();
+        else { 
+            _playerController.PlayTeleportGainRe();
+        }
+        _playerController.skillGageReset(this);
+        _pressTime.Value = 0;
     }
     public override void StateUpdate()
     {
-        base.StateUpdate();
-
         _pressTime.Value += Time.deltaTime;
         _pressTime.Value = Mathf.Min(_pressTime.Value, _needPressTime.Value);
         Debug.Log(_pressTime.Value);
+    }
+
+    public void ResetSkill()
+    {
     }
 }

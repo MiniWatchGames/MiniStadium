@@ -17,6 +17,18 @@ public class PassiveFactory
                 //"IncreasingRandomStatEvery20Seconds"
                 case 2:
                     target.PassiveList.Add(target.AddComponent<IncreasingRandomStatEvery20Seconds>());
+                break;    
+                case 3:
+                    target.PassiveList.Add(target.AddComponent<IncreasingDamagePassive>());
+                break;
+                case 4:
+                    target.PassiveList.Add(target.AddComponent<Passive_Healer>());
+                break;
+                case 5:
+                    target.PassiveList.Add(target.AddComponent<Passive_Berserker>());
+                break;
+                case 6:
+                    target.PassiveList.Add(target.AddComponent<Passive_Marathoner>());
                 break;
             }
         }

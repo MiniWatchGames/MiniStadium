@@ -12,14 +12,15 @@ public class Timer : MonoBehaviour
     public TMP_Text text;
 
     public delegate void TimerDelegate();
+
+    public delegate void TimerDelegateWithFloat(float time);
     public TimerDelegate OnTimerEndDelegate;
     public TimerDelegate OnTimerStartDelegate;
-
+    public TimerDelegateWithFloat OnTimerDelegate;
     public enum TimerType { Decrease, Increase }
     public TimerType timerType;
     public float timeLimit;
     public float currentTime;
-    public RepairShopTimer repairShopTimer;
     private bool _isPaused;
     // Start is called before the first frame update
     void Start()
@@ -30,19 +31,21 @@ public class Timer : MonoBehaviour
 
     void Update()
     {
-
         if (_isPaused) return;
         if (timerType == TimerType.Decrease)
         {
-            currentTime -= Time.deltaTime ;
+            currentTime -= Time.deltaTime;
+            OnTimerDelegate?.Invoke(currentTime);
             if (currentTime <= 0)
             {
+                Debug.Log("Timer End");
                 OnTimerEndDelegate?.Invoke();
             }
         }
         if (timerType == TimerType.Increase)
         {
             currentTime += Time.deltaTime;
+            OnTimerDelegate?.Invoke(currentTime);
             if (currentTime >= timeLimit)
             {
                 OnTimerEndDelegate?.Invoke();
@@ -75,8 +78,11 @@ public class Timer : MonoBehaviour
         _isPaused = false;
 
     }
-    public void SetTimer(float timeLimit, TimerType timerType, TimerDelegate timerDelegate)
+    public void SetTimer(float timeLimit, TimerType timerType, TimerDelegate timerDelegate, TimerDelegateWithFloat timerDelegateWithFloat = null)
     {
+        //시간이 지날때마다 실행되는 함수
+        OnTimerDelegate = timerDelegateWithFloat;
+        //시간이 끝났을때 실행되는 함수
         OnTimerEndDelegate = timerDelegate;
         this.timeLimit = timeLimit;
         this.timerType = timerType;

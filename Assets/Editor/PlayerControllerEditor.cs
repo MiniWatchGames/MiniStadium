@@ -39,7 +39,7 @@ public class PlayerControllerEditor : Editor
                 case ActionState.MovementSkills:
                     GUI.backgroundColor = new Color(1, 1, 0, 1);
                     break;
-                case ActionState.WeaponSkills:
+                case ActionState.FirstWeaponSkill:
                     GUI.backgroundColor = new Color(0, 1, 1, 1);
                     break;
                 case ActionState.None:
@@ -120,6 +120,7 @@ public class PlayerControllerEditor : Editor
             EditorGUILayout.LabelField($"Defence   : {playerController?.BaseDefence.Value}");
             EditorGUILayout.LabelField($"Jump Power: {playerController?.BaseJumpPower.Value}");
             EditorGUILayout.LabelField($"Move Speed: {playerController?.BaseMoveSpeed.Value}");
+            EditorGUILayout.LabelField($"Damage: {playerController?.Damage.Value}");
         }
 
         EditorGUILayout.EndVertical();

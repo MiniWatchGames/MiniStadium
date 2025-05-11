@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Resources/Images/UI/WeaponIcon.meta
+guid: 40a91d0dc5516c44ba007352e566567b
+========
+guid: 5330b19661c289c4d8ee04ae6e1f66fd
+>>>>>>>> develop:Assets/Resources/Prefabs/IngameScene/Player/MoveMentSkill.meta
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

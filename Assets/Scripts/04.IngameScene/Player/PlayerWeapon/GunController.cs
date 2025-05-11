@@ -8,7 +8,7 @@ using UnityEngine;
 public class GunController : NetworkBehaviour, IWeapon
 {
     // 이펙트 유형 정의
-    public enum EffectType
+    protected enum EffectType
     {
         MuzzleFlash,
         HitEffect,
@@ -17,7 +17,7 @@ public class GunController : NetworkBehaviour, IWeapon
     
     // 이펙트 프리팹 구조체
     [Serializable]
-    public struct EffectPrefab
+    protected struct EffectPrefab
     {
         public EffectType type;
         public GameObject prefab;
@@ -38,7 +38,7 @@ public class GunController : NetworkBehaviour, IWeapon
         }
     }
     
-    [SerializeField] private int damage = 20;
+    [SerializeField] private Stat damage;
     [SerializeField] private float range = 100f;
     [SerializeField] private Transform firePoint;
     [SerializeField] private LayerMask targetMask;
@@ -60,7 +60,7 @@ public class GunController : NetworkBehaviour, IWeapon
     private ObservableFloat _currentAmmo;
     private ObservableFloat _maxAmmo;
 
-    public int Damage { get => damage; }
+    public Stat Damage { get => damage; }
     public ObservableFloat CurrentAmmo { get => _currentAmmo; }
     public ObservableFloat MaxAmmo { get => _maxAmmo; }
 
@@ -70,6 +70,9 @@ public class GunController : NetworkBehaviour, IWeapon
         _poolContainer = new GameObject("EffectPools").transform;
         _poolContainer.SetParent(transform);
         _audioSource = GetComponent<AudioSource>();
+        damage = new Stat(20, "GunDamage");
+        _currentAmmo = new ObservableFloat(30, "GunCurrentAmmo");
+        _maxAmmo = new ObservableFloat(30, "GunMaxAmmo");
     }
 
     private void Start()
@@ -83,8 +86,6 @@ public class GunController : NetworkBehaviour, IWeapon
                 break;
             }
         }
-        _currentAmmo = new ObservableFloat(30, "GunCurrentAmmo");
-        _maxAmmo = new ObservableFloat(30, "GunMaxAmmo");
         
         // 풀 초기화
         InitializeObjectPools();
@@ -163,7 +164,7 @@ public class GunController : NetworkBehaviour, IWeapon
     }
     
     // 오브젝트 풀로 반환
-    public void ReturnToPool(GameObject obj, EffectType type)
+    protected void ReturnToPool(GameObject obj, EffectType type)
     {
         if (obj == null) 
             return;
@@ -271,7 +272,7 @@ public class GunController : NetworkBehaviour, IWeapon
             DamageInfo damageInfo = new DamageInfo
             {
                 attacker = gameObject,
-                damage = damage,
+                damage = damage.Value,
                 hitPoint = hitPoint,
                 hitDirection = hitDirection
             };
@@ -358,6 +359,16 @@ public class GunController : NetworkBehaviour, IWeapon
         {
             Destroy(_poolContainer.gameObject);
         }
+    }
+    
+    public void FirstSkillStart()
+    {
+        Debug.Log("Gun -- First Skill Start");
+    }
+
+    public void FirstSkillEnd()
+    {
+        Debug.Log("Gun -- First Skill End");
     }
     
 #if UNITY_EDITOR

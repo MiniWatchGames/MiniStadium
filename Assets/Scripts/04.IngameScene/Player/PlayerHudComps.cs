@@ -9,5 +9,11 @@ public class PlayerHudComps : MonoBehaviour
 {
     [SerializeField] public TextMeshProUGUI text;
     [SerializeField] public Image icon;
-    [SerializeField] public GameObject mask;
+    [SerializeField] public Image mask;
+    [SerializeField] public float coolTime;
+    
+    public void TurnVisibility(bool isVisible)
+    {
+        gameObject.SetActive(isVisible);
+    }
 }

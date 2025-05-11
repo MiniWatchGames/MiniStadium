@@ -20,7 +20,7 @@ public class RepairShopReceipt : MonoBehaviour
   	[SerializeField] public RepairShop RepairShop;
     [SerializeField] private RepairShopWeapon RepairShopWeapon;
     [SerializeField] private RepairShopSkill RepairShopSkill;
-    [SerializeField] private PlayerHud PlayerHud;
+    [SerializeField] public PlayerHud PlayerHud;
     public PlayerItems PlayerItems = new PlayerItems();
 
     // UI
@@ -47,7 +47,12 @@ public class RepairShopReceipt : MonoBehaviour
             receiptSlots[i] = receiptSlotRows[i].row;
         }
     }
-    
+
+    private void Start()
+    {
+        FromReceiptToHud();
+    }
+
     // 현재 구매 된 아이템 정보 PlayerItems에 기록
     public void SetPlayerItems()
     {
@@ -82,10 +87,6 @@ public class RepairShopReceipt : MonoBehaviour
             }
         }
         
-        // HUD 상의 정보 갱신
-        PlayerHud.Update_HUD_Comp(weapon, 
-            receiptSlots[0][0], receiptSlots[1][0], receiptSlots[1][1]);
-        
         // Debug.Log($"Weapon : {PlayerItems.weapon_Name}");
         // Debug.Log($"HP: {PlayerItems.count_HP} AR: {PlayerItems.count_AR} MV: {PlayerItems.count_MV} JP: {PlayerItems.count_JP}");
         // Debug.Log($"Skill 00 : {Dump(PlayerItems.Skills[0][0])}, Skill 01 : {Dump(PlayerItems.Skills[0][1])}, Skill 02 : {Dump(PlayerItems.Skills[0][2])}");
@@ -97,6 +98,15 @@ public class RepairShopReceipt : MonoBehaviour
     //     {
     //         return tuple == default ? "null" : $"{tuple.Item1}:{tuple.Item2}";
     //     }
+
+    
+    // HUD 상의 정보 갱신
+    public void FromReceiptToHud()
+    {
+        PlayerHud.Update_HUD_Comp( RepairShopWeapon.currentWeapon == null ? 
+                RepairShopWeapon.baseWeapon : RepairShopWeapon.currentWeapon, 
+            receiptSlots[0][0], receiptSlots[1][0], receiptSlots[1][1]);
+    }
     
     // receipt 내의 스테이터스 색상 처리
     public void CopyStatusColor(int i, int j, RepairShopStatusButton button)
@@ -126,10 +136,6 @@ public class RepairShopReceipt : MonoBehaviour
             if (i >= 3) continue;
             PlayerItems.Skills[i] = null;
         }
-        
-        // HUD 상의 정보 갱신
-        PlayerHud.Update_HUD_Comp(RepairShopWeapon.baseWeapon, 
-            receiptSlots[0][0], receiptSlots[1][0], receiptSlots[1][1]);
         
         // null 참조 방지
         SetPlayerItems();
@@ -204,7 +210,7 @@ public class RepairShopReceipt : MonoBehaviour
             return;
         }
         
-        // 무기 처리
+        // 무기 구매
         if (type == 3 || buying)
         {
             var weapon = buying ? RepairShopWeapon.currentWeapon : RepairShopWeapon.selectedWeapon;
@@ -218,8 +224,8 @@ public class RepairShopReceipt : MonoBehaviour
                 slot._icon.GetComponent<Button>().interactable = !buying;
             }
         }
-        // 스킬 처리
-        if (buying) // 구매 시
+        // 스킬 구매
+        if (buying)
         {
             for (int i = 0; i < receiptSlots.Length - 1; i++)
             {

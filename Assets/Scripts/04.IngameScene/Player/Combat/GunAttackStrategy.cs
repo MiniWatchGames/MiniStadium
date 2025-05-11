@@ -20,7 +20,7 @@ public class GunAttackStrategy : IAttackStrategy ,  IStatObserver
             if (_gunController == null) {     
                _gunController = weaponObject.GetComponent<GunController>();
                 ReloadAmmo();
-        }
+            }
             _CanAttack = true;
         
             _gunController.CurrentAmmo.AddObserver(this); // Observer 등록 ,Observer 당하는 곳에서 중복 처리

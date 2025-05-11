@@ -21,7 +21,14 @@ public class PlayerItems
     // [0][] = Movement skill
     // [1][] = Weapon skill
     // [2][] = Passive skill
-
+    
+    public PlayerItems()
+    {
+        Skills[0] = new (int, string)[3];
+        Skills[1] = new (int, string)[3];
+        Skills[2] = new (int, string)[3];
+    }
+    
     public PlayerItems DeepCopy()
     {
         PlayerItems clone = (PlayerItems)this.MemberwiseClone();

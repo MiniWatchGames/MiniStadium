@@ -24,6 +24,7 @@ public class DeadState : PlayerActionState
     }
     public override void Exit()
     {
+        _playerController.Animator.SetTrigger("BackIdle");
         base.Exit();
     }
     public override void StateUpdate()
