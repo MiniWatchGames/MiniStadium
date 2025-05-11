@@ -124,7 +124,6 @@ public class InGameManager : MonoBehaviour
                 if (playerContoroller is not null)
                 {
                     playerContoroller.ResetCharacter();
-                    
                 }
                 
                 GameRoundInfoUI.gameObject.SetActive(false);
@@ -157,16 +156,20 @@ public class InGameManager : MonoBehaviour
                     playerContoroller = player.GetComponent<PlayerController>();
                     SetPlayerTeam(player);
                 }
+
+                
                 playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
                 playerHud.init(playerContoroller);
                 playerContoroller.SetSkillGage(playerHud.GetSkillGage());
+                
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
-                player.gameObject.transform.position = new Vector3(16, 9, 3);
+                
                 Debug.Log("player spawned ");
                 
                 currentRoundState = RoundState.InRound;
                 SetGameTime(InRoundTime, RoundState.SuddenDeath);
+                
                 break;
             case RoundState.SuddenDeath:
                 currentRoundState = RoundState.SuddenDeath;
@@ -228,6 +231,7 @@ public class InGameManager : MonoBehaviour
         if (currentRoundState == RoundState.InRound)
         {
             RepairShopUI.SetActive(false);
+            
         }
 
         if (currentRoundState == RoundState.RoundStart)
@@ -241,7 +245,7 @@ public class InGameManager : MonoBehaviour
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
         {
             //Debug.Log("Game Time End");
-
+            
             SetRoundState(state);
 
         }, (time) =>
@@ -381,6 +385,7 @@ public class InGameManager : MonoBehaviour
         //플레이어가 죽었을때 패배 표시
         player.GetComponent<PlayerController>().OnPlayerDie = (player) =>
         {
+            
             if (currentWinLoseState == WinLoseState.Win)
             {
                 //적을 먼저 죽였을때 그 후 죽어도 승리 확정
