@@ -939,7 +939,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     #region 옵저버
     public void WhenStatChanged((float, string) data)
     {
-        Debug.Log($"{data.Item2}가 {data.Item1}로 변경되었습니다.");
+        //Debug.Log($"{data.Item2}가 {data.Item1}로 변경되었습니다.");
         switch (data.Item2)
         {
             case "baseMoveSpeed":

@@ -88,7 +88,10 @@ public class PlayerFSM<T> where T : Enum
 
     public void Run(PlayerController playerController) 
     {
+        //플레이어 컨트롤러에서 생성된 객체의 타입에 따라 스테이트를 생성
+        //생성될 타입은 ActionState, MovementState, PostureState로 나뉘어짐 StateFactory의 확장 메서드에 정의됨
         List<(T, IPlayerState)> list = this.CreateStates(/*_aniStrategy*/);
+        //생성된 타입별 스테이트들을 _states 딕셔너리에 넣어준다(key: enum, value: IPlayerState)
         foreach (var state in list)
         {
             AddState(state.Item1, state.Item2);

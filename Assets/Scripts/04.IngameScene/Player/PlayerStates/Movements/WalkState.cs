@@ -17,6 +17,7 @@ public class WalkState : PlayerMovementState, IStatObserver
     public override void Enter(PlayerController playerController)
     {
         //playerController.Animator.Play(aniName);
+        
         base.Enter(playerController); 
         float moveSpeed = _playerController.BaseMoveSpeed.Value;
         footstepInterval = 0.35f * (1.0f / moveSpeed);
