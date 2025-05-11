@@ -2110,7 +2110,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.8
-  m_Radius: 0.16
+  m_Radius: 0.26
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.02
@@ -2195,7 +2195,8 @@ MonoBehaviour:
   moveSpeedIncreaseAmount: 0.1
   jumpPowerIncreaseAmount: 0.1
   defaultState: Idle
-  RunStateMaterial: {fileID: 0}
+  RunStateMaterial: {fileID: 2100000, guid: b3d49ad9daff7b84280b5f8539122578, type: 2}
+  IsReloadFinished: 0
   cameraController: {fileID: 2051301180654909716}
   rotationSpeed: 2
   rotationSmoothSpeed: 30
@@ -2205,7 +2206,6 @@ MonoBehaviour:
     type: 2}
   gunAnimatorController: {fileID: 9100000, guid: 7d752a938992a43bd9f56abe328d736e,
     type: 2}
-  aimWeight: 1
   jumpSound:
   - {fileID: 8300000, guid: 4e064a2d82010b74793cdfa29cd866c9, type: 3}
   - {fileID: 8300000, guid: 1e09d992e73d99e47b4a8cac932a2f96, type: 3}
@@ -2216,6 +2216,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d11131579963621468a03459c35d4fb9, type: 3}
   - {fileID: 8300000, guid: 51e4aa22e09af2f42a0ba2e081e0afbc, type: 3}
   - {fileID: 8300000, guid: 19c33c6b30095ae498be59939039487c, type: 3}
+  teleportGainSound: {fileID: 8300000, guid: 06b2921df93c6cd4298e0b089cfe7c5b, type: 3}
+  teleportGainSoundRe: {fileID: 8300000, guid: 059bfe9caa6410c43827809d42866ec4, type: 3}
+  teleportSound: {fileID: 8300000, guid: 6049109251dd6814e814fc6b0f933f16, type: 3}
 --- !u!114 &8037387594734043560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2403,7 +2406,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.55
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2553,9 +2556,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
-  field of view: 60
+  field of view: 75
   orthographic: 0
   orthographic size: 5
   m_Depth: 0

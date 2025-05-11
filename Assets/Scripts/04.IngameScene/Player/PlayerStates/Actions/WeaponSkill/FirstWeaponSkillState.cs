@@ -34,7 +34,7 @@ public class FirstWeaponSkillState : PlayerActionState, ISkillData
         _playerController.CombatManager.UpdateFirstSkill();
         if (_playerController.CombatManager.IsFirstSkillComplete())
         {
-            _playerController.SetActionState("Idle");
+            _playerController.SetActionStateServer("Idle", _playerController);
         }
     }
 }

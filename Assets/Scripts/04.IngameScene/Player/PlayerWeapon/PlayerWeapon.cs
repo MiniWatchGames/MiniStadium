@@ -77,7 +77,6 @@ public class PlayerWeapon : NetworkBehaviour
         {
             Debug.Log("Despawn currentWeapon");
         }
-
         if (currentWeapon== null && weaponDataDict.TryGetValue(weaponType, out WeaponData weaponData))
         {
             SpawnWeapon(weapon);
@@ -100,7 +99,9 @@ public class PlayerWeapon : NetworkBehaviour
         CombatManager combatManager = gameObject.GetComponent<CombatManager>();
         PlayerController playerController = gameObject.GetComponent<PlayerController>();
         currentWeapon = weapon;
+        Debug.Log($"weapon : {weapon}");
         combatManager.CurrentWeapon = CurrentWeapon;
         playerController.CanChangeState = true;
+        playerController.InitWeaponAndSkill();
     }
 }

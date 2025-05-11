@@ -273,6 +273,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
             gameObject.GetComponent<PlayerController>().enabled = false;
             
         }
+        Debug.Log("Client Started");
         ReInit();
     }
 
@@ -659,7 +660,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
                 if (_actionFsm.CurrentState != moveMentSkill.Item1)
                 {
                     skillGageSetting(moveMentSkillData);
-                    SetActionState(_firstMoveSkill);
+                    SetActionStateServer(_firstMoveSkill, this);
                 }
 
                 return;
@@ -988,9 +989,9 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
     {
         _skillGageObj?.SetActive(false);
 
-        SetActionState("Idle");
-        SetMovementState("Idle");
-        SetPostureState("Idle");
+        SetActionStateServer("Idle", this);
+        SetMovementStateServer("Idle", this);
+        SetPostureStateServer("Idle", this);
 
         // 추가 생성한 스킬, 패시브 제거
         if (_movementSkills?.Count > 0)
@@ -1084,7 +1085,10 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         }
 
         EquipWeapon(_playerWeapon);
+    }
 
+    public void InitWeaponAndSkill()
+    {
         if (statDictionary.ContainsKey(StatType.Damage))
         {
             damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
@@ -1159,9 +1163,9 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
     {
         // InputManager 구독 해제 
         this.transform.GetComponent<InputManager>()?.Unregister(this);
-        SetActionState("Idle");
-        SetMovementState("Idle");
-        SetPostureState("Idle");
+        SetActionStateServer("Idle", this);
+        SetMovementStateServer("Idle", this);
+        SetPostureStateServer("Idle", this);
     }
 
     //public void Init()

@@ -348,6 +348,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -2644463950910470588}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 09f1791f994594469896d8b47866a754,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: -203856693384778745, guid: 09f1791f994594469896d8b47866a754,
         type: 3}
       insertIndex: -1
@@ -438,8 +442,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b16a8e943de4d8d88b6ddb16c2b834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
   head: {fileID: 0}
   groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundMask:
     serializedVersion: 2
     m_Bits: 0
   fixedFirstMaxHp: 10
@@ -452,6 +462,7 @@ MonoBehaviour:
   jumpPowerIncreaseAmount: 10
   defaultState: 10
   RunStateMaterial: {fileID: 0}
+  IsReloadFinished: 0
   cameraController: {fileID: 0}
   rotationSpeed: 2
   rotationSmoothSpeed: 30
