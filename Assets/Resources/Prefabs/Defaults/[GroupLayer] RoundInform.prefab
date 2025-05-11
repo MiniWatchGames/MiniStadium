@@ -24,7 +24,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 164500020294585699}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -53,8 +53,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RoundCount: {fileID: 3113697177028035543}
-  BlueWinCount: {fileID: 6754341641093213174}
-  RedWinCount: {fileID: 3247468476374369941}
+  BlueWinCount: {fileID: 3247468476374369941}
+  RedWinCount: {fileID: 6754341641093213174}
   inGameManager: {fileID: 0}
   FinishRoundTimer: {fileID: 0}
 --- !u!1 &814162146155554573
@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 7700725411647715631}
   - component: {fileID: 1853020828778423366}
   m_Layer: 5
-  m_Name: '[Image] BlueTeam Background'
+  m_Name: '[Image] RedTeam Background'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,17 +82,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 814162146155554573}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7427306205074531286}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 684, y: 115}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 57.5, y: -52.999966}
+  m_SizeDelta: {x: 115, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7700725411647715631
 CanvasRenderer:
@@ -122,8 +122,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5806c177b8b94c7418fd8a10af62aa3f, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: acf0f0a7d5858c3498b052dbe160d318, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -142,7 +142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1065898823762471262}
   m_Layer: 5
-  m_Name: '[GroupLayer] RedTeam'
+  m_Name: '[GroupLayer] BlueTeam'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 2081725915472293918}
   - component: {fileID: 3254397546501610924}
   - component: {fileID: 8607790654993624718}
-  - component: {fileID: 8840512631343688905}
+  - component: {fileID: 4735782087387117460}
   m_Layer: 5
   m_Name: '[Text (TMP)] Timer'
   m_TagString: Untagged
@@ -305,7 +305,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &8840512631343688905
+--- !u!114 &4735782087387117460
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -318,9 +318,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: {fileID: 0}
-  text: {fileID: 0}
+  text: {fileID: 8607790654993624718}
   timerType: 0
-  timeLimit: 0
+  timeLimit: 10
   currentTime: 0
 --- !u!1 &3113697177028035543
 GameObject:
@@ -469,7 +469,7 @@ GameObject:
   - component: {fileID: 6510831948690283673}
   - component: {fileID: 9002940426251935179}
   m_Layer: 5
-  m_Name: '[Text (TMP)] RedTeamScore'
+  m_Name: '[Text (TMP)] BlueTeamScore'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -602,7 +602,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7427306205074531286}
   m_Layer: 5
-  m_Name: '[GroupLayer] BlueTeam'
+  m_Name: '[GroupLayer] RedTeam'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -780,7 +780,7 @@ GameObject:
   - component: {fileID: 8988843281093210092}
   - component: {fileID: 5824307476626185025}
   m_Layer: 5
-  m_Name: '[Text (TMP)] BlueTeamScore'
+  m_Name: '[Text (TMP)] RedTeamScore'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -915,7 +915,7 @@ GameObject:
   - component: {fileID: 5406682510619434959}
   - component: {fileID: 5984021878660514389}
   m_Layer: 5
-  m_Name: '[Image] RedTeam Background'
+  m_Name: '[Image] BlueTeam Background'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -928,17 +928,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8087846937747749861}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1065898823762471262}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 684, y: 115}
+ m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -57.5, y: -47.000015}
+  m_SizeDelta: {x: 115, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5406682510619434959
 CanvasRenderer:
@@ -968,8 +968,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f5614c712d6fa8d40bd5e59d901983be, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: d94e61942bdd6604bb1e6565b653404d, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
