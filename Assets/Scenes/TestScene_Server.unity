@@ -1643,8 +1643,67 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 920056140210474966, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 47100568831706357}
+    - targetCorrespondingSourceObject: {fileID: 920056140210474966, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 47100568831706356}
+    - targetCorrespondingSourceObject: {fileID: 920056140210474966, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 47100568831706368}
   m_SourcePrefab: {fileID: 100100000, guid: 8623f2e4052c6be42a50b6c794756164, type: 3}
+--- !u!1 &47100568831706355 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 920056140210474966, guid: 8623f2e4052c6be42a50b6c794756164,
+    type: 3}
+  m_PrefabInstance: {fileID: 47100568831706354}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &47100568831706356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47100568831706355}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4d2b598324809644919e47840b9ea22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxPlayers: 30
+--- !u!114 &47100568831706357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47100568831706355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c84ac6b337c7cb54c8b950eb2818517e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &47100568831706368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47100568831706355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca43cf6f20e77c4f8fcc078fd85081f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _remoteServerTimeout: 2
+  _remoteServerTimeoutDuration: 60
+  _changeFrameRate: 1
+  _frameRate: 500
 --- !u!114 &57124322355401066
 MonoBehaviour:
   m_ObjectHideFlags: 0
