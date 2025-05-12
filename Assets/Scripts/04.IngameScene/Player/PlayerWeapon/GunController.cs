@@ -69,7 +69,7 @@ public class GunController : MonoBehaviour, IWeapon
         _poolContainer = new GameObject("EffectPools").transform;
         _poolContainer.SetParent(transform);
         _audioSource = GetComponent<AudioSource>();
-        damage = new Stat(20, "GunDamage");
+        damage = new Stat(5, "GunDamage");
         _currentAmmo = new ObservableFloat(30, "GunCurrentAmmo");
         _maxAmmo = new ObservableFloat(30, "GunMaxAmmo");
     }

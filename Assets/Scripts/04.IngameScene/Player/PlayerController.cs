@@ -324,7 +324,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         if (rootObject == gameObject) return;
 
         var damage = damageInfo.damage;
-        currentHp.Value -= damage;
+        currentHp.Value -= damage-(damage*BaseDefence.Value*0.1f);
         Debug.Log($"current Hp = {currentHp.Value}");
     }
 
