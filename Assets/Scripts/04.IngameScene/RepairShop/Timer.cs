@@ -25,7 +25,6 @@ public class Timer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ResetTimer();
         _isPaused = false;
     }
 
@@ -70,7 +69,7 @@ public class Timer : MonoBehaviour
             currentTime = 0;
         }
         //_isPaused= true;
-        
+        Debug.Log("Timer Reset");
     }
 
     public void PauseTimer()
@@ -91,7 +90,6 @@ public class Timer : MonoBehaviour
         OnTimerEndDelegate = timerDelegate;
         this.timeLimit = timeLimit;
         this.timerType = timerType;
-        
         
         ResetTimer();
     }

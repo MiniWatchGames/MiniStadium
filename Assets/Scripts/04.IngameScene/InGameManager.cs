@@ -64,6 +64,8 @@ public class InGameManager : MonoBehaviour
 
     //맵 세팅용 딕셔너리 start()문에서 적용
     Dictionary<GameObject, List<Spawner>> mapSpawners = new Dictionary<GameObject, List<Spawner>>();
+    //현재 켜져있는 맵 저장
+    GameObject currentMap;
     //맵 센터찾기
 
 
@@ -162,7 +164,9 @@ public class InGameManager : MonoBehaviour
                 playerHud.init(playerContoroller);
                 playerContoroller.SetSkillGage(playerHud.GetSkillGage());
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
-                player.gameObject.transform.position = new Vector3(16, 9, 3);
+                player.GetComponent<CharacterController>().enabled = false;
+                player.gameObject.transform.position = mapSpawners[currentMap][0].transform.position;
+                player.GetComponent<CharacterController>().enabled = true;
                 Debug.Log("player spawned ");
                 
                 currentRoundState = RoundState.InRound;
@@ -241,7 +245,7 @@ public class InGameManager : MonoBehaviour
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
         {
             //Debug.Log("Game Time End");
-            gameTimer.OnTimerEndDelegate = null;
+            //gameTimer.OnTimerEndDelegate = null;
             SetRoundState(state);
         }, (time) =>
         {
@@ -290,6 +294,13 @@ public class InGameManager : MonoBehaviour
             }
         }
         maps.AddRange(GameObject.FindGameObjectsWithTag("Map"));
+        for (int i = 0; i < maps.Count; i++)
+        {
+            if (maps[i].activeSelf == true)
+            {
+                currentMap = maps[i];
+            }
+        }
     }
     // Start is called before the first frame update
     void Start()
