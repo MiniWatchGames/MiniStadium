@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 using Debug = UnityEngine.Debug;
 
 // 추가되는 스킬은 여기에도 추가작성 필요
@@ -243,7 +242,15 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         _passiveFactory = new PassiveFactory();
         _passiveList = new List<IPassive>();
     }
-    private void Dead()
+
+    [ServerRpc]
+    private void DeadServer(PlayerController playerController)
+    {
+        Dead(playerController);
+    }
+    
+    [ObserversRpc]
+    private void Dead(PlayerController playerController)
     {
         if (currentHp.Value <= 0 && !_isDead)
         {
@@ -266,7 +273,6 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
             gameObject.GetComponent<PlayerController>().enabled = false;
             
         }
-        Debug.Log("Client Started");
         ReInit();
     }
 
@@ -317,6 +323,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
     {
         SetActionState(stateName, player);
     }
+    
     [ObserversRpc]
     public void SetActionState(string stateName, PlayerController player)
     {
@@ -326,8 +333,12 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
             _actionFsm.ChangeState(stateName, player);
             return;
         }
+
         if (_CanChangeState || stateName == "Dead")
-            _actionFsm.ChangeState(stateName, player);
+        {
+            Debug.Log("CanChangeState");
+            _actionFsm.ChangeState(stateName, player);   
+        }
     }
 
     private void EquipWeapon(PlayerWeapon weapon)
@@ -963,7 +974,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
     #region 옵저버
     public void WhenStatChanged((float, string) data)
     {
-        //Debug.Log($"{data.Item2}가 {data.Item1}로 변경되었습니다.");
+        //Debug.Log($"{Owner}의 {data.Item2}가 {data.Item1}로 변경되었습니다.");
         switch (data.Item2)
         {
             case "baseMoveSpeed":
@@ -972,7 +983,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
             case "currentHp":
                 if (currentHp.Value <= 0 && !_isDead)
                 {
-                    Dead();
+                    DeadServer(this);
                 }
                 break;
         }
