@@ -26,6 +26,7 @@ public class ReloadState : PlayerActionState
     public override void Exit()
     {
         base.Exit();
+        gunController.SoundStop();
         _playerController.CombatManager.FadeOutUpperBodyLayer(_upperBodyOverrideLayerIndex);
         var gun = ((GunAttackStrategy)_playerController.CombatManager.CurrentStrategy);
         gun.ReloadAmmo();

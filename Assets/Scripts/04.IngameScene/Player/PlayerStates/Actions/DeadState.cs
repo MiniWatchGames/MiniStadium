@@ -15,9 +15,7 @@ public class DeadState : PlayerActionState
     public override void Enter(PlayerController playerController)
     {
         base.Enter(playerController);
-        
         _playerController.transform.GetComponent<InputManager>().Unregister(_playerController);
-        
         _playerController.Animator.SetLayerWeight(1, 0f);
         _playerController.Animator.SetLayerWeight(2, 0f);
         _playerController.Animator.SetTrigger(Dead);
