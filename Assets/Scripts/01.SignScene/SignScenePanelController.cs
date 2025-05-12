@@ -8,26 +8,17 @@ using UnityEngine.UI;
 public class SignScenePanelController : PanelController
 {
     [Header("Buttons")]
-    // 로그인 버튼
-    public Button loginButton;
-    // 회원가입 버튼
-    public Button signupButton;
-    // 회원가입 버튼
-    public Button signinButton; 
-    // 로그인 화면으로 가는 버튼
-    public Button backLoginButton;
-    // 게임종료 버튼
-    public Button exitButton;
+    [SerializeField] private Button loginButton; // 로그인 버튼
+    [SerializeField] private Button signupButton; // 회원가입 화면으로 가는 버튼
+    [SerializeField] private Button signinButton; // 회원가입 버튼
+    [SerializeField] private Button backLoginButton; // 로그인 화면으로 가는 버튼
+    [SerializeField] private Button exitButton; // 게임종료 버튼
 
     [Header("Signup Input Fields")]
-    // 아이디 입력 필드
-    public TMP_InputField signupIdInput;
-    // 닉네임 입력 필드
-    public TMP_InputField signupNickNameInput;
-    // 비밀번호 입력 필드
-    public TMP_InputField signupPasswordInput;
-    // 비밀번호 확인용 입력 필드
-    public TMP_InputField signupCheckPasswordInput;
+    [SerializeField] private TMP_InputField signupIdInput; // 아이디 입력 필드
+    [SerializeField] private TMP_InputField signupNickNameInput; // 닉네임 입력 필드
+    [SerializeField] private TMP_InputField signupPasswordInput; // 비밀번호 입력 필드
+    [SerializeField] private TMP_InputField signupCheckPasswordInput; // 비밀번호 확인용 입력 필드
 
     [Header("Signup Success Popup")]
     // 회원가입 성공 팝업 패널
