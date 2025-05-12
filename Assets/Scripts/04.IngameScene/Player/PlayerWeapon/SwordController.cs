@@ -84,7 +84,8 @@ public class SwordController : MonoBehaviour, IWeapon
         for (int i = 0; i < slashEffectPrefabs.Length; i++)
         {
             var rotation = Quaternion.Euler(slashEffectRotations[i]);
-            var effect = Instantiate(slashEffectPrefabs[i], transform.position, rotation);
+            var effect = Instantiate(slashEffectPrefabs[i], transform.position, rotation, transform.root);
+            effect.transform.localPosition = new Vector3(0, 1, 1);
             _slashEffects[i] = effect;
         }
     }
@@ -186,8 +187,8 @@ public class SwordController : MonoBehaviour, IWeapon
                 // 크로스헤어 알림용
                 //CombatEvents.OnTargetHit?.Invoke(target);
 
-                _slashEffects[_currentComboIndex].transform.position = hitPoint;
-                _slashEffects[_currentComboIndex].Play();
+                // _slashEffects[_currentComboIndex].transform.position = hitPoint;
+                // _slashEffects[_currentComboIndex].Play();
             }
         }
     }
@@ -195,6 +196,7 @@ public class SwordController : MonoBehaviour, IWeapon
     public void PlaySlashSound(int index)
     {
         _audioSource.PlayOneShot(slashSounds[index], 1f);
+        _slashEffects[_currentComboIndex].Play();
     }
 
     public void FirstSkillStart()
