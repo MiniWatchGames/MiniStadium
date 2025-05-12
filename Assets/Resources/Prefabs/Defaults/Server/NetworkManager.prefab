@@ -13,11 +13,11 @@ GameObject:
   - component: {fileID: 5439987944862144423}
   - component: {fileID: 499816485292805147}
   - component: {fileID: 4954703400016843821}
-  - component: {fileID: 5105942667110026457}
   - component: {fileID: 8442619254598933007}
   - component: {fileID: 3882878991286038527}
   - component: {fileID: 7010727776738712448}
   - component: {fileID: 2177017357783913582}
+  - component: {fileID: 5080862738427626615}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -120,18 +120,6 @@ MonoBehaviour:
   _frameRate: 500
   _shareIds: 1
   _startOnHeadless: 0
---- !u!114 &5105942667110026457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 920056140210474966}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5926cb5aaea36e4690818a2b277216d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8442619254598933007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +197,22 @@ MonoBehaviour:
   _createLocalStates: 1
   _stateInterpolation: 2
   _stateOrder: 1
+--- !u!114 &5080862738427626615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920056140210474966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca43cf6f20e77c4f8fcc078fd85081f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _remoteServerTimeout: 2
+  _remoteServerTimeoutDuration: 60
+  _changeFrameRate: 1
+  _frameRate: 500
 --- !u!1001 &5371962373491619883
 PrefabInstance:
   m_ObjectHideFlags: 0

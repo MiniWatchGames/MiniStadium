@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
+using Debug = UnityEngine.Debug;
 
 // 추가되는 스킬은 여기에도 추가작성 필요
 public enum ActionState

@@ -2186,11 +2186,11 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 0
-  fixedFirstMaxHp: 5
-  fixedFirstDefence: 5
+  fixedFirstMaxHp: 50
+  fixedFirstDefence: 1
   fixedFirstMoveSpeed: 1
-  fixedFirstJumpPower: 1
-  maxHpIncreaseAmount: 1
+  fixedFirstJumpPower: 1.5
+  maxHpIncreaseAmount: 10
   defenceIncreaseAmount: 1
   moveSpeedIncreaseAmount: 0.1
   jumpPowerIncreaseAmount: 0.1

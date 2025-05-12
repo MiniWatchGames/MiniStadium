@@ -523,6 +523,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe27eeab998449d1a2abd8dff500d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
   weaponType: 1
   weaponDataList:
   - weaponPrefab: {fileID: 6985989593022072725, guid: 0a63d7a42f093f24cbe46e87652c2493,
@@ -547,10 +550,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b16a8e943de4d8d88b6ddb16c2b834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
   head: {fileID: 7684241365501367372}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   fixedFirstMaxHp: 50
   fixedFirstDefence: 1
   fixedFirstMoveSpeed: 1
@@ -596,6 +605,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b8c5671b51f84caea67bb78efbe7b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
   playerController: {fileID: 8564315523455457166}
 --- !u!114 &5012145158824696111
 MonoBehaviour:
@@ -609,6 +621,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e8e5c83d9414489b5a1c40f7d264893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
 --- !u!82 &7725872679975783454
 AudioSource:
   m_ObjectHideFlags: 0
