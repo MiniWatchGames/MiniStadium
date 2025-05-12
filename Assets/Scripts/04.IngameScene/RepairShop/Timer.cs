@@ -41,6 +41,7 @@ public class Timer : MonoBehaviour
             {
                 Debug.Log("Timer End");
                 OnTimerEndDelegate?.Invoke();
+
             }
         }
         if (timerType == TimerType.Increase)

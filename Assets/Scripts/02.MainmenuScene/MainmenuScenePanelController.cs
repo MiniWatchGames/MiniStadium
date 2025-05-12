@@ -12,12 +12,15 @@ public class MainmenuScenePanelController : PanelController
     public Button settingsButton;
     public Button exitButton;
 
+    public Button goMainmenu;
+
     private void Start()
     {
         gameStartButton.onClick.AddListener(OnGameStartClicked);
         rankingButton.onClick.AddListener(OnRankingClicked);
         settingsButton.onClick.AddListener(OnSettingsClicked);
         exitButton.onClick.AddListener(OnExitClicked);
+        goMainmenu.onClick.AddListener(OnGoMainMenuClicked);
     }
 
     private void OnGameStartClicked()
@@ -52,5 +55,10 @@ public class MainmenuScenePanelController : PanelController
         #else
         Application.Quit();
         #endif
+    }
+
+    private void OnGoMainMenuClicked()
+    {
+        ClosePanel("[PopUpPanel] Result");
     }
 }

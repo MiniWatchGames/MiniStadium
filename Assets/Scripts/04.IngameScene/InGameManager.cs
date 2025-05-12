@@ -64,8 +64,6 @@ public class InGameManager : MonoBehaviour
 
     //맵 세팅용 딕셔너리 start()문에서 적용
     Dictionary<GameObject, List<Spawner>> mapSpawners = new Dictionary<GameObject, List<Spawner>>();
-
-    private GameObject currentMap;
     //맵 센터찾기
 
 
@@ -126,6 +124,7 @@ public class InGameManager : MonoBehaviour
                 if (playerContoroller is not null)
                 {
                     playerContoroller.ResetCharacter();
+                    
                 }
                 
                 GameRoundInfoUI.gameObject.SetActive(false);
@@ -156,24 +155,18 @@ public class InGameManager : MonoBehaviour
                 {
                     player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
                     playerContoroller = player.GetComponent<PlayerController>();
-                    SetPlayerTeam(player);
                 }
-
-                
+                SetPlayerTeam(player);
                 playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
                 playerHud.init(playerContoroller);
                 playerContoroller.SetSkillGage(playerHud.GetSkillGage());
-                player.GetComponent<CharacterController>().enabled = false;
-                player.transform.position = mapSpawners[currentMap][0].transform.position;
-                player.GetComponent<CharacterController>().enabled = true;
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
-                
-                
+                player.gameObject.transform.position = new Vector3(16, 9, 3);
+                Debug.Log("player spawned ");
                 
                 currentRoundState = RoundState.InRound;
-                SetGameTime(10, RoundState.SuddenDeath);
-                
+                SetGameTime(InRoundTime, RoundState.SuddenDeath);
                 break;
             case RoundState.SuddenDeath:
                 currentRoundState = RoundState.SuddenDeath;
@@ -235,7 +228,6 @@ public class InGameManager : MonoBehaviour
         if (currentRoundState == RoundState.InRound)
         {
             RepairShopUI.SetActive(false);
-            
         }
 
         if (currentRoundState == RoundState.RoundStart)
@@ -249,9 +241,8 @@ public class InGameManager : MonoBehaviour
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
         {
             //Debug.Log("Game Time End");
-            
+            gameTimer.OnTimerEndDelegate = null;
             SetRoundState(state);
-
         }, (time) =>
         {
             if (currentRoundState == RoundState.SuddenDeath)
@@ -299,13 +290,6 @@ public class InGameManager : MonoBehaviour
             }
         }
         maps.AddRange(GameObject.FindGameObjectsWithTag("Map"));
-        for(int i = 0; i < maps.Count; i++)
-        {
-            if (maps[i].gameObject.activeSelf)
-            {
-                currentMap = maps[i];
-            }
-        }
     }
     // Start is called before the first frame update
     void Start()
@@ -317,7 +301,7 @@ public class InGameManager : MonoBehaviour
         //실제 게임이 실행되게 하는 문장. 게임 상태를 스타트로 만들어준다.
         SetGameState(GameState.StartGame);
 
-        
+        //이거는 없어도 될 듯 하다.쓰이는데가 없어요..
 
     }
 
@@ -349,7 +333,7 @@ public class InGameManager : MonoBehaviour
                 break;
         }
         SetRoundState(RoundState.RoundEnd);
-        
+        Debug.Log($"RedWin{RedWinCount} : Blue Win : {BlueWinCount}");
         //ResetRound();
     }
 
@@ -383,8 +367,12 @@ public class InGameManager : MonoBehaviour
             return;
         }
         int tmpRandom = Random.Range(0, 1);
-        //tag로 적 오브젝트 탐색: 없을시: 생성 있으믄 걍 둬유;
-        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy") is null ? Instantiate(EnemyPrefab, new Vector3(5, 9, 3), Quaternion.identity) : GameObject.FindWithTag("Enemy");
+
+        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy");
+        if (EnemyPlayer == null) {
+            EnemyPlayer = Instantiate(EnemyPrefab, new Vector3(5, 9, 3), Quaternion.identity);
+        }    
+        EnemyPlayer.GetComponent<PlayerController>().InitDummy();
         //if(EnemyPlayer == null) return;
         EnemyPlayer.tag = "Enemy";
         Debug.Log("Player got the Team");
@@ -396,7 +384,6 @@ public class InGameManager : MonoBehaviour
         //플레이어가 죽었을때 패배 표시
         player.GetComponent<PlayerController>().OnPlayerDie = (player) =>
         {
-            
             if (currentWinLoseState == WinLoseState.Win)
             {
                 //적을 먼저 죽였을때 그 후 죽어도 승리 확정
@@ -406,6 +393,17 @@ public class InGameManager : MonoBehaviour
             SetWinLoseState(WinLoseState.Lose);
            
         };
+        EnemyPlayer.GetComponent<PlayerController>().OnPlayerDie = (enemy) =>
+        {
+            if (currentWinLoseState == WinLoseState.Lose)
+            {
+                //적을 먼저 죽였을때 그 후 죽어도 승리 확정
+                return;
+            }
+            LoseRound(enemy);
+            SetWinLoseState(WinLoseState.Win);
+           
+        };/*
         EnemyPlayer.GetComponent<DummyController>().OnDieCallBack = (enemy) =>
         {
             if (currentWinLoseState == WinLoseState.Lose)
@@ -415,7 +413,7 @@ public class InGameManager : MonoBehaviour
             }
             WinRound(enemy);
             SetWinLoseState(WinLoseState.Win);
-        };
+        };*/
     }
     public void WinRound(GameObject Enemy)
     {
