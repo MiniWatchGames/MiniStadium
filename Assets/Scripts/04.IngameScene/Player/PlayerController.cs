@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using FishNet.Object;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
@@ -108,28 +109,6 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
     public ObservableFloat CurrentHp
     {
         get => currentHp;
-        set
-        {
-            Debug.Log("It is On the Run");
-            currentHp.Value = value.Value;
-            if (OnPlayerDie != null)
-            {
-                Debug.Log("OnPlayerDie has Value");
-            }
-            else
-            {
-                Debug.Log("OnPlayerDie is null");
-            }
-            if (currentHp.Value <= 0 && !_isDead)
-            {
-                Debug.Log("주금..");
-                _isDead = true;
-                OnPlayerDie.Invoke(gameObject);
-                SetMovementStateServer("Idle", this);
-                SetPostureStateServer("Idle", this);
-                SetActionStateServer("Dead", this);
-            }
-        }
     }
 
     // --------
@@ -263,7 +242,20 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         _passiveFactory = new PassiveFactory();
         _passiveList = new List<IPassive>();
     }
-
+    private void Dead()
+    {
+        if (currentHp.Value <= 0 && !_isDead)
+        {
+            Debug.Log("주금..");
+            _isDead = true;
+            Animator.enabled = false;
+            Animator.enabled = true;
+            OnPlayerDie?.Invoke(gameObject);
+            SetMovementStateServer("Idle", this);
+            SetPostureStateServer("Idle", this);
+            SetActionStateServer("Dead", this);
+        }
+    }
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -333,8 +325,8 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
             _actionFsm.ChangeState(stateName, player);
             return;
         }
-        if (!_CanChangeState) return;
-        _actionFsm.ChangeState(stateName, player);
+        if (_CanChangeState || stateName == "Dead")
+            _actionFsm.ChangeState(stateName, player);
     }
 
     private void EquipWeapon(PlayerWeapon weapon)
@@ -358,7 +350,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         if (rootObject == gameObject) return;
 
         var damage = damageInfo.damage;
-        currentHp.Value -= damage;
+        currentHp.Value -= damage-(damage*BaseDefence.Value*0.1f);
         Debug.Log($"current Hp = {currentHp.Value}");
     }
 
@@ -976,6 +968,12 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
             case "baseMoveSpeed":
                 ChangeMovementSpeed(data.Item1);
                 break;
+            case "currentHp":
+                if (currentHp.Value <= 0 && !_isDead)
+                {
+                    Dead();
+                }
+                break;
         }
     }
     #endregion
@@ -1159,6 +1157,45 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         //PurchaseManager.ResetPurchasedPlayerItems();
     }
 
+    public void InitDummy()
+    {
+        IsReloadFinished = true;
+
+        //상태 변경
+        ActionFsm?.ChangeState(defaultState, this);
+        MovementFsm?.ChangeState(defaultState, this);
+        PostureFsm?.ChangeState(defaultState, this);
+
+        _playerWeapon.WeaponType = WeaponType.Sword;
+        
+        EquipWeapon(_playerWeapon);
+
+        if (statDictionary.ContainsKey(StatType.Damage))
+        {
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary[StatType.Damage] = damage;
+        }
+        else
+        {
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary.Add(StatType.Damage, damage);
+        }
+
+        // 스텟 + currentHp 옵저버 등록 
+        foreach (var stat in statDictionary)
+        {
+            stat.Value.AddObserver(this);
+        }
+
+        currentHp.AddObserver(this);
+
+        _isDead = false;
+
+        //풀피 만들어주기
+        CurrentHp.Value = baseMaxHp.Value;
+        //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
+        //PurchaseManager.ResetPurchasedPlayerItems();
+    }
     public void CleanupBeforeReInit()
     {
         // InputManager 구독 해제 

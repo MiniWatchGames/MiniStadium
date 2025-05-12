@@ -155,8 +155,8 @@ public class InGameManager : MonoBehaviour
                 {
                     player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
                     playerContoroller = player.GetComponent<PlayerController>();
-                    SetPlayerTeam(player);
                 }
+                SetPlayerTeam(player);
                 playerContoroller.PurchaseManager.PurchasedPlayerItems = RepairShopUI.GetComponent<RepairShop>()?.Receipt.PlayerItems.DeepCopy();
                 playerContoroller.ReInit();
                 playerHud.init(playerContoroller);
@@ -241,9 +241,8 @@ public class InGameManager : MonoBehaviour
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
         {
             //Debug.Log("Game Time End");
-
+            gameTimer.OnTimerEndDelegate = null;
             SetRoundState(state);
-
         }, (time) =>
         {
             if (currentRoundState == RoundState.SuddenDeath)
@@ -369,7 +368,11 @@ public class InGameManager : MonoBehaviour
         }
         int tmpRandom = Random.Range(0, 1);
 
-        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy") is null ? Instantiate(EnemyPrefab, new Vector3(5, 9, 3), Quaternion.identity) : GameObject.FindWithTag("Enemy");
+        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy");
+        if (EnemyPlayer == null) {
+            EnemyPlayer = Instantiate(EnemyPrefab, new Vector3(5, 9, 3), Quaternion.identity);
+        }    
+        EnemyPlayer.GetComponent<PlayerController>().InitDummy();
         //if(EnemyPlayer == null) return;
         EnemyPlayer.tag = "Enemy";
         Debug.Log("Player got the Team");
@@ -390,6 +393,17 @@ public class InGameManager : MonoBehaviour
             SetWinLoseState(WinLoseState.Lose);
            
         };
+        EnemyPlayer.GetComponent<PlayerController>().OnPlayerDie = (enemy) =>
+        {
+            if (currentWinLoseState == WinLoseState.Lose)
+            {
+                //적을 먼저 죽였을때 그 후 죽어도 승리 확정
+                return;
+            }
+            LoseRound(enemy);
+            SetWinLoseState(WinLoseState.Win);
+           
+        };/*
         EnemyPlayer.GetComponent<DummyController>().OnDieCallBack = (enemy) =>
         {
             if (currentWinLoseState == WinLoseState.Lose)
@@ -399,7 +413,7 @@ public class InGameManager : MonoBehaviour
             }
             WinRound(enemy);
             SetWinLoseState(WinLoseState.Win);
-        };
+        };*/
     }
     public void WinRound(GameObject Enemy)
     {
