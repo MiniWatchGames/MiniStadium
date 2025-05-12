@@ -34,6 +34,7 @@ public class Timer : MonoBehaviour
         if (_isPaused) return;
         if (timerType == TimerType.Decrease)
         {
+            
             currentTime -= Time.deltaTime;
             OnTimerDelegate?.Invoke(currentTime);
             if (currentTime <= 0)
@@ -57,15 +58,18 @@ public class Timer : MonoBehaviour
     }
     public void ResetTimer()
     {
+        
         if (timerType == TimerType.Decrease)
         {
             currentTime = timeLimit;
         }
         else
         {
+            
             currentTime = 0;
         }
         //_isPaused= true;
+        
     }
 
     public void PauseTimer()
@@ -86,6 +90,8 @@ public class Timer : MonoBehaviour
         OnTimerEndDelegate = timerDelegate;
         this.timeLimit = timeLimit;
         this.timerType = timerType;
+        
+        
         ResetTimer();
     }
     public void SetEndTimerDelegate(TimerDelegate timerDelegate)

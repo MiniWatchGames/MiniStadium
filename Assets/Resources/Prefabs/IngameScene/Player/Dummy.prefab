@@ -202,6 +202,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dummy
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 09f1791f994594469896d8b47866a754,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 1711505207429034123, guid: 09f1791f994594469896d8b47866a754,
         type: 3}
       propertyPath: m_Layer
@@ -452,6 +457,7 @@ MonoBehaviour:
   jumpPowerIncreaseAmount: 10
   defaultState: 10
   RunStateMaterial: {fileID: 0}
+  IsReloadFinished: 0
   cameraController: {fileID: 0}
   rotationSpeed: 2
   rotationSmoothSpeed: 30

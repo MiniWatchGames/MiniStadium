@@ -64,6 +64,8 @@ public class InGameManager : MonoBehaviour
 
     //맵 세팅용 딕셔너리 start()문에서 적용
     Dictionary<GameObject, List<Spawner>> mapSpawners = new Dictionary<GameObject, List<Spawner>>();
+
+    private GameObject currentMap;
     //맵 센터찾기
 
 
@@ -162,13 +164,15 @@ public class InGameManager : MonoBehaviour
                 playerContoroller.ReInit();
                 playerHud.init(playerContoroller);
                 playerContoroller.SetSkillGage(playerHud.GetSkillGage());
-                
+                player.GetComponent<CharacterController>().enabled = false;
+                player.transform.position = mapSpawners[currentMap][0].transform.position;
+                player.GetComponent<CharacterController>().enabled = true;
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
                 
-                Debug.Log("player spawned ");
+                
                 
                 currentRoundState = RoundState.InRound;
-                SetGameTime(InRoundTime, RoundState.SuddenDeath);
+                SetGameTime(10, RoundState.SuddenDeath);
                 
                 break;
             case RoundState.SuddenDeath:
@@ -295,6 +299,13 @@ public class InGameManager : MonoBehaviour
             }
         }
         maps.AddRange(GameObject.FindGameObjectsWithTag("Map"));
+        for(int i = 0; i < maps.Count; i++)
+        {
+            if (maps[i].gameObject.activeSelf)
+            {
+                currentMap = maps[i];
+            }
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -306,7 +317,7 @@ public class InGameManager : MonoBehaviour
         //실제 게임이 실행되게 하는 문장. 게임 상태를 스타트로 만들어준다.
         SetGameState(GameState.StartGame);
 
-        //이거는 없어도 될 듯 하다.쓰이는데가 없어요..
+        
 
     }
 
@@ -338,7 +349,7 @@ public class InGameManager : MonoBehaviour
                 break;
         }
         SetRoundState(RoundState.RoundEnd);
-        Debug.Log($"RedWin{RedWinCount} : Blue Win : {BlueWinCount}");
+        
         //ResetRound();
     }
 
@@ -372,7 +383,7 @@ public class InGameManager : MonoBehaviour
             return;
         }
         int tmpRandom = Random.Range(0, 1);
-
+        //tag로 적 오브젝트 탐색: 없을시: 생성 있으믄 걍 둬유;
         GameObject EnemyPlayer = GameObject.FindWithTag("Enemy") is null ? Instantiate(EnemyPrefab, new Vector3(5, 9, 3), Quaternion.identity) : GameObject.FindWithTag("Enemy");
         //if(EnemyPlayer == null) return;
         EnemyPlayer.tag = "Enemy";

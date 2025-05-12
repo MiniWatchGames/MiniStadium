@@ -48,11 +48,7 @@ public class SafeZone : MonoBehaviour, IStatObserver
         {
             return;
         }
-        
         gameObject.transform.localScale -= new Vector3(1f,0f,1f) * (magneticShrinkSpeed * Time.deltaTime);
-        
-
-        
     }
     public void Reset()
     {
@@ -76,7 +72,7 @@ public class SafeZone : MonoBehaviour, IStatObserver
                     StopCoroutine(activeCoroutines[other.gameObject]);
                     //activeCoroutines.Remove(other.gameObject);
                 }
-                return;
+                
             }
             else
             {
@@ -90,8 +86,9 @@ public class SafeZone : MonoBehaviour, IStatObserver
                         ObservableFloat CurrentHp = other.gameObject.GetComponent<PlayerController>().CurrentHp;
                         CurrentHp.Value -= other.gameObject.GetComponent<PlayerController>().BaseMaxHp.Value * 0.1f ;
                         other.gameObject.GetComponent<PlayerController>().CurrentHp = CurrentHp;
+                        Debug.Log("Out of field" + other.name + " " + magneticFieldDamage);
                     },
-                    timer = 3f
+                    timer = 1f
                 });
                 
             }
