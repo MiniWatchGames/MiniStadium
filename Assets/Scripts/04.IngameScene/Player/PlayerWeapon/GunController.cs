@@ -69,7 +69,7 @@ public class GunController : MonoBehaviour, IWeapon
         _poolContainer = new GameObject("EffectPools").transform;
         _poolContainer.SetParent(transform);
         _audioSource = GetComponent<AudioSource>();
-        damage = new Stat(20, "GunDamage");
+        damage = new Stat(5, "GunDamage");
         _currentAmmo = new ObservableFloat(30, "GunCurrentAmmo");
         _maxAmmo = new ObservableFloat(30, "GunMaxAmmo");
     }
@@ -334,8 +334,14 @@ public class GunController : MonoBehaviour, IWeapon
     }
 
     public void ReloadSoundPlay() {
-        _audioSource.PlayOneShot(ReloadSound);
+        _audioSource.clip = ReloadSound;
+        _audioSource.Play();
     }
+    public void SoundStop() {
+        _audioSource.Stop();
+    }
+
+
 
     // 게임 종료 시 풀 정리
     private void OnDestroy()
