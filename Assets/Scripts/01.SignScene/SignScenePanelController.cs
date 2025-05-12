@@ -8,19 +8,6 @@ using UnityEngine.UI;
 
 public class SignScenePanelController : PanelController
 {
-    private class UserInfo
-    {
-        public string Id;
-        public string Password;
-        public string Nickname;
-
-        public UserInfo(string id, string password, string nickname)
-        {
-            Id = id;
-            Password = password;
-            Nickname = nickname;
-        }
-    }
     
     [Header("System Buttons")] 
     [SerializeField] private Button optionButton; // 게임 옵션 버튼
@@ -52,17 +39,6 @@ public class SignScenePanelController : PanelController
     
     // 로그인 유지 여부 저장 변수
     private bool isChecked = false; 
-    
-    // 회원가입한 유저 정보를 저장하는 리스트(임시)
-    private List<UserInfo> signupUserList = new List<UserInfo>();
-    
-    // 임시 테스트용 유저 목록 (실제로는 DB 사용 예정)
-    private List<UserInfo> testUserList = new List<UserInfo>
-    {
-        new UserInfo("admin1", "1234", "관리자1"),
-        new UserInfo("admin2", "1234", "관리자2"),
-        new UserInfo("admin3", "1234", "관리자3")
-    };
 
     private const string StayLoggedInKey = "StayLoggedIn";
     private const string SavedLoginIdKey = "SavedLoginId";
@@ -149,18 +125,10 @@ public class SignScenePanelController : PanelController
         string enteredId = loginIdField.text.Trim();
         string enteredPw = loginPasswordField.text.Trim();
         
-        // 1. 임시 테스트 유저 목록에서 검사
-        UserInfo user = testUserList.Find(u => u.Id == enteredId && u.Password == enteredPw);
-        
-        // 2. 회원가입한 임시 유저 목록에서 검사
-        if (user == null)
+        if (PlayerManager.instance.CheckEmailAlreadyExists(enteredId) && PlayerManager.instance.ComparePassword(enteredId, enteredPw))
         {
-            user = signupUserList.Find(u => u.Id == enteredId && u.Password == enteredPw);
-        }
+            PlayerManager.instance.SetCurrentUserAccountData(enteredId);
         
-        // 간단한 로그인 검증 (임시 테스트용 -> 리스트 사용)
-        if (user != null)
-        {
             // 로그인 성공 시 실패 문구 끄고 MainmenuScene으로 전환
             if (loginFailText != null) loginFailText.gameObject.SetActive(false);
             
@@ -170,7 +138,7 @@ public class SignScenePanelController : PanelController
                 PlayerPrefs.SetString(SavedLoginIdKey, enteredId);
                 PlayerPrefs.SetString(SavedLoginPwKey, enteredPw);
             }
-            
+            // 버튼 클릭 시 MainmenuScene으로 전환
             SceneManager.LoadScene("MainmenuScene");
         }
         else
@@ -192,14 +160,9 @@ public class SignScenePanelController : PanelController
         string userNickname = signupNickNameInputField.text.Trim();
         string userPassword = signupPasswordField.text.Trim();
         string userCheckPassword = signupCheckPasswordInputField.text.Trim();
-
-        string errorMessage;
-
-        if (TrySignUp(userId, userNickname, userPassword, userCheckPassword, out errorMessage))
+        
+        if (PlayerManager.instance.AddUserAccountData(userNickname, userId, userPassword, userCheckPassword,  out int errorCode))
         {
-            // 회원가입 성공 시 유저 목록에 추가
-            signupUserList.Add(new UserInfo(userId, userPassword, userNickname));
-            
             // 회원가입 성공 시 실패 문구 끄고 [PopupPanel] SuccessSignup 열기
             if (signupFailText != null) signupFailText.gameObject.SetActive(false);
             OpenPanel("[PopupPanel] SuccessSignup");
@@ -209,8 +172,24 @@ public class SignScenePanelController : PanelController
             // 회원가입 실패 시 문구 표시
             if (signupFailText != null)
             {
-                signupFailText.text = errorMessage;
-                signupFailText.gameObject.SetActive(true);
+                switch (errorCode)
+                {
+                    case 1:
+                        signupFailText.text = "모든 입력 칸을 채워주세요.";
+                        signupFailText.gameObject.SetActive(true);
+                        break;
+                    
+                    case 2:
+                        signupFailText.text = "이미 존재하는 아이디입니다.";
+                        signupFailText.gameObject.SetActive(true);
+                        break;
+
+                    case 3:
+                        signupFailText.text = "비밀번호가 일치하지 않습니다.";
+                        signupFailText.gameObject.SetActive(true);
+                        break;
+                    
+                }
             }
         }
     }
@@ -239,43 +218,5 @@ public class SignScenePanelController : PanelController
 #endif
     }
     
-    #endregion
-
-    
-    #region 회원가입 에러 메세지 및 아이디 중복 확인
-
-    private bool TrySignUp(string userId, string userNickname, string password, string checkPassword, out string errorMessage)
-    {
-        errorMessage = "";
-
-        if (string.IsNullOrWhiteSpace(userId) 
-            || string.IsNullOrWhiteSpace(userNickname)
-            || string.IsNullOrWhiteSpace(password) 
-            || string.IsNullOrWhiteSpace(checkPassword))
-        {
-            errorMessage = "모든 입력 칸을 채워주세요.";
-            return false;
-        }
-
-        if (password != checkPassword)
-        {
-            errorMessage = "비밀번호가 일치하지 않습니다.";
-            return false;
-        }
-        
-        // 아이디 중복 확인 (테스트 유저 또는 기존 회원가입 유저)
-        bool idExists =
-            testUserList.Find(u => u.Id == userId) != null
-            || signupUserList.Find(u => u.Id == userId) != null;
-        
-        if (idExists)
-        {
-            errorMessage = "이미 존재하는 아이디입니다.";
-            return false;
-        }
-        
-        return true;
-    }
-
     #endregion
 }
