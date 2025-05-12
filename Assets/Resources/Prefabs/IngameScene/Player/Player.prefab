@@ -2060,7 +2060,7 @@ GameObject:
   - component: {fileID: 8037387594734043560}
   - component: {fileID: 2827574855819347934}
   - component: {fileID: 18073734463356429}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2173,11 +2173,11 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  fixedFirstMaxHp: 5
-  fixedFirstDefence: 5
+  fixedFirstMaxHp: 50
+  fixedFirstDefence: 1
   fixedFirstMoveSpeed: 1
-  fixedFirstJumpPower: 1
-  maxHpIncreaseAmount: 1
+  fixedFirstJumpPower: 1.5
+  maxHpIncreaseAmount: 10
   defenceIncreaseAmount: 1
   moveSpeedIncreaseAmount: 0.1
   jumpPowerIncreaseAmount: 0.1
