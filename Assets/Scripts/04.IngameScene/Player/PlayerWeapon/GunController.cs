@@ -334,8 +334,14 @@ public class GunController : MonoBehaviour, IWeapon
     }
 
     public void ReloadSoundPlay() {
-        _audioSource.PlayOneShot(ReloadSound);
+        _audioSource.clip = ReloadSound;
+        _audioSource.Play();
     }
+    public void SoundStop() {
+        _audioSource.Stop();
+    }
+
+
 
     // 게임 종료 시 풀 정리
     private void OnDestroy()

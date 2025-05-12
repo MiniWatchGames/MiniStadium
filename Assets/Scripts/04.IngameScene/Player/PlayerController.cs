@@ -106,28 +106,6 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public ObservableFloat CurrentHp
     {
         get => currentHp;
-        set
-        {
-            Debug.Log("It is On the Run");
-            currentHp.Value = value.Value;
-            if (OnPlayerDie != null)
-            {
-                Debug.Log("OnPlayerDie has Value");
-            }
-            else
-            {
-                Debug.Log("OnPlayerDie is null");
-            }
-            if (currentHp.Value <= 0 && !_isDead)
-            {
-                Debug.Log("주금..");
-                _isDead = true;
-                OnPlayerDie?.Invoke(gameObject);
-                SetMovementState("Idle");
-                SetPostureState("Idle");
-                SetActionState("Dead");
-            }
-        }
     }
 
     // --------
@@ -262,6 +240,21 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _passiveList = new List<IPassive>();
     }
 
+    private void Dead()
+    {
+        if (currentHp.Value <= 0 && !_isDead)
+        {
+            Debug.Log("주금..");
+            _isDead = true;
+            Animator.enabled = false;
+            Animator.enabled = true;
+            OnPlayerDie?.Invoke(gameObject);
+            SetMovementState("Idle");
+            SetPostureState("Idle");
+            SetActionState("Dead");
+        }
+    }
+
     private void Start()
     {
         //Init();      
@@ -294,14 +287,16 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void SetActionState(string stateName)
     {
-        if (stateName == "Reload" && IsReloadFinished) {
+        if ((stateName == "Reload" && IsReloadFinished)) {
             IsReloadFinished = false;
             _CanChangeState = false;
             _actionFsm.ChangeState(stateName, this);
             return;
         }
-        if (!_CanChangeState) return;
-        _actionFsm.ChangeState(stateName, this);
+        if (_CanChangeState || stateName == "Dead")
+        {
+            _actionFsm.ChangeState(stateName, this);
+        }
     }
 
     private void EquipWeapon(PlayerWeapon weapon)
@@ -945,6 +940,12 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             case "baseMoveSpeed":
                 ChangeMovementSpeed(data.Item1);
                 break;
+            case "currentHp":
+                if (currentHp.Value <= 0 && !_isDead)
+                {
+                    Dead();
+                }
+                break;
         }
     }
     #endregion
@@ -1125,6 +1126,45 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         //PurchaseManager.ResetPurchasedPlayerItems();
     }
 
+    public void InitDummy()
+    {
+        IsReloadFinished = true;
+
+        //상태 변경
+        ActionFsm?.ChangeState(defaultState, this);
+        MovementFsm?.ChangeState(defaultState, this);
+        PostureFsm?.ChangeState(defaultState, this);
+
+        _playerWeapon.WeaponType = WeaponType.Sword;
+        
+        EquipWeapon(_playerWeapon);
+
+        if (statDictionary.ContainsKey(StatType.Damage))
+        {
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary[StatType.Damage] = damage;
+        }
+        else
+        {
+            damage = _playerWeapon.CurrentWeapon.GetComponent<IWeapon>().Damage;
+            statDictionary.Add(StatType.Damage, damage);
+        }
+
+        // 스텟 + currentHp 옵저버 등록 
+        foreach (var stat in statDictionary)
+        {
+            stat.Value.AddObserver(this);
+        }
+
+        currentHp.AddObserver(this);
+
+        _isDead = false;
+
+        //풀피 만들어주기
+        CurrentHp.Value = baseMaxHp.Value;
+        //모든 _playerItems의 적용이 끝났다면 PurchaseManager의 값 초기화
+        //PurchaseManager.ResetPurchasedPlayerItems();
+    }
     public void CleanupBeforeReInit()
     {
         // InputManager 구독 해제 

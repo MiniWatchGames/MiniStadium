@@ -22,7 +22,7 @@ public class ObservableFloat : IStatPublisher
             {
                 NotifyObservers(new(result,name));
                 passResult = result;
-            }          
+            }
         }
     }
 
