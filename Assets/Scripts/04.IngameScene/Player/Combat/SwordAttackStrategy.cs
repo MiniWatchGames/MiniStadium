@@ -24,8 +24,8 @@ public class SwordAttackStrategy : IAttackStrategy
         
         _playerController.Animator.SetTrigger(Attack);
         
-        // 첫번째 공격 사운드 
-        _swordController.PlaySlashSound(0);
+        // 첫번째 공격 이펙트
+        _swordController.PlaySlashEffect(0);
     }
 
     public void Update(PlayerController playerController)
@@ -33,7 +33,7 @@ public class SwordAttackStrategy : IAttackStrategy
         _stateInfo = _playerController.Animator.GetCurrentAnimatorStateInfo(2);
         float t = _stateInfo.normalizedTime % 1f;
         
-        if (!_comboActive && t >= 0.5f && t <= 0.85f)
+        if (!_comboActive && t >= 0.5f && t <= 0.9f)
         {
             _comboActive = true;
         }
@@ -43,7 +43,7 @@ public class SwordAttackStrategy : IAttackStrategy
         }
         
         // 공격 상태 종료
-        if (t > 0.85f && _isAttacking)
+        if (t > 0.9f && _isAttacking)
         {
             _swordController.AttackEnd();
             _isAttacking = false;
@@ -74,8 +74,8 @@ public class SwordAttackStrategy : IAttackStrategy
             // 다음 공격 애니메이션 트리거
             _playerController.Animator.SetTrigger(NextAttack);
             
-            // 콤보 공격 사운드 
-            _swordController.PlaySlashSound(_currentCombo);
+            // 콤보 공격 이펙트 
+            _swordController.PlaySlashEffect(_currentCombo);
             
             // 콤보 활성 상태 리셋 (새 콤보의 콤보 윈도우를 기다리기 위해)
             _comboActive = false;

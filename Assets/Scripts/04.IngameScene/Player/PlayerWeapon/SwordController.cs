@@ -36,9 +36,12 @@ public class SwordController : MonoBehaviour, IWeapon
     
     [Header("Effects")]
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
+    [SerializeField] private ParticleSystem firstSkillEffectPrefab;
     [SerializeField] private Vector3[] slashEffectRotations;
     [SerializeField] private AudioClip[] slashSounds;
+    [SerializeField] private AudioClip firstSkillSound;
     private ParticleSystem[] _slashEffects;
+    private ParticleSystem _firstSkillEffect;
     private AudioSource _audioSource;
     
     // 충돌 처리
@@ -56,20 +59,21 @@ public class SwordController : MonoBehaviour, IWeapon
     
     private int _maxCombo = 2;
     private int _currentComboIndex = 0;
-    
+
+    private PlayerController pc;
     private CameraController _camera;
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _attackPower = new Stat(12.5f, "_attackPower");
+        _attackPower = new Stat(1f, "_attackPower");
         _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
         _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
     
     private void Start()
     {
-        var pc = GetComponentInParent<PlayerController>();
+        pc = GetComponentInParent<PlayerController>();
         _camera = pc.CameraController;
         
         _previousPositions = new Vector3[_triggerZones.Length];
@@ -84,9 +88,12 @@ public class SwordController : MonoBehaviour, IWeapon
         for (int i = 0; i < slashEffectPrefabs.Length; i++)
         {
             var rotation = Quaternion.Euler(slashEffectRotations[i]);
-            var effect = Instantiate(slashEffectPrefabs[i], transform.position, rotation);
+            var effect = Instantiate(slashEffectPrefabs[i], transform.root, false);
+            effect.transform.localRotation = rotation;
             _slashEffects[i] = effect;
+            Debug.Log("effect instantiated");
         }
+        _firstSkillEffect = Instantiate(firstSkillEffectPrefab);
     }
     
     public void SetComboIndex(int index)
@@ -174,7 +181,7 @@ public class SwordController : MonoBehaviour, IWeapon
                 attacker = gameObject,
                 damage = _attackPower.Value,
                 hitPoint = hitPoint,
-                hitDirection = (target.transform.position - transform.position).normalized
+                hitDirection = (target.transform.position - pc.transform.position).normalized
             };
             
             // 내 검에 내가 맞지 않도록 처리 
@@ -185,16 +192,14 @@ public class SwordController : MonoBehaviour, IWeapon
                 
                 // 크로스헤어 알림용
                 //CombatEvents.OnTargetHit?.Invoke(target);
-
-                _slashEffects[_currentComboIndex].transform.position = hitPoint;
-                _slashEffects[_currentComboIndex].Play();
             }
         }
     }
 
-    public void PlaySlashSound(int index)
+    public void PlaySlashEffect(int index)
     {
         _audioSource.PlayOneShot(slashSounds[index], 1f);
+        _slashEffects[_currentComboIndex].Play();
     }
 
     public void FirstSkillStart()
@@ -232,8 +237,6 @@ public class SwordController : MonoBehaviour, IWeapon
             var pitch = _camera.Pitch;
             float normalizedPitch = 1- ((pitch + 90) / 180f); // 0~1
             wallDistance = Mathf.Lerp(_minWallDistance, _maxWallDistance, normalizedPitch);
-            
-            //Debug.Log($"Camera Pitch: {pitch}, Normalized: {normalizedPitch}, Wall Distance: {wallDistance}");
             
             // 플레이어(루트) 트랜스폼 가져오기
             Transform rootTransform = transform.root;
@@ -275,10 +278,18 @@ public class SwordController : MonoBehaviour, IWeapon
         // 실제 벽 생성
         _currentWall = Instantiate(_wallPrefab, _wallSpawnPosition, _wallSpawnRotation);
         
-        // 벽 효과음 재생
+        // 벽 이펙트 재생
+        PlayWallEffect();
         
         // 바닥에서 올라오는 애니메이션 시작
         StartCoroutine(RiseWallAnimation());
+    }
+
+    private void PlayWallEffect()
+    {
+        _firstSkillEffect.transform.position = _wallSpawnPosition;
+        _firstSkillEffect.Play();
+        _audioSource.PlayOneShot(firstSkillSound, 1f);
     }
     
     // 벽이 바닥에서 올라오는 애니메이션
@@ -294,8 +305,7 @@ public class SwordController : MonoBehaviour, IWeapon
         // 시작 위치는 바닥 아래
         startPosition.y = -wallHeight / 2;
         
-        // 최종 위치는 벽 높이의 절반 (중심이 바닥에서 벽 높이의 절반 위치)
-        endPosition.y = wallHeight / 2;
+        endPosition.y = 0f;
         
         // 벽을 시작 위치에 배치
         _currentWall.transform.position = startPosition;
@@ -355,6 +365,11 @@ public class SwordController : MonoBehaviour, IWeapon
             {
                 Destroy(slashEffect.gameObject);
             }
+        }
+
+        if (_firstSkillEffect != null)
+        {
+            Destroy(_firstSkillEffect.gameObject);
         }
     }
     
