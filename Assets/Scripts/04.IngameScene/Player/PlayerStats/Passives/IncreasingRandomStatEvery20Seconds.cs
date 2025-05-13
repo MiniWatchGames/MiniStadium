@@ -4,63 +4,87 @@ using UnityEngine;
 
 public class IncreasingRandomStatEvery20Seconds : MonoBehaviour, IPassive
 {
+    private PlayerController controller;
+    private int rand;
+    private int modifierIndex_HP;
+    private int modifierIndex_MS;
+    private int modifierIndex_JP;
+    private int modifierIndex_AR;
+    
     //20초 마다 랜덤 스텟 증가
-
     Coroutine RandomStat;
 
     public void ApplyPassive(PlayerController playerController)
     {
         if (RandomStat == null)
         {
-            RandomStat = StartCoroutine(HelthRegen(playerController));
+            RandomStat = StartCoroutine(RandomAttribute(playerController));
         }
     }
 
-    IEnumerator HelthRegen(PlayerController playerController)
+    IEnumerator RandomAttribute(PlayerController playerController)
     {
         while (true)
         {
-            int rand = Random.Range(0, 3);
+            rand = Random.Range(0, 3);
             switch (rand) {
                 case 0:
-                    //최대 체력 증가, 체력 5 회복
-                    playerController.AddStatDecorate(StatType.MaxHp, 5);
-                    playerController.CurrentHp.Value += 5;
+                    //최대 체력 5 증가, 체력 5 회복
+                    controller.AddStatDecorate(StatType.MaxHp, 5);
+                    controller.CurrentHp.Value += 5;
+                    modifierIndex_HP = controller.BaseMaxHp.Modifiers.Count - 1;
                     break;
                 case 1:
-                    //이동 속도 증가
-                    playerController.AddStatDecorate(StatType.MoveSpeed, 0.5f);
+                    //이동 속도 20%증가
+                    controller.AddStatDecorate(StatType.MoveSpeed, 0.2f);
+                    modifierIndex_MS = controller.BaseMoveSpeed.Modifiers.Count - 1;
                     break;
                 case 2:
                     //점프 높이 증가
-                    playerController.AddStatDecorate(StatType.JumpPower, 0.5f);
+                    controller.AddStatDecorate(StatType.JumpPower, 0.5f);
+                    modifierIndex_JP = controller.BaseJumpPower.Modifiers.Count - 1;
                     break;
                 case 3:
                     //방어력 증가
-                    playerController.AddStatDecorate(StatType.Defence, 0.5f);
+                    controller.AddStatDecorate(StatType.Defence, 1f);
+                    modifierIndex_AR = controller.BaseDefence.Modifiers.Count - 1;
                     break;
-            }    
+            }
             yield return new WaitForSeconds(20f);
             switch (rand)
             {
                 case 0:
-                    //최대 체력 증가
-                    playerController.RemoveStatDecorate(StatType.MaxHp);
+                    controller.RemoveStatTargetDecorate(StatType.MaxHp, modifierIndex_HP);
                     break;
                 case 1:
-                    playerController.RemoveStatDecorate(StatType.MoveSpeed);
+                    controller.RemoveStatTargetDecorate(StatType.MoveSpeed, modifierIndex_MS);
                     break;
                 case 2:
-                    playerController.RemoveStatDecorate(StatType.JumpPower);
+                    controller.RemoveStatTargetDecorate(StatType.JumpPower, modifierIndex_JP);
                     break;
                 case 3:
-                    playerController.RemoveStatDecorate(StatType.Defence);
+                    controller.RemoveStatTargetDecorate(StatType.Defence, modifierIndex_AR);
                     break;
             }
         }
     }
     private void OnDestroy()
     {
+        switch (rand)
+        {
+            case 0:
+                controller.RemoveStatTargetDecorate(StatType.MaxHp, modifierIndex_HP);
+                break;
+            case 1:
+                controller.RemoveStatTargetDecorate(StatType.MoveSpeed, modifierIndex_MS);
+                break;
+            case 2:
+                controller.RemoveStatTargetDecorate(StatType.JumpPower, modifierIndex_JP);
+                break;
+            case 3:
+                controller.RemoveStatTargetDecorate(StatType.Defence, modifierIndex_AR);
+                break;
+        }
         StopAllCoroutines();
     }
 }
