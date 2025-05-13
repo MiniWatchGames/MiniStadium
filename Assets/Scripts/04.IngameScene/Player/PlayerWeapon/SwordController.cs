@@ -57,20 +57,21 @@ public class SwordController : MonoBehaviour, IWeapon
     
     private int _maxCombo = 2;
     private int _currentComboIndex = 0;
-    
+
+    private PlayerController pc;
     private CameraController _camera;
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _attackPower = new Stat(12.5f, "_attackPower");
+        _attackPower = new Stat(1f, "_attackPower");
         _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
         _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
     
     private void Start()
     {
-        var pc = GetComponentInParent<PlayerController>();
+        pc = GetComponentInParent<PlayerController>();
         _camera = pc.CameraController;
         
         _previousPositions = new Vector3[_triggerZones.Length];
@@ -177,7 +178,7 @@ public class SwordController : MonoBehaviour, IWeapon
                 attacker = gameObject,
                 damage = _attackPower.Value,
                 hitPoint = hitPoint,
-                hitDirection = (target.transform.position - transform.position).normalized
+                hitDirection = (target.transform.position - pc.transform.position).normalized
             };
             
             // 내 검에 내가 맞지 않도록 처리 
