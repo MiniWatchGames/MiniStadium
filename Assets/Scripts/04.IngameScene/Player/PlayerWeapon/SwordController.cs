@@ -36,10 +36,12 @@ public class SwordController : MonoBehaviour, IWeapon
     
     [Header("Effects")]
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
+    [SerializeField] private ParticleSystem firstSkillEffectPrefab;
     [SerializeField] private Vector3[] slashEffectRotations;
     [SerializeField] private AudioClip[] slashSounds;
     [SerializeField] private AudioClip firstSkillSound;
     private ParticleSystem[] _slashEffects;
+    private ParticleSystem _firstSkillEffect;
     private AudioSource _audioSource;
     
     // 충돌 처리
@@ -91,6 +93,7 @@ public class SwordController : MonoBehaviour, IWeapon
             _slashEffects[i] = effect;
             Debug.Log("effect instantiated");
         }
+        _firstSkillEffect = Instantiate(firstSkillEffectPrefab);
     }
     
     public void SetComboIndex(int index)
@@ -284,6 +287,8 @@ public class SwordController : MonoBehaviour, IWeapon
 
     private void PlayWallEffect()
     {
+        _firstSkillEffect.transform.position = _wallSpawnPosition;
+        _firstSkillEffect.Play();
         _audioSource.PlayOneShot(firstSkillSound, 1f);
     }
     
@@ -360,6 +365,11 @@ public class SwordController : MonoBehaviour, IWeapon
             {
                 Destroy(slashEffect.gameObject);
             }
+        }
+
+        if (_firstSkillEffect != null)
+        {
+            Destroy(_firstSkillEffect.gameObject);
         }
     }
     

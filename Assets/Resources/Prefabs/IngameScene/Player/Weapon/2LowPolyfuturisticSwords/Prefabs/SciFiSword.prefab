@@ -178,6 +178,8 @@ MonoBehaviour:
   slashEffectPrefabs:
   - {fileID: 198102920666579688, guid: bf9f848a24682054e9fddc30f1184e46, type: 3}
   - {fileID: 198104556613700186, guid: a8a6ba91edbeef2439175ecf0e08e6fb, type: 3}
+  firstSkillEffectPrefab: {fileID: 198412930389571108, guid: 231e3be01ac50c047bb16d07fd8d2ba5,
+    type: 3}
   slashEffectRotations:
   - {x: 0, y: -90, z: 0}
   - {x: 0, y: -90, z: 0}
