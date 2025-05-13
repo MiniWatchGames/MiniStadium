@@ -38,6 +38,7 @@ public class SwordController : MonoBehaviour, IWeapon
     [SerializeField] private ParticleSystem[] slashEffectPrefabs;
     [SerializeField] private Vector3[] slashEffectRotations;
     [SerializeField] private AudioClip[] slashSounds;
+    [SerializeField] private AudioClip firstSkillSound;
     private ParticleSystem[] _slashEffects;
     private AudioSource _audioSource;
     
@@ -85,8 +86,10 @@ public class SwordController : MonoBehaviour, IWeapon
         for (int i = 0; i < slashEffectPrefabs.Length; i++)
         {
             var rotation = Quaternion.Euler(slashEffectRotations[i]);
-            var effect = Instantiate(slashEffectPrefabs[i], transform.position, rotation);
+            var effect = Instantiate(slashEffectPrefabs[i], transform.root, false);
+            effect.transform.localRotation = rotation;
             _slashEffects[i] = effect;
+            Debug.Log("effect instantiated");
         }
     }
     
@@ -186,16 +189,14 @@ public class SwordController : MonoBehaviour, IWeapon
                 
                 // 크로스헤어 알림용
                 //CombatEvents.OnTargetHit?.Invoke(target);
-
-                _slashEffects[_currentComboIndex].transform.position = hitPoint;
-                _slashEffects[_currentComboIndex].Play();
             }
         }
     }
 
-    public void PlaySlashSound(int index)
+    public void PlaySlashEffect(int index)
     {
         _audioSource.PlayOneShot(slashSounds[index], 1f);
+        _slashEffects[_currentComboIndex].Play();
     }
 
     public void FirstSkillStart()
@@ -233,8 +234,6 @@ public class SwordController : MonoBehaviour, IWeapon
             var pitch = _camera.Pitch;
             float normalizedPitch = 1- ((pitch + 90) / 180f); // 0~1
             wallDistance = Mathf.Lerp(_minWallDistance, _maxWallDistance, normalizedPitch);
-            
-            //Debug.Log($"Camera Pitch: {pitch}, Normalized: {normalizedPitch}, Wall Distance: {wallDistance}");
             
             // 플레이어(루트) 트랜스폼 가져오기
             Transform rootTransform = transform.root;
@@ -276,10 +275,16 @@ public class SwordController : MonoBehaviour, IWeapon
         // 실제 벽 생성
         _currentWall = Instantiate(_wallPrefab, _wallSpawnPosition, _wallSpawnRotation);
         
-        // 벽 효과음 재생
+        // 벽 이펙트 재생
+        PlayWallEffect();
         
         // 바닥에서 올라오는 애니메이션 시작
         StartCoroutine(RiseWallAnimation());
+    }
+
+    private void PlayWallEffect()
+    {
+        _audioSource.PlayOneShot(firstSkillSound, 1f);
     }
     
     // 벽이 바닥에서 올라오는 애니메이션

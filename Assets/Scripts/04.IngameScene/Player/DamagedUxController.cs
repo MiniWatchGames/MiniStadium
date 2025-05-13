@@ -71,7 +71,7 @@ public class DamagedUxController : MonoBehaviour
     IEnumerator DamagedImageCoroutine(int index)
     {
         float time = 1.5f;
-        float startAlpha = 88f / 255f;
+        float startAlpha = 130f / 255f;
         Color originalColor = damagedImages[index].color;
         damagedImages[index].gameObject.SetActive(true);
         while (time > 0)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class Stat : IStatPublisher
 {
     private readonly float baseValue;
+    public List<Func<float, float>> Modifiers => modifiers;
     private List<Func<float, float>> modifiers;
 
     private string name;
@@ -43,10 +44,11 @@ public class Stat : IStatPublisher
     /// 데코레이트 추가 메소드
     /// </summary>
     /// <param name="Decorate">데코레이트 할 func 내용이 들어간다</param>
-    public void AddDecorate(Func<float, float> Decorate)
+    public int AddDecorate(Func<float, float> Decorate)
     {
         modifiers.Add(Decorate);
         checkValueChanged();
+        return modifiers.Count - 1;
     }
 
     /// <summary>
@@ -56,6 +58,17 @@ public class Stat : IStatPublisher
         if (modifiers.Count > 0)
         {
             modifiers.RemoveAt(modifiers.Count - 1);
+            checkValueChanged();
+        }
+    }
+    
+    /// <summary>
+    /// 특정 순서의 버프 제거 
+    /// </summary>
+    public void RemoveTargetModifier(int targetIndex) {
+        if (modifiers.Count > 0)
+        {
+            modifiers.RemoveAt(targetIndex);
             checkValueChanged();
         }
     }

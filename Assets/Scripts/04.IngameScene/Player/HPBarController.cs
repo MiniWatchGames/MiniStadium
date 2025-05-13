@@ -23,8 +23,9 @@ public class HPBarController : MonoBehaviour, IStatObserver
         var hitColliders = Physics.OverlapSphere(transform.position,20, targetLayer);
         if (hitColliders.Length > 0 )
         {
-            if (hitColliders[0].CompareTag("Player")) { 
-                return hitColliders[0].transform;
+            foreach(var hitCollider in hitColliders)
+            if (hitCollider.CompareTag("Player")) { 
+                return hitCollider.transform;
             }
             return null;
         }
@@ -37,7 +38,7 @@ public class HPBarController : MonoBehaviour, IStatObserver
     {
         _hpGauge.fillAmount = hp;
     }
-    void Update()
+    void LateUpdate()
     {
         var target = DetectPlayerInCircle();
         if (target != null) {
