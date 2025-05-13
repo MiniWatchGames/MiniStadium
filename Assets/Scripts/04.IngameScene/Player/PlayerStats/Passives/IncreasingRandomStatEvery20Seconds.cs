@@ -10,23 +10,29 @@ public class IncreasingRandomStatEvery20Seconds : MonoBehaviour, IPassive
     private int modifierIndex_MS;
     private int modifierIndex_JP;
     private int modifierIndex_AR;
-    
+    private PassiveEffects effects;
+    private GameObject effect;
     //20초 마다 랜덤 스텟 증가
     Coroutine RandomStat;
 
     public void ApplyPassive(PlayerController playerController)
     {
+        effects = playerController.GetComponent<PassiveEffects>();
+        effect = Instantiate(effects.effect2, playerController.GetComponentInChildren<Camera>().transform);
+        effect.transform.localPosition = new Vector3(0, -0.5f, 0.15f);
+        controller = playerController;
         if (RandomStat == null)
         {
-            RandomStat = StartCoroutine(RandomAttribute(playerController));
+            RandomStat = StartCoroutine(RandomAttribute());
         }
     }
 
-    IEnumerator RandomAttribute(PlayerController playerController)
+    IEnumerator RandomAttribute()
     {
         while (true)
         {
             rand = Random.Range(0, 3);
+            effect.SetActive(true);
             switch (rand) {
                 case 0:
                     //최대 체력 5 증가, 체력 5 회복
@@ -50,7 +56,9 @@ public class IncreasingRandomStatEvery20Seconds : MonoBehaviour, IPassive
                     modifierIndex_AR = controller.BaseDefence.Modifiers.Count - 1;
                     break;
             }
-            yield return new WaitForSeconds(20f);
+            yield return new WaitForSeconds(1f);
+            effect.SetActive(false);
+            yield return new WaitForSeconds(19f);
             switch (rand)
             {
                 case 0:

@@ -2342,14 +2342,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd249edc69a71f94498f8057c4a4b4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effect1: {fileID: 0}
-  effect2: {fileID: 0}
-  effect3: {fileID: 0}
+  effect1: {fileID: 1247282762272248, guid: 8f8ccb3a03e68af4cb4db0098da19146, type: 3}
+  effect2: {fileID: 1617602193996184, guid: 672508e118abcc04eb8c428966936ba0, type: 3}
+  effect3: {fileID: 1679348057962266, guid: 043a259092d2c1d4eb5cf0d7a807a5c2, type: 3}
   effect4Healer: {fileID: 8877596331768416466, guid: 25df25dc39da2f8448bcfd49b754f377,
     type: 3}
   effect5Berserker: {fileID: 1084983192572740, guid: c04b2745d5ca4cd40bb52e1f937e7a7d,
     type: 3}
-  effect6: {fileID: 0}
+  effect6: {fileID: 1161526018737128, guid: 4e98af0ece4a26c428343cafdaf41241, type: 3}
 --- !u!1 &7469125994218291045
 GameObject:
   m_ObjectHideFlags: 0
