@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 {
     [SerializeField] private Transform head;
     [SerializeField] private LayerMask groundLayer;
-
+    [SerializeField] private DamagedUxController _damagedUxController;
     private CharacterController _characterController;
     private const float Gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
@@ -217,9 +217,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
         _audioSource = GetComponent<AudioSource>();
-
         _purchaseManager = new PurchaseManager();
-
+        
         _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
         _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
         _actionFsm = new PlayerFSM<ActionState>(StateType.Action, _playerWeapon, defaultState);
@@ -326,6 +325,22 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         var damage = damageInfo.damage;
         currentHp.Value -= damage-(damage*BaseDefence.Value*0.1f);
         Debug.Log($"current Hp = {currentHp.Value}");
+
+        //피격 ux
+        // XZ 평면으로 투영
+        Vector3 _hitDirectrion = damageInfo.hitDirection;
+        Vector3 flatDirection = new Vector3(_hitDirectrion.x, 0f, _hitDirectrion.z);
+        
+        Vector3 forward = this.transform.forward;
+
+        // Y축 기준 각도 구하기
+        float angle = Vector3.SignedAngle(forward, flatDirection, Vector3.up);
+        Debug.Log($"Angle: {angle}");
+
+        if(gameObject.name == "Player(Clone)")
+        _damagedUxController.ShowDamagedUx(angle);
+        // 캐릭터 기준 뒤 0도 앞 180도 
+        // 왼쪽 + 오른쪽 -
     }
 
     private void OnAnimatorMove()
@@ -1042,6 +1057,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         _skillGageObj = gage;
         _skillGage = _skillGageObj.GetComponent<SkillGage>();
     }
+
     /// <summary>
     /// ResetCharacter 후 새로운 구매내역이 생길 때 Init 대신 ReInit호출
     /// </summary>
