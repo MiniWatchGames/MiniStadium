@@ -48,8 +48,8 @@ public static class SkillFactory
                     {
                         // WeaponSkills
                         case 1:
-                            skill = target.AddComponent<FirstWeaponSkillState>();
-                            states.Add(new(ActionState.FirstWeaponSkill, skill));
+                            skill = target.AddComponent<MissileState>();
+                            states.Add(new(ActionState.Missile, skill));
                             break;
                         case 2:
                             skill = target.AddComponent<MovementSkillsState>();

@@ -19,6 +19,7 @@ public enum ActionState
     RunSkill,
     DoubleJumpSkill,
     TeleportSkill,
+    Missile,
     None
 }
 
@@ -1299,7 +1300,8 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void PlayTeleportGain() {
         _audioSource.volume = 0.25f;
-        _audioSource.PlayOneShot(teleportGainSound);
+        _audioSource.clip = teleportGainSound;
+        _audioSource.Play();
     }    
     public void PlayTeleport() {
         _audioSource.volume = 0.5f;
@@ -1312,6 +1314,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void StopSound() {
         _audioSource.Stop();
+        _audioSource.clip = null;
     }
     #endregion
 }

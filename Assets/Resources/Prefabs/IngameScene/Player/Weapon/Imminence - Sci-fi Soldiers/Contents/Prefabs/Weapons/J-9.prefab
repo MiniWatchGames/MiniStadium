@@ -143,6 +143,7 @@ Transform:
   m_Children:
   - {fileID: 4269768957693326}
   - {fileID: 5616332189590976570}
+  - {fileID: 1016908457658617623}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33014663897003982
@@ -253,6 +254,7 @@ MonoBehaviour:
   bulletSpeed: 100
   shotSound: {fileID: 8300000, guid: add852624da5145198a7bff8275aaa5b, type: 3}
   ReloadSound: {fileID: 8300000, guid: 1ad512755994b7b4398bc323d76605fc, type: 3}
+  SkillFirePoint: {fileID: 1016908457658617623}
 --- !u!82 &1604889059322042027
 AudioSource:
   m_ObjectHideFlags: 0
@@ -349,6 +351,37 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &4734494533460087528
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1016908457658617623}
+  m_Layer: 0
+  m_Name: SkillFilrePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1016908457658617623
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4734494533460087528}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.035, z: 0.786}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4163331797486372}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5619173624915461403
 GameObject:
   m_ObjectHideFlags: 0
