@@ -66,7 +66,7 @@ public class SwordController : MonoBehaviour, IWeapon
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _attackPower = new Stat(1f, "_attackPower");
+        _attackPower = new Stat(12.5f, "_attackPower");
         _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
         _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
@@ -277,7 +277,8 @@ public class SwordController : MonoBehaviour, IWeapon
         
         // 실제 벽 생성
         _currentWall = Instantiate(_wallPrefab, _wallSpawnPosition, _wallSpawnRotation);
-        
+        _currentWall.layer = LayerMask.NameToLayer("Ground");
+
         // 벽 이펙트 재생
         PlayWallEffect();
         

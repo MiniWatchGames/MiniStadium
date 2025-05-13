@@ -66,7 +66,7 @@ public class Stat : IStatPublisher
     /// 특정 순서의 버프 제거 
     /// </summary>
     public void RemoveTargetModifier(int targetIndex) {
-        if (modifiers.Count > 0)
+        if (modifiers.Count > 0 && modifiers.Count-1 <= targetIndex)
         {
             modifiers.RemoveAt(targetIndex);
             checkValueChanged();
@@ -91,9 +91,13 @@ public class Stat : IStatPublisher
         observers.Add(observer);
     }
 
-    public void RemoveObserver(IStatObserver observer)
+    public void RemoveAllObservers()
     {
         observers.Clear();
+    }
+    public void RemoveObserver(IStatObserver observer)
+    {
+        observers.Remove(observer);
     }
 
     public void NotifyObservers((float,string) value)
