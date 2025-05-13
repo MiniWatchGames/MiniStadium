@@ -2060,6 +2060,7 @@ GameObject:
   - component: {fileID: 8037387594734043560}
   - component: {fileID: 2827574855819347934}
   - component: {fileID: 18073734463356429}
+  - component: {fileID: -4719406229504086337}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2327,6 +2328,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-4719406229504086337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7244771892483126651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd249edc69a71f94498f8057c4a4b4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect1: {fileID: 0}
+  effect2: {fileID: 0}
+  effect3: {fileID: 0}
+  effect4Healer: {fileID: 8877596331768416466, guid: 25df25dc39da2f8448bcfd49b754f377,
+    type: 3}
+  effect5Berserker: {fileID: 1084983192572740, guid: c04b2745d5ca4cd40bb52e1f937e7a7d,
+    type: 3}
+  effect6: {fileID: 0}
 --- !u!1 &7469125994218291045
 GameObject:
   m_ObjectHideFlags: 0

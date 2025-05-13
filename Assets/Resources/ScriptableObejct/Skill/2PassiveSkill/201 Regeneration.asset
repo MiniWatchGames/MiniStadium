@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3eac3f510134e57458e71407c3298bfc, type: 3}
-  m_Name: 204 PassiveSkill4
+  m_Name: 201 Regeneration
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 1297fdd981992844e8d21630bba32f4c, type: 3}
-  _name: "\uD328\uC2DC\uBE0C4"
+  _name: "\uC7AC\uC0DD\uB825"
   price: 300
-  description: "\uD328\uC2DC\uBE0C \uC2A4\uD0AC 4 \uC124\uBA85"
+  description: "2\uCD08 \uB9C8\uB2E4 \uCCB4\uB825 1 \uC7AC\uC0DD"
   skillType: 2
   weaponType: 0

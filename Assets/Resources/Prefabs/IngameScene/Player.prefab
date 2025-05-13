@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4519177198745052549}
   - component: {fileID: 4023150316468927950}
   - component: {fileID: 4012582964062246863}
+  - component: {fileID: 699718846967037991}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -122,3 +123,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 100
+  team: 0
+  inGameManager: {fileID: 0}
+--- !u!114 &699718846967037991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954570115969710883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd249edc69a71f94498f8057c4a4b4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect1: {fileID: 0}
+  effect2: {fileID: 0}
+  effect3: {fileID: 0}
+  effect4Healer: {fileID: 8877596331768416466, guid: 25df25dc39da2f8448bcfd49b754f377,
+    type: 3}
+  effect5Berserker: {fileID: 1084983192572740, guid: c04b2745d5ca4cd40bb52e1f937e7a7d,
+    type: 3}
+  effect6: {fileID: 0}
