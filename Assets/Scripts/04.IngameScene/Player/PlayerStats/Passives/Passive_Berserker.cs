@@ -19,8 +19,9 @@ public class Passive_Berserker : MonoBehaviour, IPassive, IStatObserver
         effects = controller.GetComponent<PassiveEffects>();
         
         additionalDamage = 0;
-        
-        effect = Instantiate(effects.effect5Berserker, controller.transform);
+
+        effect = Instantiate(effects.effect4Healer, playerController.GetComponentInChildren<Camera>().transform);
+        effect.transform.localPosition = new Vector3(0, -0.5f, 0.15f);
         effect.SetActive(false);
     }
 
@@ -32,7 +33,7 @@ public class Passive_Berserker : MonoBehaviour, IPassive, IStatObserver
             {
                 additionalDamage = controller.Damage.Value * 0.2f;
                 controller.AddStatDecorate(StatType.Damage, additionalDamage);
-                modifierIndex = controller.BaseMoveSpeed.Modifiers.Count - 1;
+                modifierIndex = controller.Damage.Modifiers.Count - 1;
                 activated = true;
             }
             else if (data.Item1 > controller.BaseMaxHp.Value / 2 && activated)
@@ -53,6 +54,7 @@ public class Passive_Berserker : MonoBehaviour, IPassive, IStatObserver
     {
         if (activated)
         {
+            controller.CurrentHp.RemoveObserver(this);
             controller.RemoveStatTargetDecorate(StatType.Damage, modifierIndex);
             activated = false;
         }

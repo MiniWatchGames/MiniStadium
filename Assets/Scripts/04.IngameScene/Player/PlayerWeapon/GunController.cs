@@ -13,7 +13,7 @@ public class GunController : MonoBehaviour, IWeapon
         HitEffect,
         Bullet
     }
-    
+
     // 이펙트 프리팹 구조체
     [Serializable]
     protected struct EffectPrefab
@@ -23,46 +23,48 @@ public class GunController : MonoBehaviour, IWeapon
         public int poolSize;
         public float duration; // 자동 반환 시간
     }
-    
+
     // 풀에 있는 오브젝트 관리를 위한 내부 클래스
     private class PooledObject
     {
         public GameObject gameObject;
         public EffectType type;
-        
+
         public PooledObject(GameObject gameObject, EffectType type)
         {
             this.gameObject = gameObject;
             this.type = type;
         }
     }
-    
+
     [SerializeField] private Stat damage;
     [SerializeField] private float range = 100f;
     [SerializeField] private Transform firePoint;
     [SerializeField] private LayerMask targetMask;
-    
+
     [Header("Effects")]
     [SerializeField] private EffectPrefab[] effectPrefabs; // 구조체 배열
     [SerializeField] private float bulletSpeed = 100f;
-    [SerializeField ]private AudioClip shotSound;
-    [SerializeField ]private AudioClip ReloadSound;
+    [SerializeField] private AudioClip shotSound;
+    [SerializeField] private AudioClip ReloadSound;
     private AudioSource _audioSource;
-    
+
     // 풀 관리
     private Dictionary<EffectType, Transform> _poolParents = new Dictionary<EffectType, Transform>();
     private Dictionary<EffectType, List<PooledObject>> _objectPools = new Dictionary<EffectType, List<PooledObject>>();
     private Transform _poolContainer;
-    
+
     private CameraController _camera;
     private RaycastHit _hitInfo;
     private ObservableFloat _currentAmmo;
     private ObservableFloat _maxAmmo;
-
+    private Vector3 hitPosition;
     public Stat Damage { get => damage; }
     public ObservableFloat CurrentAmmo { get => _currentAmmo; }
     public ObservableFloat MaxAmmo { get => _maxAmmo; }
-
+    [SerializeField]
+    public Transform SkillFirePoint;
+    public Vector3 CameraPosition { get =>_camera.transform.forward; }
     private void Awake()
     {
         // 풀 컨테이너 생성
@@ -205,7 +207,7 @@ public class GunController : MonoBehaviour, IWeapon
         // 발사 효과음
         _audioSource.PlayOneShot(shotSound, 1f);
         
-        Vector3 hitPosition = firePoint.position + _camera.transform.forward * range;
+        hitPosition = firePoint.position + _camera.transform.forward * range;
         bool hitTarget = false;
         
         // 레이캐스트로 타격 확인
