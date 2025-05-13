@@ -66,7 +66,7 @@ public class SwordController : MonoBehaviour, IWeapon
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _attackPower = new Stat(12.5f, "_attackPower");
+        _attackPower = new Stat(6f, "_attackPower");
         _currentAmmo = new ObservableFloat(10, "SwordCurrentAmmo");
         _maxAmmo = new ObservableFloat(10, "SwordMaxAmmo");
     }
