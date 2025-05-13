@@ -186,14 +186,11 @@ public class SwordController : MonoBehaviour, IWeapon
                 
                 // 크로스헤어 알림용
                 //CombatEvents.OnTargetHit?.Invoke(target);
-
-                // _slashEffects[_currentComboIndex].transform.position = hitPoint;
-                // _slashEffects[_currentComboIndex].Play();
             }
         }
     }
 
-    public void PlaySlashSound(int index)
+    public void PlaySlashEffect(int index)
     {
         _audioSource.PlayOneShot(slashSounds[index], 1f);
         _slashEffects[_currentComboIndex].Play();
