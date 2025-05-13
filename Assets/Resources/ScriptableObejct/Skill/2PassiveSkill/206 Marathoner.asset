@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3eac3f510134e57458e71407c3298bfc, type: 3}
-  m_Name: 203 Marathoner
+  m_Name: 206 Marathoner
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 77cddb7abc45a5b4c8b0d22f0afa31cf, type: 3}
   _name: "\uB9C8\uB77C\uD1A0\uB108"
   price: 300
   description: "\uCCB4\uB825\uC5D0 \uBE44\uB840\uD574 \uC774\uB3D9\uC18D\uB3C4\uAC00
-    \uCD5C\uB300 10% \uBE68\uB77C\uC9C4\uB2E4."
+    \uCD5C\uB300 10% \uAC00\uC18D"
   skillType: 2
   weaponType: 0

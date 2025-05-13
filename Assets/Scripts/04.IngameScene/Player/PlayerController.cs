@@ -885,6 +885,25 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
     }
+    /// <summary>
+    /// 지정 인덱스의 특정 순서에 추가된 데코레이트 삭제
+    /// </summary>
+    /// <param name="stat">삭제시킬 변수</param>
+    public void RemoveStatTargetDecorate(StatType stat, int targetIndex)
+    {
+        if (statDictionary.TryGetValue(stat, out var target))
+        {
+            target.RemoveTargetModifier(targetIndex);
+        }
+        if (stat == StatType.MaxHp)
+        {
+            if (CurrentHp.Value >= baseMaxHp.Value)
+            {
+                CurrentHp.Value = baseMaxHp.Value;
+            }
+            Debug.Log($"버프 적용 현재 체력{CurrentHp}");
+        }
+    }
 
     public void ChangeMovementSpeed(float value)
     {

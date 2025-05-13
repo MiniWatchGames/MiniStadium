@@ -5,9 +5,17 @@ using UnityEngine;
 
 public class IncreasingDamagePassive : MonoBehaviour, IPassive
 {
-    
+    private PlayerController controller;
+    private int modifierIndex;
     public void ApplyPassive(PlayerController playerController)
     {
-        playerController.AddStatDecorate(StatType.Damage, 10f);
+        controller = playerController;
+        controller.AddStatDecorate(StatType.Damage, 10f);
+        modifierIndex = controller.BaseMoveSpeed.Modifiers.Count - 1;
+    }
+    private void OnDestroy()
+    {
+        controller.RemoveStatTargetDecorate(StatType.Damage, modifierIndex);
+        
     }
 }
