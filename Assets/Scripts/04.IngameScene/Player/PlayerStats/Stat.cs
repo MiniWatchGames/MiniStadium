@@ -5,6 +5,7 @@ public class Stat : IStatPublisher
 {
     private readonly float baseValue;
     private List<Func<float, float>> modifiers;
+
     private string name;
     private float value;
     private List<IStatObserver> observers;
