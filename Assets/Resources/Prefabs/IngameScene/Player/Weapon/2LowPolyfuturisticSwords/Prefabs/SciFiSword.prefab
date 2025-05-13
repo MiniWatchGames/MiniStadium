@@ -143,7 +143,7 @@ MonoBehaviour:
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  _wallPrefab: {fileID: 2241337565284646605, guid: 70563c86d6d4f43fca5b961c46b8c74a,
+  _wallPrefab: {fileID: 3879527797373684685, guid: 117d60b470967427993801cf8cfa1c6c,
     type: 3}
   _previewPrefab: {fileID: 999142466502684380, guid: c2924f2560cea44218f2e56a1833922d,
     type: 3}

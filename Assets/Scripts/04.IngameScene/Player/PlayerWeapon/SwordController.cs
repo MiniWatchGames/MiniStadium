@@ -299,8 +299,7 @@ public class SwordController : MonoBehaviour, IWeapon
         // 시작 위치는 바닥 아래
         startPosition.y = -wallHeight / 2;
         
-        // 최종 위치는 벽 높이의 절반 (중심이 바닥에서 벽 높이의 절반 위치)
-        endPosition.y = wallHeight / 2;
+        endPosition.y = 0f;
         
         // 벽을 시작 위치에 배치
         _currentWall.transform.position = startPosition;

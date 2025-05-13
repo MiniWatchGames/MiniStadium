@@ -45430,7 +45430,6 @@ GameObject:
   - component: {fileID: 938540096}
   - component: {fileID: 938540098}
   - component: {fileID: 938540097}
-  - component: {fileID: 938540098}
   m_Layer: 5
   m_Name: '[GroupLayer] Receipt'
   m_TagString: Untagged
