@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class SwordFirstSkillStrategy : IWeaponSkillStrategy
 {
+    private static readonly int FirstSkill = Animator.StringToHash("FirstSkill");
     private PlayerController _playerController;
     private SwordController _swordController;
     private bool _isSkillActive = false;
@@ -39,10 +40,9 @@ public class SwordFirstSkillStrategy : IWeaponSkillStrategy
     {
         if (!isSkillHeld && _isSkillActive)
         {
-            _playerController.Animator.SetTrigger("FirstSkill");
+            _playerController.Animator.SetTrigger(FirstSkill);
             _swordController.FirstSkillEnd();
             _isSkillActive = false;
-            //_isComplete = true;
             CompleteWithDelay(500);
         }
     }
@@ -52,7 +52,7 @@ public class SwordFirstSkillStrategy : IWeaponSkillStrategy
         return _isComplete;
     }
 
-    public async void CompleteWithDelay(int delay)
+    private async void CompleteWithDelay(int delay)
     {
         await System.Threading.Tasks.Task.Delay(delay);
         _isComplete = true;

@@ -33,7 +33,7 @@ public class SwordAttackStrategy : IAttackStrategy
         _stateInfo = _playerController.Animator.GetCurrentAnimatorStateInfo(2);
         float t = _stateInfo.normalizedTime % 1f;
         
-        if (!_comboActive && t >= 0.5f && t <= 0.85f)
+        if (!_comboActive && t >= 0.5f && t <= 0.95f)
         {
             _comboActive = true;
         }
@@ -43,7 +43,7 @@ public class SwordAttackStrategy : IAttackStrategy
         }
         
         // 공격 상태 종료
-        if (t > 0.85f && _isAttacking)
+        if (t > 0.95f && _isAttacking)
         {
             _swordController.AttackEnd();
             _isAttacking = false;
