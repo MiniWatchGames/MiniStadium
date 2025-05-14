@@ -155,7 +155,7 @@ public class InGameManager : MonoBehaviour
                 // 플레이어 없다면 생성, 플레이어에 구매 내역을 넘기고, 플레이어 구매 내역 적용
                 if (player is null)
                 {
-                    player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
+                    player = Instantiate(PlayerPrefab, mapSpawners[currentMap][0].transform.position, Quaternion.identity);
                     playerContoroller = player.GetComponent<PlayerController>();
                 }
                 SetPlayerTeam(player);
