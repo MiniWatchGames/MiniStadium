@@ -4,63 +4,74 @@ using UnityEngine;
 
 public class IncreasingRandomStatEvery20Seconds : MonoBehaviour, IPassive
 {
+    private PlayerController controller;
+    private int rand;
+    private int modifierIndex_HP;
+    private int modifierIndex_MS;
+    private int modifierIndex_JP;
+    private int modifierIndex_AR;
+    private PassiveEffects effects;
+    private GameObject effect;
     //20초 마다 랜덤 스텟 증가
-
     Coroutine RandomStat;
 
     public void ApplyPassive(PlayerController playerController)
     {
+        effects = playerController.GetComponent<PassiveEffects>();
+        effect = Instantiate(effects.effect2, playerController.CameraController.transform);
+        effect.transform.localPosition = new Vector3(0, -0.5f, 0.15f);
+        controller = playerController;
         if (RandomStat == null)
         {
-            RandomStat = StartCoroutine(HelthRegen(playerController));
+            RandomStat = StartCoroutine(RandomAttribute());
         }
     }
 
-    IEnumerator HelthRegen(PlayerController playerController)
+    IEnumerator RandomAttribute()
     {
         while (true)
         {
-            int rand = Random.Range(0, 3);
+            rand = Random.Range(0, 3);
+            effect?.SetActive(true);
             switch (rand) {
                 case 0:
-                    //최대 체력 증가, 체력 5 회복
-                    playerController.AddStatDecorate(StatType.MaxHp, 5);
-                    playerController.CurrentHp.Value += 5;
+                    //최대 체력 20 증가, 체력 20 회복
+                    controller.AddStatDecorate(StatType.MaxHp, 20);
+                    controller.CurrentHp.Value += 20;
+                    modifierIndex_HP = controller.BaseMaxHp.Modifiers.Count - 1;
                     break;
                 case 1:
-                    //이동 속도 증가
-                    playerController.AddStatDecorate(StatType.MoveSpeed, 0.5f);
-                    break;
-                case 2:
-                    //점프 높이 증가
-                    playerController.AddStatDecorate(StatType.JumpPower, 0.5f);
-                    break;
-                case 3:
                     //방어력 증가
-                    playerController.AddStatDecorate(StatType.Defence, 0.5f);
+                    controller.AddStatDecorate(StatType.Defence, 5f);
+                    modifierIndex_AR = controller.BaseDefence.Modifiers.Count - 1;
                     break;
-            }    
-            yield return new WaitForSeconds(20f);
+            }
+            yield return new WaitForSeconds(1f);
+            effect?.SetActive(false);
+            yield return new WaitForSeconds(19f);
             switch (rand)
             {
                 case 0:
-                    //최대 체력 증가
-                    playerController.RemoveStatDecorate(StatType.MaxHp);
+                    controller.RemoveStatTargetDecorate(StatType.MaxHp, modifierIndex_HP);
                     break;
                 case 1:
-                    playerController.RemoveStatDecorate(StatType.MoveSpeed);
-                    break;
-                case 2:
-                    playerController.RemoveStatDecorate(StatType.JumpPower);
-                    break;
-                case 3:
-                    playerController.RemoveStatDecorate(StatType.Defence);
+                    controller.RemoveStatTargetDecorate(StatType.Defence, modifierIndex_AR);
                     break;
             }
         }
     }
     private void OnDestroy()
     {
-        StopAllCoroutines();
+        switch (rand)
+        {
+            case 0:
+                controller.RemoveStatTargetDecorate(StatType.MaxHp, modifierIndex_HP);
+                break;
+            case 1:
+                controller.RemoveStatTargetDecorate(StatType.Defence, modifierIndex_AR);
+                break;
+        }
+        StopAllCoroutines(); 
+        Destroy(effect?.gameObject);
     }
 }

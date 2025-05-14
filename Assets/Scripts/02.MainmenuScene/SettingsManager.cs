@@ -8,99 +8,58 @@ using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
-    [Header("Dropdowns")]
-    public TMP_Dropdown resolutionDropdown;
-    public TMP_Dropdown displayModeDropdown;
+    [Header("Display Setting Elements")]
+    [SerializeField] private TMP_Dropdown resolutionDropdown; // 해상도 드롭다운
+    [SerializeField] private TMP_Dropdown displayModeDropdown; // 화면모드(전체화면, 창모드) 드롭다운
 
-    [Header("Sliders")]
-    public Slider masterSlider;
-    public Slider bgmSlider;
-    public Slider sfxSlider;
-    public Slider mouseSensitivitySlider;
+    [Header("Sound Setting Elements")]
+    [SerializeField] private Slider masterSlider; // 마스터 볼륨 조절 슬라이더
+    [SerializeField] private Slider bgmSlider; // 배경음 볼륨 조절 슬라이더
+    [SerializeField] private Slider sfxSlider; // 효과음 볼륨 조절 슬라이더
+    
+    [Header("Sensitivity Setting Element")]
+    [SerializeField] private Slider mouseSlider; // 마우스 감도 조절 슬라이더
 
     [Header("Buttons")]
-    public Button saveButton;
-    public Button closeButton;
-
-    [Header("Audio")]
-    // public AudioMixer audioMixer; // 마스터 믹서 연결
-
-    private Resolution[] resolutions;
-
-    private readonly Vector2Int[] supportedResolutions = new Vector2Int[]
-    {
-        new Vector2Int(1280, 720),
-        new Vector2Int(1360, 768),
-        new Vector2Int(1600, 900),
-        new Vector2Int(1920, 1080),
-        new Vector2Int(3480, 2160)
-    };
+    [SerializeField] private Button applySettingButton; // 설정저장 버튼
 
     private void Start()
     {
-        InitResolutionDropdown();
-        InitDisplayModeDropdown();
-        LoadSettings();
+        InitDropdowns();
+        LoadUIValues();
 
-        saveButton.onClick.AddListener(SaveSettings);
-        closeButton.onClick.AddListener(CloseSettings);
+        // [PopupPanel] Settings에 있는 버튼 클릭 이벤트 연결 함수
+        OnClickButtons();
+        // [PopupPanel] Settings에 있는 슬라이더 이벤트 연결 함수
+        OnValueChangedSlider();
     }
-
-    private void InitResolutionDropdown()
+    
+    private void InitDropdowns()
     {
         resolutionDropdown.ClearOptions();
-        var options = new System.Collections.Generic.List<string>();
-        int currentResolutionIndex = 0;
-
-        for (int i = 0; i < supportedResolutions.Length; i++)
-        {
-            var res = supportedResolutions[i];
-            string option = res.x + " x " + res.y;
-            options.Add(option);
-
-            if (res.x == Screen.width && res.y == Screen.height)
-                currentResolutionIndex = i;
-        }
-
-        resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = PlayerPrefs.GetInt("ResolutionIndex", 3); // 기본 설정 : 1920 x 1080
-        resolutionDropdown.RefreshShownValue();
-    }
-
-    private void InitDisplayModeDropdown()
-    {
         displayModeDropdown.ClearOptions();
-        displayModeDropdown.AddOptions(new System.Collections.Generic.List<string> { "전체화면", "창모드" });
-        displayModeDropdown.value = PlayerPrefs.GetInt("DisplayMode", 0); // 기본 설정 : 전체 화면
-        displayModeDropdown.RefreshShownValue();
+        
+        resolutionDropdown.AddOptions(new List<string> { "1280x720", "1360x768", "1600x900", "1920x1080", "3840x2160" });
+        displayModeDropdown.AddOptions(new List<string> { "전체화면", "창모드" });
     }
+    
+    
+    #region [PopupPanel] Settings saveSettingButton 처리
 
-    private void SaveSettings()
+    private void ApplySettingClicked()
     {
-        // 해상도 적용
-        Vector2Int res = supportedResolutions[resolutionDropdown.value];
-        bool isFullScreen = displayModeDropdown.value == 0;
-        Screen.SetResolution(res.x, res.y, isFullScreen);
-        
-        // 소리 설정 적용
-        // audioMixer.SetFloat("MasterVolume", Mathf.Log10(masterSlider.value) * 20);
-        // audioMixer.SetFloat("BGMVolume", Mathf.Log10(bgmSlider.value) * 20);
-        // audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxSlider.value) * 20);
-        
-        // 마우스 감도 설정 적용
-        PlayerPrefs.SetFloat("MouseSensitivity", mouseSensitivitySlider.value);
-        
-        // 플레이어 설정 값 저장
-        PlayerPrefs.SetInt("ResolutionIndex", resolutionDropdown.value);
-        PlayerPrefs.SetInt("DisplayMode", displayModeDropdown.value);
-        PlayerPrefs.SetFloat("MasterVolume", masterSlider.value);
-        PlayerPrefs.SetFloat("BGMVolume", bgmSlider.value);
-        PlayerPrefs.SetFloat("SFXVolume", sfxSlider.value);
+        Debug.Log("해당 설정값을 저장합니다.");
 
-        PlayerPrefs.Save();
+        GraphicsManager.Instance.SetGraphicsSettings(resolutionDropdown.value, displayModeDropdown.value);
+        AudioManager.Instance.SetMasterVolume(masterSlider.value);
+        AudioManager.Instance.SetBGMVolume(bgmSlider.value);
+        AudioManager.Instance.SetSFXVolume(sfxSlider.value);
+        SensitivityManager.Instance.SetSensitivity(mouseSlider.value);
     }
+    
+    #endregion
 
-    private void LoadSettings()
+    private void LoadUIValues()
     {
         resolutionDropdown.value = PlayerPrefs.GetInt("ResolutionIndex", 3);
         displayModeDropdown.value = PlayerPrefs.GetInt("DisplayMode", 0);
@@ -109,15 +68,37 @@ public class SettingsManager : MonoBehaviour
         bgmSlider.value = PlayerPrefs.GetFloat("BGMVolume", 1f);
         sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
 
-        mouseSensitivitySlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
-        
-        // audioMixer.SetFloat("MasterVolume", Mathf.Log10(masterSlider.value) * 20);
-        // audioMixer.SetFloat("BGMVolume", Mathf.Log10(bgmSlider.value) * 20);
-        // audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxSlider.value) * 20);
+        mouseSlider.value = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
+
+
+        resolutionDropdown.RefreshShownValue();
+        displayModeDropdown.RefreshShownValue();
+    }
+    
+    #region UI(Button, Slider) 이벤트 연결 함수
+
+    private void OnClickButtons()
+    {
+        // 설정저장 버튼 이벤트 연결
+        applySettingButton.onClick.AddListener(ApplySettingClicked);
     }
 
-    private void CloseSettings()
+    private void OnValueChangedSlider()
     {
-        gameObject.SetActive(false);
+        if (AudioManager.Instance != null)
+        {
+            // AudioManager 연동
+            masterSlider.onValueChanged.AddListener(AudioManager.Instance.SetMasterVolume);
+            bgmSlider.onValueChanged.AddListener(AudioManager.Instance.SetBGMVolume);
+            sfxSlider.onValueChanged.AddListener(AudioManager.Instance.SetSFXVolume);
+        }
+
+        if (SensitivityManager.Instance != null)
+        {
+            // 마우스 감도 슬라이더 연동
+            mouseSlider.onValueChanged.AddListener(SensitivityManager.Instance.SetSensitivity);
+        }
     }
+    
+    #endregion
 }

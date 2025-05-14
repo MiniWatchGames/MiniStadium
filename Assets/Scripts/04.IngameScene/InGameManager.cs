@@ -64,6 +64,8 @@ public class InGameManager : MonoBehaviour
 
     //맵 세팅용 딕셔너리 start()문에서 적용
     Dictionary<GameObject, List<Spawner>> mapSpawners = new Dictionary<GameObject, List<Spawner>>();
+    //현재 켜져있는 맵 저장
+    GameObject currentMap;
     //맵 센터찾기
 
 
@@ -153,7 +155,7 @@ public class InGameManager : MonoBehaviour
                 // 플레이어 없다면 생성, 플레이어에 구매 내역을 넘기고, 플레이어 구매 내역 적용
                 if (player is null)
                 {
-                    player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
+                    player = Instantiate(PlayerPrefab, mapSpawners[currentMap][0].transform.position, Quaternion.identity);
                     playerContoroller = player.GetComponent<PlayerController>();
                 }
                 SetPlayerTeam(player);
@@ -162,7 +164,9 @@ public class InGameManager : MonoBehaviour
                 playerHud.init(playerContoroller);
                 playerContoroller.SetSkillGage(playerHud.GetSkillGage());
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
-                player.gameObject.transform.position = new Vector3(16, 9, 3);
+                player.GetComponent<CharacterController>().enabled = false;
+                player.gameObject.transform.position = mapSpawners[currentMap][0].transform.position;
+                player.GetComponent<CharacterController>().enabled = true;
                 Debug.Log("player spawned ");
                 
                 currentRoundState = RoundState.InRound;
@@ -185,7 +189,9 @@ public class InGameManager : MonoBehaviour
 
                 if (BlueWinCount == 4 || RedWinCount == 4)
                 {
-                    SetGameState(GameState.EndGame);
+                    StartCoroutine(EndGame());
+                    inGameUIAction?.Invoke();
+                    break;
                 }
 
                 if (currentGameState == GameState.EndGame)
@@ -201,6 +207,12 @@ public class InGameManager : MonoBehaviour
                 break;
         }
     }
+
+    IEnumerator EndGame() {
+        yield return new WaitForSeconds(5);
+        SetGameState(GameState.EndGame);
+    }
+
     void SetWinLoseState(WinLoseState state)
     {
         switch (state)
@@ -241,7 +253,7 @@ public class InGameManager : MonoBehaviour
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
         {
             //Debug.Log("Game Time End");
-            gameTimer.OnTimerEndDelegate = null;
+            //gameTimer.OnTimerEndDelegate = null;
             SetRoundState(state);
         }, (time) =>
         {
@@ -278,7 +290,7 @@ public class InGameManager : MonoBehaviour
 
         for (int i = 0; i < countSpanwer.Count; i++)
         {
-            //각 스포너의 부모 오브젝트를 가져온다. 그리고 그 오브젝트에 스포너를 맵핑한다
+            //각 스포너의 부모 오브젝트를 가져온다. 그리고 그 오브젝트의 스포너를 맵핑한다
             if (mapSpawners.ContainsKey(countSpanwer[i].transform.parent.gameObject))
             {
                 mapSpawners[countSpanwer[i].transform.parent.gameObject].Add(countSpanwer[i]);
@@ -290,6 +302,13 @@ public class InGameManager : MonoBehaviour
             }
         }
         maps.AddRange(GameObject.FindGameObjectsWithTag("Map"));
+        for (int i = 0; i < maps.Count; i++)
+        {
+            if (maps[i].activeSelf == true)
+            {
+                currentMap = maps[i];
+            }
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -370,7 +389,7 @@ public class InGameManager : MonoBehaviour
 
         GameObject EnemyPlayer = GameObject.FindWithTag("Enemy");
         if (EnemyPlayer == null) {
-            EnemyPlayer = Instantiate(EnemyPrefab, new Vector3(5, 9, 3), Quaternion.identity);
+            EnemyPlayer = Instantiate(EnemyPrefab, new Vector3(5, 2, 3), Quaternion.identity);
         }    
         EnemyPlayer.GetComponent<PlayerController>().InitDummy();
         //if(EnemyPlayer == null) return;

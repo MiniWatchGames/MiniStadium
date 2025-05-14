@@ -1452,48 +1452,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2880254285287731699, guid: 4e2f70a69d3144d4a9b7d04427bad570,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6312852015783536301}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e2f70a69d3144d4a9b7d04427bad570, type: 3}
---- !u!1 &1813518438984621067 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2880254285287731699, guid: 4e2f70a69d3144d4a9b7d04427bad570,
-    type: 3}
-  m_PrefabInstance: {fileID: 4526770092445511160}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6312852015783536301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1813518438984621067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 865d3de32cc9760448ceb8f9eb712f38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timer: {fileID: 0}
-  text: {fileID: 5307301485510509430}
-  timerType: 0
-  timeLimit: 10
-  currentTime: 0
-  repairShopTimer: {fileID: 0}
---- !u!114 &5307301485510509430 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8607790654993624718, guid: 4e2f70a69d3144d4a9b7d04427bad570,
-    type: 3}
-  m_PrefabInstance: {fileID: 4526770092445511160}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1813518438984621067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &8105224073206844996 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5668302620803195836, guid: 4e2f70a69d3144d4a9b7d04427bad570,

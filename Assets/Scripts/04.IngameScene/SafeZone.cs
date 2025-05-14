@@ -88,7 +88,8 @@ public class SafeZone : MonoBehaviour, IStatObserver
                     outoffieldAction = () =>
                     {
                         ObservableFloat CurrentHp = other.gameObject.GetComponent<PlayerController>().CurrentHp;
-                        CurrentHp.Value -= other.gameObject.GetComponent<PlayerController>().BaseMaxHp.Value * 0.1f ;
+                        CurrentHp.Value -= other.gameObject.GetComponent<PlayerController>().BaseMaxHp.Value * 0.1f;
+                        
                     },
                     timer = 3f
                 });

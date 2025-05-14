@@ -22,6 +22,8 @@ public enum ActionState
     RunSkill,
     DoubleJumpSkill,
     TeleportSkill,
+    SmartMissile,
+    Missile,
     None
 }
 
@@ -55,7 +57,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
 {
     [SerializeField] private Transform head;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private DamagedUxController _damagedUxController;
     private CharacterController _characterController;
     private const float Gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
@@ -220,9 +222,8 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         _combatManager = GetComponent<CombatManager>();
         _playerWeapon = GetComponent<PlayerWeapon>();
         _audioSource = GetComponent<AudioSource>();
-
         _purchaseManager = new PurchaseManager();
-
+        
         _movementFsm = new PlayerFSM<MovementState>(StateType.Move, _playerWeapon, defaultState);
         _postureFsm = new PlayerFSM<PostureState>(StateType.Posture, _playerWeapon, defaultState);
         _actionFsm = new PlayerFSM<ActionState>(StateType.Action, _playerWeapon, defaultState);
@@ -327,17 +328,16 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
     [ObserversRpc]
     public void SetActionState(string stateName, PlayerController player)
     {
-        if (stateName == "Reload" && IsReloadFinished) {
+        if ((_CanChangeState && stateName != "Reload") || stateName == "Dead")
+        {
+            _actionFsm.ChangeState(stateName, this);
+            return;
+        }
+        if ((stateName == "Reload" && IsReloadFinished)) {
             IsReloadFinished = false;
             _CanChangeState = false;
             _actionFsm.ChangeState(stateName, player);
             return;
-        }
-
-        if (_CanChangeState || stateName == "Dead")
-        {
-            Debug.Log("CanChangeState");
-            _actionFsm.ChangeState(stateName, player);   
         }
     }
 
@@ -364,6 +364,22 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         var damage = damageInfo.damage;
         currentHp.Value -= damage-(damage*BaseDefence.Value*0.1f);
         Debug.Log($"current Hp = {currentHp.Value}");
+
+        //피격 ux
+        // XZ 평면으로 투영
+        Vector3 _hitDirectrion = damageInfo.hitDirection;
+        Vector3 flatDirection = new Vector3(_hitDirectrion.x, 0f, _hitDirectrion.z);
+        
+        Vector3 forward = this.transform.forward;
+
+        // Y축 기준 각도 구하기
+        float angle = Vector3.SignedAngle(forward, flatDirection, Vector3.up);
+        Debug.Log($"Angle: {angle}");
+
+        if(gameObject.name == "Player(Clone)")
+        _damagedUxController.ShowDamagedUx(angle);
+        // 캐릭터 기준 뒤 0도 앞 180도 
+        // 왼쪽 + 오른쪽 -
     }
 
     private void OnAnimatorMove()
@@ -534,6 +550,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
 
     public void OnFirstWeaponSkillPressed()
     {
+        if (_actionFsm.CurrentState == ActionState.Reload) return;
         if (_weaponSkills?.Count >= 1)
         {
             var weaponSkill = _weaponSkills[0];
@@ -584,6 +601,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
 
     public void OnSecondWeaponSkillPressed()
     {
+        if (_actionFsm.CurrentState == ActionState.Reload) return;
         if (_weaponSkills?.Count >= 2)
         {
             if (_weaponSkills?.Count >= 1)
@@ -742,7 +760,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         while (value.Value >= 0)
         {
             value.Value -= Time.deltaTime;
-            Debug.Log("스킬 쿨타임 : " + value.Value);
+            //Debug.Log("스킬 쿨타임 : " + value.Value);
             yield return null;
         }
 
@@ -925,6 +943,25 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
             Debug.Log($"버프 적용 현재 체력{CurrentHp}");
         }
     }
+    /// <summary>
+    /// 지정 인덱스의 특정 순서에 추가된 데코레이트 삭제
+    /// </summary>
+    /// <param name="stat">삭제시킬 변수</param>
+    public void RemoveStatTargetDecorate(StatType stat, int targetIndex)
+    {
+        if (statDictionary.TryGetValue(stat, out var target))
+        {
+            target.RemoveTargetModifier(targetIndex);
+        }
+        if (stat == StatType.MaxHp)
+        {
+            if (CurrentHp.Value >= baseMaxHp.Value)
+            {
+                CurrentHp.Value = baseMaxHp.Value;
+            }
+            Debug.Log($"버프 적용 현재 체력{CurrentHp}");
+        }
+    }
 
     public void ChangeMovementSpeed(float value)
     {
@@ -1063,6 +1100,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
         _skillGageObj = gage;
         _skillGage = _skillGageObj.GetComponent<SkillGage>();
     }
+
     /// <summary>
     /// ResetCharacter 후 새로운 구매내역이 생길 때 Init 대신 ReInit호출
     /// </summary>
@@ -1307,7 +1345,8 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
 
     public void PlayTeleportGain() {
         _audioSource.volume = 0.25f;
-        _audioSource.PlayOneShot(teleportGainSound);
+        _audioSource.clip = teleportGainSound;
+        _audioSource.Play();
     }    
     public void PlayTeleport() {
         _audioSource.volume = 0.5f;
@@ -1320,6 +1359,7 @@ public class PlayerController : NetworkBehaviour, IInputEvents, IDamageable, ISt
 
     public void StopSound() {
         _audioSource.Stop();
+        _audioSource.clip = null;
     }
     #endregion
 }

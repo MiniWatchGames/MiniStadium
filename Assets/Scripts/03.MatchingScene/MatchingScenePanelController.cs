@@ -13,44 +13,24 @@ using Random = UnityEngine.Random;
 
 public class MatchingScenePanelController : PanelController
 {
-    // 현재 보여지고 있는 패널
-    public GameObject currentPanel;
-    // 전환 패널
-    public GameObject nextPanel;
-    
-    // 패널 전환 대기 시간 (초)
-    public float panelDelayTime = 5f;
-    // 장면 전환 대기 시간 (초)
-    public float sceneDelayTime = 5f;
+    [Header("[PopupPanel] MatchMaking")]
+    [SerializeField] private TextMeshProUGUI matchingText; // "매칭이진행중입니다..." 문구 텍스트
+    [SerializeField] private TextMeshProUGUI gameTipMessage; // 게임팁 문구 텍스트
+    [SerializeField] private Image progressBar; // Fill 타입 Image로 설정된 진행바
 
-    // 매칭 중 표시할 문구 텍스트
-    public TextMeshProUGUI matchMakingText;
-    // 매칭 중 아이콘 (회전 애니메이션)
-    public Image progressIcon;
+    [Header("[PopupPanel] MatchFinish")]
+    [SerializeField] private GameObject popupMatchFinish; // [PopupPanel] MatchFinish 
 
-    // Versus 화면 좌/우 플레이어 배경
-    public RectTransform playerBackGround;
-    public RectTransform enemyBackGround;
+    public float fillSpeed = 0.3f; // 진행바 진행 속도
+    public float targetProgress = 1f;
     
-    // 이동 목표 위치
-    public Vector2 playerTargetPos;
-    public Vector2 enemyTargetPos;
-    
-    // ProgressIcon 회전 속도
-    public float rotationSpeed = 100f;
-    // Versus 배경 이동 속도
-    public float moveSpeed = 500f;
-    
-    // 현재 ProgressIcon이 회전 중인지 회전 여부 확인
-    private bool isSpinning = true;
-    // Versus 배경이 이동 중인지 이동 여부 확인
-    private bool isMovingVersus = false;
-    
+    private float currentProgress = 0f;
+    private bool isFinished = false;
+
     private PlayerManager _playerManager;
     private DataManager _dataManager;
-    
-    // 랜덤으로 보여줄 문구 리스트
-    public List<string> tipMessages = new List<string>()
+    // 랜덤으로 보여줄 게임TIP 문구 리스트
+    private List<string> tipMessages = new List<string>()
     {
         "확인용 팁 메시지 1",
         "확인용 팁 메시지 2",
@@ -65,6 +45,9 @@ public class MatchingScenePanelController : PanelController
         _dataManager = FindObjectOfType<DataManager>();
         InstanceFinder.ClientManager.OnClientConnectionState += HandleClientConnectionState;
         InstanceFinder.ServerManager.OnServerConnectionState += HandleServerConnectionState;
+
+        // "매칭진행중입니다..." 텍스트 점 개수 반복
+        StartCoroutine(AnimationDots());
     }
     private void HandleServerConnectionState(ServerConnectionStateArgs args)
     {
@@ -87,76 +70,62 @@ public class MatchingScenePanelController : PanelController
             yield return null;
         Debug.Log("Waiting for player manager");
         _playerManager.RequestUserIn(_dataManager.currentUserAccount);
-        _playerManager.OnChangedStartState += SwitchPanel;
+        _playerManager.OnChangedStartState += OnMatchComplete;
     }
 
     private void Update()
     {
-        // ProgressIcon 회전
-        if (isSpinning && progressIcon != null)
-        {
-            progressIcon.transform.Rotate(Vector3.forward, -rotationSpeed * Time.deltaTime);
-        }
+        if (isFinished) return;
         
-        /*
-        // Versus 패널 이동 애니메이션
-        if (isMovingVersus)
+        if (currentProgress < targetProgress)
         {
-            playerBackGround.anchoredPosition = Vector2.MoveTowards(
-                playerBackGround.anchoredPosition,
-                playerTargetPos,
-                moveSpeed * Time.deltaTime);
+            currentProgress += fillSpeed * Time.deltaTime;
+            progressBar.fillAmount = currentProgress;
 
-            enemyBackGround.anchoredPosition = Vector2.MoveTowards(
-                enemyBackGround.anchoredPosition,
-                enemyTargetPos,
-                moveSpeed * Time.deltaTime);
-
-            if (Vector2.Distance(playerBackGround.anchoredPosition, playerTargetPos) < 0.1f
-                && Vector2.Distance(enemyBackGround.anchoredPosition, enemyTargetPos) < 0.1f)
+            if (currentProgress >= targetProgress)
             {
-                isMovingVersus = false; // 이동 종료
-                StartCoroutine(LoadInGameScene()); // 장면 전환 코루틴
+                OnMatchComplete();
             }
         }
-        */
-
     }
-
-    /// <summary>
-    /// 랜덤 문구 화면에 설정하는 함수
-    /// </summary>
+    
     private void SetRandomTipMessages()
     {
-        if (matchMakingText != null && tipMessages.Count > 0)
+        if (gameTipMessage != null && tipMessages.Count > 0)
         {
             int randomIndex = Random.Range(0, tipMessages.Count);
-            matchMakingText.text = tipMessages[randomIndex];
+            gameTipMessage.text = tipMessages[randomIndex];
         }
     }
 
-    private void SwitchPanel()
+    private void OnMatchComplete()
     {
-        currentPanel.SetActive(false);
-        nextPanel.SetActive(true);
-        
-        // 회전 멈추기
-        StopSpinner();
-
-        StartCoroutine(LoadInGameScene());
+        isFinished = true;
+        popupMatchFinish.SetActive(true); // [PopupPanel] MatchFinish 패널 띄우기
+        StartCoroutine(WaitAndLoadInGame());
     }
 
-    /// <summary>
-    /// ProgressIcon 회전 중지 함수
-    /// </summary>
-    private void StopSpinner()
+    #region 코루틴
+    
+    IEnumerator AnimationDots()
     {
-        isSpinning = false;
+        string baseText = "매칭이진행중입니다";
+        int dotCount = 0;
+
+        while (!isFinished)
+        {
+            dotCount = (dotCount % 3) + 1;
+            matchingText.text = baseText + new string('.', dotCount);
+
+            yield return new WaitForSeconds(0.5f); // 점 변경 시간 간격
+        }
     }
 
-    private IEnumerator LoadInGameScene()
+    IEnumerator WaitAndLoadInGame()
     {
-        yield return new WaitForSeconds(sceneDelayTime);
-        SceneManager.LoadScene("IngameScene");
+        yield return new WaitForSeconds(5f); // 5초 대기
+        SceneManager.LoadScene("InGameScene"); // InGameScene으로 장면 전환
     }
+
+    #endregion
 }

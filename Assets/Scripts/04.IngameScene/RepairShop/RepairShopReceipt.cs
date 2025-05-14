@@ -105,7 +105,7 @@ public class RepairShopReceipt : MonoBehaviour
     {
         PlayerHud.Update_HUD_Comp( RepairShopWeapon.currentWeapon == null ? 
                 RepairShopWeapon.baseWeapon : RepairShopWeapon.currentWeapon, 
-            receiptSlots[0][0], receiptSlots[1][0], receiptSlots[1][1]);
+            receiptSlots);
     }
     
     // receipt 내의 스테이터스 색상 처리
