@@ -23,6 +23,7 @@ public class HS_ProjectileMover : MonoBehaviour
     [SerializeField] private AudioClip flyingSound;
     [SerializeField] private AudioClip explosionSound;
     [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private bool isSmart;
     private bool startChecker = false;
     protected bool notDestroy = false;
     private Transform ParentsTransform;
@@ -59,9 +60,9 @@ public class HS_ProjectileMover : MonoBehaviour
             }
         }
         if (notDestroy)
-            StartCoroutine(DisableTimer(3));
+            StartCoroutine(DisableTimer(7));
         else
-            StartCoroutine(DestroyTimer(3));
+            StartCoroutine(DestroyTimer(7));
         startChecker = true;
     }
 
@@ -108,6 +109,13 @@ public class HS_ProjectileMover : MonoBehaviour
     //https ://docs.unity3d.com/ScriptReference/Rigidbody.OnCollisionEnter.html
     protected virtual void OnCollisionEnter(Collision collision)
     {
+        if (isSmart)
+        {
+            if (collision.collider.CompareTag("Obstacle"))
+            {
+                return;
+            }
+        }
         audioSource.Stop();
         audioSource.clip = null;
         audioSource.volume = 0.4f;
@@ -169,11 +177,6 @@ public class HS_ProjectileMover : MonoBehaviour
         }
         ApplyDamage(collision.gameObject, ParentsTransform, 20);
 
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, 3f);
     }
     private void ApplyDamage(GameObject target, Transform _hitPoint ,float skillMount)
     {
