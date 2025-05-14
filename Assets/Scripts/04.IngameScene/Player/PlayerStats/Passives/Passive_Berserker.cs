@@ -20,7 +20,7 @@ public class Passive_Berserker : MonoBehaviour, IPassive, IStatObserver
         
         additionalDamage = 0;
 
-        effect = Instantiate(effects.effect5Berserker, playerController.GetComponentInChildren<Camera>().transform);
+        effect = Instantiate(effects.effect5Berserker, playerController.CameraController.transform);
         effect.transform.localPosition = new Vector3(0, -0.5f, 0.15f);
         effect.SetActive(false);
     }
@@ -29,19 +29,19 @@ public class Passive_Berserker : MonoBehaviour, IPassive, IStatObserver
     {
         if (data.Item2 == "currentHp")
         {
-            if (data.Item1 <= controller.BaseMaxHp.Value / 2 && !activated)
+            if (data.Item1 <= controller?.BaseMaxHp.Value / 2 && !activated)
             {
                 additionalDamage = controller.Damage.Value * 0.2f;
                 controller.AddStatDecorate(StatType.Damage, additionalDamage);
                 modifierIndex = controller.Damage.Modifiers.Count - 1;
                 activated = true;
             }
-            else if (data.Item1 > controller.BaseMaxHp.Value / 2 && activated)
+            else if (data.Item1 > controller?.BaseMaxHp.Value / 2 && activated)
             {
                 controller.RemoveStatTargetDecorate(StatType.Damage, modifierIndex);
                 activated = false;
             }
-            effect.SetActive(activated);
+            effect?.SetActive(activated);
         }
     }
 
@@ -54,10 +54,11 @@ public class Passive_Berserker : MonoBehaviour, IPassive, IStatObserver
     {
         if (activated)
         {
-            controller.CurrentHp.RemoveObserver(this);
-            controller.RemoveStatTargetDecorate(StatType.Damage, modifierIndex);
+            controller?.CurrentHp.RemoveObserver(this);
+            controller?.RemoveStatTargetDecorate(StatType.Damage, modifierIndex);
             activated = false;
         }
+        StopAllCoroutines();
         Destroy(effect.gameObject);
     }
 }

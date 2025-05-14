@@ -28,7 +28,7 @@ public class PassiveFactory
                     target.PassiveList.Add(target.AddComponent<Passive_Berserker>());
                 break;
                 case 6:
-                    target.PassiveList.Add(target.AddComponent<Passive_Marathoner>());
+                    target.PassiveList.Add(target.AddComponent<Passive_Jumper>());
                 break;
             }
         }
