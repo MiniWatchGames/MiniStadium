@@ -290,7 +290,7 @@ public class InGameManager : MonoBehaviour
 
         for (int i = 0; i < countSpanwer.Count; i++)
         {
-            //각 스포너의 부모 오브젝트를 가져온다. 그리고 그 오브젝트에 스포너를 맵핑한다
+            //각 스포너의 부모 오브젝트를 가져온다. 그리고 그 오브젝트의 스포너를 맵핑한다
             if (mapSpawners.ContainsKey(countSpanwer[i].transform.parent.gameObject))
             {
                 mapSpawners[countSpanwer[i].transform.parent.gameObject].Add(countSpanwer[i]);
