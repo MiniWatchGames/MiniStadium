@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
+    public AudioSource audioSource;
 
     [SerializeField] private AudioMixer audioMixer;
 
@@ -12,6 +13,7 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            audioSource = GetComponent<AudioSource>();
             DontDestroyOnLoad(gameObject);
             LoadVolumes();
         }
