@@ -41,21 +41,41 @@ public class TeleportSkillState : PlayerActionState, ISkillData
     public override void Exit()
     {
         _playerController.StopSound();
+
         if (_pressTime.Value >= _needPressTime.Value)
         {
             _playerController.PlayTeleport();
-            Vector3 teleportDirection = _playerController.transform.forward * _skillMount;
-            _characterController.enabled = false;
-            _playerController.transform.position += teleportDirection;
-            _characterController.enabled = true;
 
+            Vector3 teleportDirection = _playerController.transform.forward.normalized;
+            Vector3 startPosition = _playerController.transform.position;
+            float maxDistance = _skillMount;
+
+            RaycastHit hit;
+            Vector3 targetPosition;
+
+            if (Physics.Raycast(startPosition, teleportDirection, out hit, maxDistance))
+            {
+                float safeDistance = Mathf.Max(hit.distance - 0.5f, 0f);
+                targetPosition = startPosition + teleportDirection * safeDistance;
+            }
+            else
+            {
+                targetPosition = startPosition + teleportDirection * maxDistance;
+            }
+
+            _characterController.enabled = false;
+            _playerController.transform.position = targetPosition;
+            _characterController.enabled = true;
         }
-        else { 
+        else
+        {
             _playerController.PlayTeleportGainRe();
         }
+
         _playerController.skillGageReset(this);
         _pressTime.Value = 0;
     }
+
     public override void StateUpdate()
     {
         _pressTime.Value += Time.deltaTime;

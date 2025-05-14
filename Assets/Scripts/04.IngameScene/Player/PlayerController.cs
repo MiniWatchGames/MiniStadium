@@ -720,7 +720,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
         while (value.Value >= 0)
         {
             value.Value -= Time.deltaTime;
-            Debug.Log("스킬 쿨타임 : " + value.Value);
+            //Debug.Log("스킬 쿨타임 : " + value.Value);
             yield return null;
         }
 
