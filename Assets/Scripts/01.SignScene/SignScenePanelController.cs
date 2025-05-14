@@ -36,7 +36,9 @@ public class SignScenePanelController : PanelController
 
     [Header("OptionSetting Element")] 
     [SerializeField] private Button optionCloseButton; // 옵션 패널 닫는 버튼 (옵션 패널 -> 로그인 화면)
-    
+
+    [Header("ErrorSound")]
+    [SerializeField] private AudioClip errorSound; // 오류 발생 시 재생할 사운드
     // 로그인 유지 여부 저장 변수
     private bool isChecked = false; 
 
@@ -144,6 +146,7 @@ public class SignScenePanelController : PanelController
         else
         {
             // 로그인 실패 시 문구 표시
+            AudioManager.Instance.audioSource.PlayOneShot(errorSound);
             if (loginFailText != null) loginFailText.gameObject.SetActive(true);
         }
     }
@@ -172,6 +175,7 @@ public class SignScenePanelController : PanelController
             // 회원가입 실패 시 문구 표시
             if (signupFailText != null)
             {
+                AudioManager.Instance.audioSource.PlayOneShot(errorSound);
                 switch (errorCode)
                 {
                     case 1:

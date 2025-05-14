@@ -126,6 +126,7 @@ public class RepairShopSkill : MonoBehaviour
         if (remainingSkillsToBuy[type] <= 0)
         {
             error.GetComponent<TextMeshProUGUI>().text = "더 선택할 수 없습니다.";
+            AudioManager.Instance.audioSource.PlayOneShot(RepairShop.ErrorSound);
             error.SetActive(true);
             return; // 더 이상 선택할 수 없으면 종료
         }
