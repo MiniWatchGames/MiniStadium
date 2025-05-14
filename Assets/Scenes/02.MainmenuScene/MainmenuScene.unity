@@ -6280,6 +6280,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 996635965}
   m_CullTransparentMesh: 1
+--- !u!1001 &1012413673
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 920056140210474966, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_Name
+      value: NetworkManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537164139285181036, guid: 8623f2e4052c6be42a50b6c794756164,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8623f2e4052c6be42a50b6c794756164, type: 3}
 --- !u!1 &1020194665
 GameObject:
   m_ObjectHideFlags: 0
@@ -7497,6 +7565,7 @@ GameObject:
   - component: {fileID: 1183067905}
   - component: {fileID: 1183067904}
   - component: {fileID: 1183067908}
+  - component: {fileID: 1183067909}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -7607,7 +7676,7 @@ MonoBehaviour:
   - {fileID: 1919397428}
   gameStartButton: {fileID: 415028936}
   rankingButton: {fileID: 2145276210}
-  creativeServerButton: {fileID: 672108616}
+  createServerButton: {fileID: 672108616}
   gameSettingButton: {fileID: 2058837319}
   gameExitButton: {fileID: 2100174043}
   closeSettingButton: {fileID: 844920082}
@@ -7616,6 +7685,18 @@ MonoBehaviour:
   totalRoundText: {fileID: 874001245}
   playerWinText: {fileID: 965733711}
   opponentWinText: {fileID: 2032168313}
+--- !u!114 &1183067909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183067903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3f1479dcdce3154dafde76bef57a402, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1197134560
 GameObject:
   m_ObjectHideFlags: 0
@@ -11273,7 +11354,7 @@ MonoBehaviour:
   bgmSlider: {fileID: 184739773}
   sfxSlider: {fileID: 1863550485}
   mouseSlider: {fileID: 813298607}
-  saveSettingButton: {fileID: 197519349}
+  applySettingButton: {fileID: 0}
 --- !u!1 &1921786502
 GameObject:
   m_ObjectHideFlags: 0
@@ -14732,3 +14813,4 @@ SceneRoots:
   - {fileID: 1716847289}
   - {fileID: 2031982802}
   - {fileID: 1128293279}
+  - {fileID: 1012413673}

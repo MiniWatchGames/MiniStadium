@@ -12,9 +12,9 @@ public class DummyAttacking : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(3f);
-            dummy.SetActionState("Attack");
+            dummy.SetActionStateServer("Attack", dummy);
             yield return new WaitForSeconds(3f);
-            dummy.SetActionState("Idle");
+            dummy.SetActionStateServer("Idle", dummy);
         }
     }
 

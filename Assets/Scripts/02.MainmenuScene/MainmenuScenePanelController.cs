@@ -27,6 +27,7 @@ public class MainmenuScenePanelController : PanelController
     [SerializeField] private TextMeshProUGUI opponentWinText; // 상대 플레이어가 이긴 횟수가 나오는 텍스트
 
     private bool isResultActive = false;
+    private GameObject _playerManager;
 
     private void Start()
     {
@@ -50,9 +51,6 @@ public class MainmenuScenePanelController : PanelController
         gameStartButton.onClick.AddListener(OnGameStartClicked);
         createServerButton.onClick.AddListener(OnCreateServerClicked);
         rankingButton.onClick.AddListener(OnRankingClicked);
-        settingsButton.onClick.AddListener(OnSettingsClicked);
-        exitButton.onClick.AddListener(OnExitClicked);
-        goMainmenu.onClick.AddListener(OnGoMainMenuClicked);
         InstanceFinder.ServerManager.OnServerConnectionState += HandleServerConnectionState;
     }
 

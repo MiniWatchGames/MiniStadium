@@ -440,6 +440,7 @@ GameObject:
   - component: {fileID: 7725872679975783454}
   - component: {fileID: 316716070162975916}
   - component: {fileID: 1808899221753383931}
+  - component: {fileID: 8402707498868210226}
   m_Layer: 7
   m_Name: Dummy 1
   m_TagString: Player
@@ -528,7 +529,7 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 316716070162975916}
   _networkObjectCache: {fileID: 0}
-  weaponType: 1
+  weaponType: 0
   weaponDataList:
   - weaponPrefab: {fileID: 6985989593022072725, guid: 0a63d7a42f093f24cbe46e87652c2493,
       type: 3}
@@ -559,9 +560,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 0
+  _damagedUxController: {fileID: 0}
   fixedFirstMaxHp: 50
   fixedFirstDefence: 1
   fixedFirstMoveSpeed: 1
@@ -787,6 +786,19 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 316716070162975916}
   _networkObjectCache: {fileID: 0}
+--- !u!114 &8402707498868210226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592021047486761035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e93c84bb77f94a4c9b97487c5c2ecf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dummy: {fileID: 8564315523455457166}
 --- !u!1 &1628996011761389380
 GameObject:
   m_ObjectHideFlags: 0

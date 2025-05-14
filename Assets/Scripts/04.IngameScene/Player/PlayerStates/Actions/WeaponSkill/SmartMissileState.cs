@@ -44,7 +44,7 @@ public class SmartMissileState : PlayerActionState, ISkillData
         missileControlelr.SetMissileDirection(cameraPosition);
         missileControlelr.SetParentsTransform(gameObject.transform);
         missileControlelr.SetDamage(_skillMount);
-        _playerController.SetActionState("Idle");
+        _playerController.SetActionStateServer("Idle", _playerController);
     }
     public override void Exit()
     {

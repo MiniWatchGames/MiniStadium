@@ -145,6 +145,7 @@ Transform:
   m_Children:
   - {fileID: 4269768957693326}
   - {fileID: 5616332189590976570}
+  - {fileID: 5873898735927797360}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33014663897003982
@@ -237,7 +238,6 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 5858179048443902512}
   _networkObjectCache: {fileID: 0}
-  damage: 20
   range: 100
   firePoint: {fileID: 5616332189590976570}
   targetMask:
@@ -259,6 +259,7 @@ MonoBehaviour:
   bulletSpeed: 100
   shotSound: {fileID: 8300000, guid: add852624da5145198a7bff8275aaa5b, type: 3}
   ReloadSound: {fileID: 8300000, guid: 1ad512755994b7b4398bc323d76605fc, type: 3}
+  SkillFirePoint: {fileID: 5873898735927797360}
 --- !u!114 &5858179048443902512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -422,6 +423,37 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &974127405685886341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5873898735927797360}
+  m_Layer: 0
+  m_Name: SkillFirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5873898735927797360
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 974127405685886341}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4163331797486372}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5619173624915461403
 GameObject:
   m_ObjectHideFlags: 0
