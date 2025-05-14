@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,11 +16,36 @@ public class HS_ProjectileMover : MonoBehaviour
     [SerializeField] protected Light lightSourse;
     [SerializeField] protected GameObject[] Detached;
     [SerializeField] protected ParticleSystem projectilePS;
+    //사운드 클립, 일단 여기에 넣어뒀지만
+    //차라리 HS_ProjectileMover를 상속 받는 편이 더 좋을 듯
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip shootSound;
+    [SerializeField] private AudioClip flyingSound;
+    [SerializeField] private AudioClip explosionSound;
+    [SerializeField] private LayerMask targetLayer;
     private bool startChecker = false;
-    [SerializeField]protected bool notDestroy = false;
-
+    protected bool notDestroy = false;
+    private Transform ParentsTransform;
+    private Vector3 missileDirection;
+    private float damage;
+    public void SetParentsTransform(Transform _transform) { 
+        ParentsTransform = _transform;
+    }
+    public void SetDamage(float _damage)
+    {
+        damage = _damage;
+    }
+    public void SetMissileDirection(Vector3 _direction)
+    {
+        missileDirection = _direction;
+    }
     protected virtual void Start()
     {
+        audioSource.volume = 0.4f;
+        audioSource.PlayOneShot(shootSound);
+        audioSource.volume = 0.05f;
+        audioSource.clip = flyingSound;
+        audioSource.Play();
         if (!startChecker)
         {
             /*lightSourse = GetComponent<Light>();
@@ -34,12 +59,21 @@ public class HS_ProjectileMover : MonoBehaviour
             }
         }
         if (notDestroy)
-            StartCoroutine(DisableTimer(5));
+            StartCoroutine(DisableTimer(3));
         else
-            Destroy(gameObject, 5);
+            StartCoroutine(DestroyTimer(3));
         startChecker = true;
     }
 
+    IEnumerator DestroyTimer(float time)
+    {
+        yield return new WaitForSeconds(time-0.5f);
+        audioSource.Stop();
+        audioSource.clip = null;
+        audioSource.PlayOneShot(explosionSound);
+        Destroy(gameObject, 0.5f);
+        yield break;
+    }
     protected virtual IEnumerator DisableTimer(float time)
     {
         yield return new WaitForSeconds(time);
@@ -65,15 +99,19 @@ public class HS_ProjectileMover : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
-        if (speed != 0)
+        if (speed != 0 && (missileDirection != null))
         {
-            rb.velocity = transform.forward * speed;      
+            rb.velocity = missileDirection * speed;      
         }
     }
 
     //https ://docs.unity3d.com/ScriptReference/Rigidbody.OnCollisionEnter.html
     protected virtual void OnCollisionEnter(Collision collision)
     {
+        audioSource.Stop();
+        audioSource.clip = null;
+        audioSource.volume = 0.4f;
+        audioSource.PlayOneShot(explosionSound);
         //Lock all axes movement and rotation
         rb.constraints = RigidbodyConstraints.FreezeAll;
         //speed = 0;
@@ -120,6 +158,37 @@ public class HS_ProjectileMover : MonoBehaviour
             }
             else
                 Destroy(gameObject, 1);
+        }
+
+        var hitColliders = Physics.OverlapSphere(transform.position, 3f, targetLayer);
+        if (hitColliders != null) { 
+            foreach (var hit in hitColliders)
+            {
+                ApplyDamage(hit.gameObject, ParentsTransform, 10);
+            }
+        }
+        ApplyDamage(collision.gameObject, ParentsTransform, 20);
+
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, 3f);
+    }
+    private void ApplyDamage(GameObject target, Transform _hitPoint ,float skillMount)
+    {
+        IDamageable damageable = target.GetComponentInParent<IDamageable>();
+        if (damageable != null)
+        {
+            DamageInfo damageInfo = new DamageInfo
+            {
+                attacker = _hitPoint.gameObject,
+                damage = skillMount,
+                hitPoint = _hitPoint.position,
+                hitDirection = (target.transform.position - _hitPoint.transform.position).normalized
+            };
+
+            damageable.TakeDamage(damageInfo);
         }
     }
 }

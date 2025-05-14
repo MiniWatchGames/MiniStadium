@@ -189,7 +189,9 @@ public class InGameManager : MonoBehaviour
 
                 if (BlueWinCount == 4 || RedWinCount == 4)
                 {
-                    SetGameState(GameState.EndGame);
+                    StartCoroutine(EndGame());
+                    inGameUIAction?.Invoke();
+                    break;
                 }
 
                 if (currentGameState == GameState.EndGame)
@@ -205,6 +207,12 @@ public class InGameManager : MonoBehaviour
                 break;
         }
     }
+
+    IEnumerator EndGame() {
+        yield return new WaitForSeconds(5);
+        SetGameState(GameState.EndGame);
+    }
+
     void SetWinLoseState(WinLoseState state)
     {
         switch (state)

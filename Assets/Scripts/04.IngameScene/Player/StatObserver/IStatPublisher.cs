@@ -6,6 +6,7 @@ public interface IStatPublisher
 {
    public void AddObserver(IStatObserver observer);
 
+    public void RemoveAllObservers();
     public void RemoveObserver(IStatObserver observer);
 
     public void NotifyObservers((float,string) value);

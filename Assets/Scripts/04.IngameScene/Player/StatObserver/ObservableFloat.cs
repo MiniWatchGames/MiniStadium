@@ -46,9 +46,14 @@ public class ObservableFloat : IStatPublisher
         observers.Add(observer);
     }
 
-    public void RemoveObserver(IStatObserver observer)
+    public void RemoveAllObservers()
     {
         observers.Clear();
+    }
+
+    public void RemoveObserver(IStatObserver observer)
+    {
+        observers.Remove(observer);
     }
 
     public void NotifyObservers((float,string) value)

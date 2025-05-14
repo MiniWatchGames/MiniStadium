@@ -4,67 +4,86 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class HPBarController : MonoBehaviour, IStatObserver
-
 {
     [SerializeField] private PlayerController pc;
     [SerializeField] private LayerMask targetLayer;
     [SerializeField] private Image _hpGauge;
+
     private Transform cameraTransform;
-    float currentHp = 0;
-    float maxHp = 0;
+    private float currentHp;
+    private float maxHp;
 
     private void Awake()
     {
-        pc.CurrentHp.AddObserver(this);
+        if (pc != null && pc.CurrentHp != null)
+            pc.CurrentHp.AddObserver(this);
+
         maxHp = pc.BaseMaxHp.Value;
     }
-    public Transform DetectPlayerInCircle()
+
+    private void Start()
     {
-        var hitColliders = Physics.OverlapSphere(transform.position,20, targetLayer);
-        if (hitColliders.Length > 0 )
+        TryAssignCamera();
+    }
+
+    private void TryAssignCamera()
+    {
+        if (cameraTransform != null) return;
+
+        var hitColliders = Physics.OverlapSphere(transform.position, 20f, targetLayer);
+        foreach (var hit in hitColliders)
         {
-            if (hitColliders[0].CompareTag("Player")) { 
-                return hitColliders[0].transform;
+            if (hit.CompareTag("Player"))
+            {
+                var cam = hit.GetComponentInChildren<Camera>();
+                if (cam != null)
+                {
+                    cameraTransform = cam.transform;
+                    break;
+                }
             }
-            return null;
         }
-        else
+    }
+
+    private void FixedUpdate()
+    {
+        if (cameraTransform == null)
         {
-            return null;
-        }
-    }
-    public void SetHp(float hp)
-    {
-        _hpGauge.fillAmount = hp;
-    }
-    void Update()
-    {
-        var target = DetectPlayerInCircle();
-        if (target != null) {
-            cameraTransform = target.GetComponentInChildren<Camera>().transform;
+            TryAssignCamera();
+            return;
         }
 
-        if (cameraTransform == null) return;
-
-        transform.rotation = cameraTransform.rotation * Quaternion.Euler(0, 180, 0);
+        transform.rotation = cameraTransform.rotation * Quaternion.Euler(0, 180f, 0);
     }
 
-    void OnDrawGizmos()
+    public void SetHp(float ratio)
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, 10);
+        _hpGauge.fillAmount = Mathf.Clamp01(ratio);
     }
 
     public void WhenStatChanged((float, string) data)
     {
-        if (data.Item2 == "currentHp")
+        switch (data.Item2)
         {
-            currentHp = data.Item1;
+            case "currentHp":
+                currentHp = data.Item1;
+                break;
+            case "baseMaxHp":
+                maxHp = data.Item1;
+                break;
         }
-        else if (data.Item2 == "baseMaxHp")
+
+        if (maxHp > 0f)
         {
-            maxHp = data.Item1;
+            SetHp(currentHp / maxHp);
         }
-        SetHp(currentHp / maxHp);
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, 20f);
+    }
+#endif
 }

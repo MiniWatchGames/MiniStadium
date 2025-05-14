@@ -7,11 +7,19 @@ public class FirstWeaponSkillState : PlayerActionState, ISkillData
     private static int aniName;
     public FirstWeaponSkillState() : base() { }
     
-    public ObservableFloat CoolTime { get; }
+    private ObservableFloat _coolTime;
+    private float _skillMount;
+    public ObservableFloat CoolTime => _coolTime;
     public ObservableFloat NeedPressTime { get; }
     public ObservableFloat PressTime { get; }
     public bool IsNeedPresse { get; }
-    public float SkillMount { get; }
+    public float SkillMount => _skillMount;
+    
+    private void Awake()
+    {
+        _coolTime = new ObservableFloat(10, "_coolTime");
+        _skillMount = 30;
+    }
     
     public override void Enter(PlayerController playerController)
     {
