@@ -84,7 +84,6 @@ public class RepairShop : MonoBehaviour
             RepairShopSkill.BuyingSkill();
             RepairShopReceipt.ReceiptUpdateSlot(true, 0);
             RepairShopReceipt.FromReceiptToHud();
-            SetDescription("", "");
             ResetPrice();
         }
         else // 실패

@@ -513,6 +513,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void OnFirstWeaponSkillPressed()
     {
+        if (_actionFsm.CurrentState == ActionState.Reload) return;
         if (_weaponSkills?.Count >= 1)
         {
             var weaponSkill = _weaponSkills[0];
@@ -563,6 +564,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void OnSecondWeaponSkillPressed()
     {
+        if (_actionFsm.CurrentState == ActionState.Reload) return;
         if (_weaponSkills?.Count >= 2)
         {
             if (_weaponSkills?.Count >= 1)

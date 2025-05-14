@@ -2349,7 +2349,8 @@ MonoBehaviour:
     type: 3}
   effect5Berserker: {fileID: 1084983192572740, guid: c04b2745d5ca4cd40bb52e1f937e7a7d,
     type: 3}
-  effect6: {fileID: 1161526018737128, guid: 4e98af0ece4a26c428343cafdaf41241, type: 3}
+  effect6: {fileID: 1343423572576872, guid: 63345b0c026b87e45b34506ee875c7ee, type: 3}
+  effect7: {fileID: 1161526018737128, guid: 4e98af0ece4a26c428343cafdaf41241, type: 3}
 --- !u!1 &7469125994218291045
 GameObject:
   m_ObjectHideFlags: 0
