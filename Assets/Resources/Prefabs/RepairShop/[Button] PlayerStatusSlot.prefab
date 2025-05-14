@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5357360543503894620}
   - component: {fileID: 41141704672531520}
   - component: {fileID: -6718418589764414963}
+  - component: {fileID: 3306232998792143595}
   m_Layer: 5
   m_Name: '[Button] PlayerStatusSlot'
   m_TagString: Untagged
@@ -149,3 +150,17 @@ MonoBehaviour:
   isSelected: 0
   isBought: 0
   button: {fileID: 0}
+  description: 
+--- !u!114 &3306232998792143595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2860442263994008382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 922b6b717d243c0488363df95524540f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound: {fileID: 8300000, guid: 99fa2e6a4cedcd842a69cd2dff524353, type: 3}
