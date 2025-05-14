@@ -155,7 +155,7 @@ public class InGameManager : MonoBehaviour
                 // 플레이어 없다면 생성, 플레이어에 구매 내역을 넘기고, 플레이어 구매 내역 적용
                 if (player is null)
                 {
-                    player = Instantiate(PlayerPrefab, new Vector3(16, 9, 3), Quaternion.identity);
+                    player = Instantiate(PlayerPrefab, mapSpawners[currentMap][0].transform.position, Quaternion.identity);
                     playerContoroller = player.GetComponent<PlayerController>();
                 }
                 SetPlayerTeam(player);
@@ -290,7 +290,7 @@ public class InGameManager : MonoBehaviour
 
         for (int i = 0; i < countSpanwer.Count; i++)
         {
-            //각 스포너의 부모 오브젝트를 가져온다. 그리고 그 오브젝트에 스포너를 맵핑한다
+            //각 스포너의 부모 오브젝트를 가져온다. 그리고 그 오브젝트의 스포너를 맵핑한다
             if (mapSpawners.ContainsKey(countSpanwer[i].transform.parent.gameObject))
             {
                 mapSpawners[countSpanwer[i].transform.parent.gameObject].Add(countSpanwer[i]);
