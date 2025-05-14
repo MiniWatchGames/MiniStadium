@@ -18,7 +18,7 @@ public class MissileState : PlayerActionState, ISkillData
     private Transform spawnPoint;
     private GunController gunController;
 
-    private string path = "Prefabs/IngameScene/Player/Weapon/Missile";
+    private string path = "Prefabs/IngameScene/Player/WeaponSkill/Missile";
     public void ResetSkill()
     {
     }

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: 121 MeleeSkill1
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 1297fdd981992844e8d21630bba32f4c, type: 3}
-  _name: "\uADFC\uC811 \uC2A4\uD0AC1"
+  _name: "\uBCBD \uC0DD\uC131"
   price: 300
-  description: "\uADFC\uC811 \uC2A4\uD0AC \uC124\uBA851"
+  description: "\uC801 \uD50C\uB808\uC774\uC5B4\uB85C \uBD80\uD130 \uB098\uB97C \uBCF4\uD638\uD560                                  
+    \uC218 \uC788\uAC8C \uD558\uB294 \uBCBD\uC744 \uC0DD\uC131"
   skillType: 1
   weaponType: 2
