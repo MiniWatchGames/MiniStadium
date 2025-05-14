@@ -18,6 +18,9 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     [SerializeField] private PlayerHudComps moveSkill0;
     [SerializeField] private PlayerHudComps weaponSkill0;
     [SerializeField] private PlayerHudComps weaponSkill1;
+    [SerializeField] private PlayerHudComps passive0;
+    [SerializeField] private PlayerHudComps passive1;
+    [SerializeField] private PlayerHudComps passive2;
     [SerializeField] private PlayerHudComps playerWeapon;
     [SerializeField] private GameObject playerWeaponAmmo;
     [SerializeField] private GameObject skillGage;
@@ -103,47 +106,56 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     //}
 
     public void Update_HUD_Comp(RepairShopWeaponSlot currentWeapon, 
-        ReceiptSlot skill1, ReceiptSlot skill2, ReceiptSlot skill3)
+        ReceiptSlot[][] receipts)
     {
-        PlayerHudComps[] comps = 
-            { moveSkill0, weaponSkill0, weaponSkill1, playerWeapon };
-        ReceiptSlot[] skills = { skill1, skill2, skill3 };
+        PlayerHudComps[][] comps = 
+            { new PlayerHudComps[1], 
+                new PlayerHudComps[2], 
+                new PlayerHudComps[3], 
+                new PlayerHudComps[1]};
+        comps[0][0] = moveSkill0;
+        comps[1][0] = weaponSkill0; 
+        comps[1][1] = weaponSkill1;
+        comps[2][0] = passive0; 
+        comps[2][1] = passive1; 
+        comps[2][2] = passive2;
+        comps[3][0] = playerWeapon; 
 
-        int i;
 
-        for (i = 0; i < comps.Length; i++)
+        for (int i = 0; i < comps.Length; i++)
         {
-            UpdateCompUI(comps[i]);
-        }
-        
-        return;
-        
-        void UpdateCompUI(PlayerHudComps comp)
-        {
-            if (comp == playerWeapon && currentWeapon != null)
+            for (int j = 0; j < comps[i].Length; j++)
             {
-                comp.icon.sprite = currentWeapon.iconImage.sprite;
-                if (currentWeapon.type == 2)
+                var comp = comps[i][j];
+                // 무기
+                if (i == 0 && currentWeapon != null)
                 {
-                    comp.text.text = "\u221e";
+                    comp.icon.sprite = currentWeapon.iconImage.sprite;
+                    if (currentWeapon.type == 2)
+                    {
+                        comp.text.text = "\u221e";
+                    }
                 }
-            }
-            else if (i < skills.Length)
-            {
-                if (skills[i] == null || skills[i].ID == -1)
+                //스킬
+                else
                 {
-                    comp.gameObject.SetActive(false);
-                }
-                else if (skills[i] != null)
-                {
-                    comp.gameObject.SetActive(true);
-                    comp.icon.sprite = skills[i]._icon.sprite;
-                    comp.text.text = "";
-                }
+                    if (receipts[i][j] == null || receipts[i][j].ID == -1)
+                    {
+                        comp.TurnVisibility(false);
+                    }
+                    else
+                    {
+                        comp.TurnVisibility(true);
+                        comp.icon.sprite = receipts[i][j]._icon.sprite;
+                        if (comp.text != null)
+                            comp.text.text = ""; // 쿨타임
+                    }
                 
+                }
+                comp.coolTime = 0;
+                if (comp.mask != null)
+                    comp.mask.fillAmount = 0;
             }
-            comp.coolTime = 0;
-            comp.mask.fillAmount = 0;
         }
     }
     public GameObject GetSkillGage() {
