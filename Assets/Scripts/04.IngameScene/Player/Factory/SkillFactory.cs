@@ -52,8 +52,8 @@ public static class SkillFactory
                             states.Add(new(ActionState.Missile, skill));
                             break;
                         case 2:
-                            skill = target.AddComponent<MovementSkillsState>();
-                            states.Add(new(ActionState.MovementSkills, skill));
+                            skill = target.AddComponent<SmartMissileState>();
+                            states.Add(new(ActionState.SmartMissile, skill));
                             break;
                         case 3:
                             skill = target.AddComponent<MovementSkillsState>();

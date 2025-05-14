@@ -4867,7 +4867,7 @@ GameObject:
   - component: {fileID: 6241618274472337936}
   - component: {fileID: 7093268142024563909}
   m_Layer: 0
-  m_Name: Missile
+  m_Name: SmartMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4921,7 +4921,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 128
-  isSmart: 0
+  isSmart: 1
 --- !u!54 &54065236817763250
 Rigidbody:
   m_ObjectHideFlags: 0
