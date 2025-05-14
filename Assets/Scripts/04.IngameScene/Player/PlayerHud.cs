@@ -108,11 +108,11 @@ public class PlayerHud : MonoBehaviour , IStatObserver
     public void Update_HUD_Comp(RepairShopWeaponSlot currentWeapon, 
         ReceiptSlot[][] receipts)
     {
-        PlayerHudComps[][] comps = 
-            { new PlayerHudComps[1], 
-                new PlayerHudComps[2], 
-                new PlayerHudComps[3], 
-                new PlayerHudComps[1]};
+        PlayerHudComps[][] comps = { 
+            new PlayerHudComps[1], 
+            new PlayerHudComps[2], 
+            new PlayerHudComps[3], 
+            new PlayerHudComps[1]};
         comps[0][0] = moveSkill0;
         comps[1][0] = weaponSkill0; 
         comps[1][1] = weaponSkill1;
@@ -127,34 +127,22 @@ public class PlayerHud : MonoBehaviour , IStatObserver
             for (int j = 0; j < comps[i].Length; j++)
             {
                 var comp = comps[i][j];
-                // 무기
-                if (i == 0 && currentWeapon != null)
-                {
+                bool isWeapon = (i == 3);
+                var receipt = isWeapon ? null : receipts[i][j];
+
+                if (isWeapon && currentWeapon != null) {
                     comp.icon.sprite = currentWeapon.iconImage.sprite;
-                    if (currentWeapon.type == 2)
-                    {
-                        comp.text.text = "\u221e";
-                    }
-                }
-                //스킬
-                else
-                {
-                    if (receipts[i][j] == null || receipts[i][j].ID == -1)
-                    {
-                        comp.TurnVisibility(false);
-                    }
-                    else
-                    {
-                        comp.TurnVisibility(true);
-                        comp.icon.sprite = receipts[i][j]._icon.sprite;
-                        if (comp.text != null)
-                            comp.text.text = ""; // 쿨타임
-                    }
-                
+                    comp.text.text = currentWeapon.type == 2 ? "\u221e" : "";
+                    comp.TurnVisibility(true);
+                } else if (receipt != null && receipt.ID != -1) {
+                    comp.icon.sprite = receipt._icon.sprite;
+                    if (comp.text != null) comp.text.text = "";
+                    comp.TurnVisibility(true);
+                } else if (!isWeapon){
+                    comp.TurnVisibility(false);
                 }
                 comp.coolTime = 0;
-                if (comp.mask != null)
-                    comp.mask.fillAmount = 0;
+                if (comp.mask != null) comp.mask.fillAmount = 0;
             }
         }
     }
