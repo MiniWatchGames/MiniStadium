@@ -12,7 +12,7 @@ public class IncreasingDamagePassive : MonoBehaviour, IPassive
     public void ApplyPassive(PlayerController playerController)
     {
         effects = playerController.GetComponent<PassiveEffects>();
-        effect = Instantiate(effects.effect3, playerController.GetComponentInChildren<Camera>().transform);
+        effect = Instantiate(effects.effect3, playerController.CameraController.transform);
         effect.transform.localPosition = new Vector3(0, -0.5f, 0.15f);
         effect.SetActive(true);
         controller = playerController;
@@ -21,8 +21,9 @@ public class IncreasingDamagePassive : MonoBehaviour, IPassive
     }
     private void OnDestroy()
     {
-        effect.SetActive(false);
-        controller.RemoveStatTargetDecorate(StatType.Damage, modifierIndex);
-        
+        effect?.SetActive(false);
+        controller.RemoveStatTargetDecorate(StatType.Damage, modifierIndex); 
+        StopAllCoroutines();
+        Destroy(effect?.gameObject);
     }
 }

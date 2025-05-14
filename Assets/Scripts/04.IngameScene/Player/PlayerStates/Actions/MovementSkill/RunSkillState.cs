@@ -9,7 +9,8 @@ public class RunSkillState : PlayerActionState, ISkillData
     //이동 스킬 블루 프린트입니다
     private static int aniName;
     public RunSkillState() : base() { }
-
+    private PassiveEffects effects;
+    private GameObject effect;
     private bool _isNeedPresse;
     private float _skillMount;
     private ObjectPool _TrailObjectPool_Surface;
@@ -42,7 +43,6 @@ public class RunSkillState : PlayerActionState, ISkillData
         _SurfacePrefab = Resources.Load<GameObject>("Prefabs/IngameScene/Player/MoveMentSkill/PlayerTrail_surface");
         _trails = new GameObject();
         _trails.name = "PlayerTrails";
-
         _TrailObjectPool_Surface = gameObject.AddComponent<ObjectPool>();
         _TrailObjectPool_Joints = gameObject.AddComponent<ObjectPool>();
 
@@ -53,17 +53,31 @@ public class RunSkillState : PlayerActionState, ISkillData
         _skillMount = 1;
         waitTime = new WaitForSeconds(1f);
     }
-
     public override void Enter(PlayerController playerController)
     {
         //playerController.Animator.Play(aniName);
         base.Enter(playerController);
+
+        if(effects == null)
+        {
+            effects = _playerController.GetComponent<PassiveEffects>();
+        }if(effect == null)
+        {
+            effect = Instantiate(effects.effect7, _playerController.CameraController.transform);
+            effect.transform.localPosition = new Vector3(0, -0.5f, 2f);
+        }
+        else
+        {
+            effect.SetActive(true);
+        }
+
         //값 지정 필요        
         _playerController.AddStatDecorate(StatType.MoveSpeed, _skillMount);
         _runTrail = _playerController.StartCoroutine(ActivateTrail());
     }
     public override void Exit()
     {
+        effect?.SetActive(false);
         _playerController.RemoveStatDecorate(StatType.MoveSpeed);
         _playerController.StopCoroutine(_runTrail);
     }
@@ -77,6 +91,7 @@ public class RunSkillState : PlayerActionState, ISkillData
         Destroy(_TrailObjectPool_Surface);
         Destroy(_TrailObjectPool_Joints);
         Destroy(_trails);
+        Destroy(effect);    
     }
 
     IEnumerator ActivateTrail()

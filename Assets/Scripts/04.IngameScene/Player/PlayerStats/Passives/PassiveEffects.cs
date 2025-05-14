@@ -10,4 +10,5 @@ public class PassiveEffects : MonoBehaviour
     [SerializeField] public GameObject effect4Healer;
     [SerializeField] public GameObject effect5Berserker;
     [SerializeField] public GameObject effect6;
+    [SerializeField] public GameObject effect7;
 }
