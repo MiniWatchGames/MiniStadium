@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3eac3f510134e57458e71407c3298bfc, type: 3}
-  m_Name: 111 RangedSkill1
+  m_Name: 121 Wall
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 1297fdd981992844e8d21630bba32f4c, type: 3}
-  _name: "\uC6D0\uAC70\uB9AC \uC2A4\uD0AC1"
+  icon: {fileID: 21300000, guid: 8d7a03f0f40ef3e49bf91cc4b1030cb6, type: 3}
+  _name: "\uBCBD \uC138\uC6B0\uAE30"
   price: 300
-  description: "\uC6D0\uAC70\uB9AC \uC2A4\uD0AC \uC124\uBA851"
+  description: "\uD50C\uB808\uC774\uC5B4 \uC55E\uC5D0 \uBCBD\uC744 \uC138\uC6B4\uB2E4."
   skillType: 1
-  weaponType: 1
+  weaponType: 2

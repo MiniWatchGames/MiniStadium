@@ -20,7 +20,7 @@ public class Passive_Berserker : MonoBehaviour, IPassive, IStatObserver
         
         additionalDamage = 0;
 
-        effect = Instantiate(effects.effect4Healer, playerController.GetComponentInChildren<Camera>().transform);
+        effect = Instantiate(effects.effect5Berserker, playerController.GetComponentInChildren<Camera>().transform);
         effect.transform.localPosition = new Vector3(0, -0.5f, 0.15f);
         effect.SetActive(false);
     }
