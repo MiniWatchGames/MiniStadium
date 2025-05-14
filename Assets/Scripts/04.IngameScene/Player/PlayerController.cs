@@ -19,6 +19,7 @@ public enum ActionState
     RunSkill,
     DoubleJumpSkill,
     TeleportSkill,
+    SmartMissile,
     Missile,
     None
 }
@@ -287,15 +288,16 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     public void SetActionState(string stateName)
     {
+        if ((_CanChangeState && stateName != "Reload") || stateName == "Dead")
+        {
+            _actionFsm.ChangeState(stateName, this);
+            return;
+        }
         if ((stateName == "Reload" && IsReloadFinished)) {
             IsReloadFinished = false;
             _CanChangeState = false;
             _actionFsm.ChangeState(stateName, this);
             return;
-        }
-        if (_CanChangeState || stateName == "Dead")
-        {
-            _actionFsm.ChangeState(stateName, this);
         }
     }
 

@@ -389,7 +389,7 @@ public class InGameManager : MonoBehaviour
 
         GameObject EnemyPlayer = GameObject.FindWithTag("Enemy");
         if (EnemyPlayer == null) {
-            EnemyPlayer = Instantiate(EnemyPrefab, new Vector3(5, 9, 3), Quaternion.identity);
+            EnemyPlayer = Instantiate(EnemyPrefab, new Vector3(5, 2, 3), Quaternion.identity);
         }    
         EnemyPlayer.GetComponent<PlayerController>().InitDummy();
         //if(EnemyPlayer == null) return;

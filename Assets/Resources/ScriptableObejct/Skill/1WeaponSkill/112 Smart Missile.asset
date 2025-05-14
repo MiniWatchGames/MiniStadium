@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3eac3f510134e57458e71407c3298bfc, type: 3}
-  m_Name: 112 RangedSkill2
+  m_Name: 112 Smart Missile
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 1297fdd981992844e8d21630bba32f4c, type: 3}
-  _name: "\uBBF8\uAD6C\uD604"
+  icon: {fileID: 21300000, guid: 88969545942c371458d0e55d32407ac1, type: 3}
+  _name: "\uC2A4\uB9C8\uD2B8 \uBBF8\uC0AC\uC77C"
   price: 300
-  description: "\uC544\uC9C1 \uAD6C\uD604\uB418\uC9C0 \uC54A\uC740 \uC2A4\uD0AC\uC785\uB2C8\uB2E4                                               
-    \uC120\uD0DD\uD574\uB3C4 \uC9C4\uC9DC \uC544\uBB34 \uB2A5\uB825\uB3C4 \uC5C6\uC2B5\uB2C8"
+  description: "\uC7A5\uC560\uBB3C\uC744 \uB9CC\uB098\uBA74 \uBE57\uACA8 \uB098\uAC00\uB294
+    \uBBF8\uC0AC\uC77C                              (\uC9C1\uACA9 \uB370\uBBF8\uC9C0
+    20, \uBC94\uC704 \uB370\uBBF8\uC9C0 10 \uCFE8\uD0C0\uC784 10)"
   skillType: 1
   weaponType: 1

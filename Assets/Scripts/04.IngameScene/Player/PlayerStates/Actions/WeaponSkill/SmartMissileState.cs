@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MissileState : PlayerActionState, ISkillData
+public class SmartMissileState : PlayerActionState, ISkillData
 {
     private ObservableFloat _coolTime;
     private bool _isNeedPresse;
@@ -18,28 +18,28 @@ public class MissileState : PlayerActionState, ISkillData
     private Transform spawnPoint;
     private GunController gunController;
 
-    private string path = "Prefabs/IngameScene/Player/WeaponSkill/Missile";
+    private string path = "Prefabs/IngameScene/Player/WeaponSkill/SmartMissile";
     public void ResetSkill()
     {
     }
 
     private void Awake()
     {
-        _coolTime = new ObservableFloat(5, "_coolTime");
+        _coolTime = new ObservableFloat(10, "_coolTime");
         _skillMount = 30;
     }
     public override void Enter(PlayerController playerController)
     {
         //playerController.Animator.Play(aniName);
         base.Enter(playerController);
-        if (Missile == null)
+        if(Missile == null)
             Missile = Resources.Load<GameObject>(path);
         if (gunController == null)
             gunController = _playerController.PlayerWeapon.CurrentWeapon.GetComponent<GunController>();
         if (spawnPoint == null)
             spawnPoint = (gunController.SkillFirePoint);
         Vector3 cameraPosition = gunController.CameraPosition.normalized;
-        var missileObj = Instantiate(Missile, spawnPoint.position, _playerController.transform.rotation);
+        var missileObj =Instantiate(Missile, spawnPoint.position, _playerController.transform.rotation);
         var missileControlelr = missileObj.GetComponent<HS_ProjectileMover>();
         missileControlelr.SetMissileDirection(cameraPosition);
         missileControlelr.SetParentsTransform(gameObject.transform);
@@ -54,6 +54,6 @@ public class MissileState : PlayerActionState, ISkillData
 
     }
 
-
+   
 
 }

@@ -2178,7 +2178,7 @@ MonoBehaviour:
   _damagedUxController: {fileID: 561192186287709959}
   fixedFirstMaxHp: 50
   fixedFirstDefence: 1
-  fixedFirstMoveSpeed: 1
+  fixedFirstMoveSpeed: 1.5
   fixedFirstJumpPower: 1.5
   maxHpIncreaseAmount: 10
   defenceIncreaseAmount: 1
