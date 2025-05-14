@@ -21,7 +21,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] private Slider mouseSlider; // 마우스 감도 조절 슬라이더
 
     [Header("Buttons")]
-    [SerializeField] private Button saveSettingButton; // 설정저장 버튼
+    [SerializeField] private Button applySettingButton; // 설정저장 버튼
 
     private void Start()
     {
@@ -46,7 +46,7 @@ public class SettingsManager : MonoBehaviour
     
     #region [PopupPanel] Settings saveSettingButton 처리
 
-    private void SaveSettingClicked()
+    private void ApplySettingClicked()
     {
         Debug.Log("해당 설정값을 저장합니다.");
 
@@ -80,7 +80,7 @@ public class SettingsManager : MonoBehaviour
     private void OnClickButtons()
     {
         // 설정저장 버튼 이벤트 연결
-        saveSettingButton.onClick.AddListener(SaveSettingClicked);
+        applySettingButton.onClick.AddListener(ApplySettingClicked);
     }
 
     private void OnValueChangedSlider()
