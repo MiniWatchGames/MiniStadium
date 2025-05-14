@@ -5629,9 +5629,8 @@ MonoBehaviour:
   masterSlider: {fileID: 1700365311}
   bgmSlider: {fileID: 1143913969}
   sfxSlider: {fileID: 123131281}
-  mouseSensitivitySlider: {fileID: 1569669051}
-  saveButton: {fileID: 525936763}
-  closeButton: {fileID: 1261732061}
+  mouseSlider: {fileID: 1569669051}
+  saveSettingButton: {fileID: 525936763}
 --- !u!1 &808435864
 GameObject:
   m_ObjectHideFlags: 0
