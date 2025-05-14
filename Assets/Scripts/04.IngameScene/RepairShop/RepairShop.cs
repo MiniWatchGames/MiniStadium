@@ -28,8 +28,12 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text descriptionText;
     [SerializeField] private TMP_Text roundText;
+    [SerializeField] public AudioClip ErrorSound;
+
+    private AudioListener audioListener;
     void Start()
     {
+        audioListener = gameObject.AddComponent<AudioListener>();
         errorMessage.SetActive(false);
         currentMoney = _startingMoney;
         UpdateMoneyText(0);
@@ -44,6 +48,7 @@ public class RepairShop : MonoBehaviour
         if (currentMoney < 200)
         {
             errorMessage.GetComponent<TextMeshProUGUI>().text = "자금이 부족합니다.";
+            AudioManager.Instance.audioSource.PlayOneShot(ErrorSound);
             errorMessage.SetActive(true);
             return;
         }
@@ -89,6 +94,7 @@ public class RepairShop : MonoBehaviour
         else // 실패
         {
             errorMessage.GetComponent<TextMeshProUGUI>().text = "자금이 부족합니다.";
+            AudioManager.Instance.audioSource.PlayOneShot(ErrorSound);
             errorMessage.SetActive(true);
         }
     }
@@ -101,5 +107,13 @@ public class RepairShop : MonoBehaviour
     {
         nameText.text = name;
         descriptionText.text = description;
+    }
+
+    private void OnDisable()
+    {
+        if (audioListener) {
+            Destroy(audioListener); 
+            audioListener = null;
+        }
     }
 }

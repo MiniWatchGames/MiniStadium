@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4451781718530435567}
   - component: {fileID: 774347649416665865}
   - component: {fileID: 7429893189299926226}
+  - component: {fileID: 7823071125218735850}
   m_Layer: 5
   m_Name: '[Button] SkillIcon'
   m_TagString: Untagged
@@ -132,6 +133,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7823071125218735850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669358106450468989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 922b6b717d243c0488363df95524540f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound: {fileID: 8300000, guid: 50ea8318e500a114489e3457f94c44cb, type: 3}
 --- !u!1 &694488255703183365
 GameObject:
   m_ObjectHideFlags: 0
