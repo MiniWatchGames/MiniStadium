@@ -1,9 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using FishNet;
+using FishNet.Demo.AdditiveScenes;
+using FishNet.Managing;
+using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class MatchingScenePanelController : PanelController
 {
@@ -40,6 +46,9 @@ public class MatchingScenePanelController : PanelController
     // Versus 배경이 이동 중인지 이동 여부 확인
     private bool isMovingVersus = false;
     
+    private PlayerManager _playerManager;
+    private DataManager _dataManager;
+    
     // 랜덤으로 보여줄 문구 리스트
     public List<string> tipMessages = new List<string>()
     {
@@ -53,7 +62,32 @@ public class MatchingScenePanelController : PanelController
     private void Start()
     {
         SetRandomTipMessages(); // 매칭 문구 설정
-        StartCoroutine(SwitchPanelAfterDelay()); // 패널 전환 코루틴
+        _dataManager = FindObjectOfType<DataManager>();
+        InstanceFinder.ClientManager.OnClientConnectionState += HandleClientConnectionState;
+        InstanceFinder.ServerManager.OnServerConnectionState += HandleServerConnectionState;
+    }
+    private void HandleServerConnectionState(ServerConnectionStateArgs args)
+    {
+        if (args.ConnectionState == LocalConnectionState.Started)
+        {
+            _playerManager = FindObjectOfType<PlayerManager>();
+        }
+    }
+    private void HandleClientConnectionState(ClientConnectionStateArgs args)
+    {
+        if (args.ConnectionState == LocalConnectionState.Started)
+        {
+            _playerManager = FindObjectOfType<PlayerManager>();
+            StartCoroutine(WaitForPlayerManager());
+        }
+    }
+    private IEnumerator WaitForPlayerManager()
+    {
+        while ((_playerManager = FindObjectOfType<PlayerManager>()) == null)
+            yield return null;
+        Debug.Log("Waiting for player manager");
+        _playerManager.RequestUserIn(_dataManager.currentUserAccount);
+        _playerManager.OnChangedStartState += SwitchPanel;
     }
 
     private void Update()
@@ -86,6 +120,7 @@ public class MatchingScenePanelController : PanelController
             }
         }
         */
+
     }
 
     /// <summary>
@@ -100,15 +135,14 @@ public class MatchingScenePanelController : PanelController
         }
     }
 
-    private IEnumerator SwitchPanelAfterDelay()
+    private void SwitchPanel()
     {
-        yield return new WaitForSeconds(panelDelayTime);
         currentPanel.SetActive(false);
         nextPanel.SetActive(true);
         
         // 회전 멈추기
         StopSpinner();
-        
+
         StartCoroutine(LoadInGameScene());
     }
 

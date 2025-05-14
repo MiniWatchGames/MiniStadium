@@ -43,6 +43,8 @@ public class SignScenePanelController : PanelController
     private const string StayLoggedInKey = "StayLoggedIn";
     private const string SavedLoginIdKey = "SavedLoginId";
     private const string SavedLoginPwKey = "SavedLoginPw";
+
+    private DataManager _dataManager;
     
     private void Start()
     {
@@ -71,6 +73,8 @@ public class SignScenePanelController : PanelController
         if (loginFailText != null) loginFailText.gameObject.SetActive(false);
         // 회원가입 실패 문구 숨기기
         if (signupFailText != null) signupFailText.gameObject.SetActive(false);
+        
+        _dataManager = FindObjectOfType<DataManager>();
     }
     
     #region 버튼 클릭 이벤트 연결 함수
@@ -125,9 +129,9 @@ public class SignScenePanelController : PanelController
         string enteredId = loginIdField.text.Trim();
         string enteredPw = loginPasswordField.text.Trim();
         
-        if (PlayerManager.instance.CheckEmailAlreadyExists(enteredId) && PlayerManager.instance.ComparePassword(enteredId, enteredPw))
+        if (_dataManager.CheckEmailAlreadyExists(enteredId) && _dataManager.ComparePassword(enteredId, enteredPw))
         {
-            PlayerManager.instance.SetCurrentUserAccountData(enteredId);
+            _dataManager.SetCurrentUserAccountData(enteredId);
         
             // 로그인 성공 시 실패 문구 끄고 MainmenuScene으로 전환
             if (loginFailText != null) loginFailText.gameObject.SetActive(false);
@@ -161,7 +165,7 @@ public class SignScenePanelController : PanelController
         string userPassword = signupPasswordField.text.Trim();
         string userCheckPassword = signupCheckPasswordInputField.text.Trim();
         
-        if (PlayerManager.instance.AddUserAccountData(userNickname, userId, userPassword, userCheckPassword,  out int errorCode))
+        if (_dataManager.AddUserAccountData(userNickname, userId, userPassword, userCheckPassword,  out int errorCode))
         {
             // 회원가입 성공 시 실패 문구 끄고 [PopupPanel] SuccessSignup 열기
             if (signupFailText != null) signupFailText.gameObject.SetActive(false);
