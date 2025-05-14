@@ -51,28 +51,6 @@ public class MainmenuScenePanelController : PanelController
         gameStartButton.onClick.AddListener(OnGameStartClicked);
         createServerButton.onClick.AddListener(OnCreateServerClicked);
         rankingButton.onClick.AddListener(OnRankingClicked);
-        InstanceFinder.ServerManager.OnServerConnectionState += HandleServerConnectionState;
-    }
-
-    private void OnDestroy()
-    {
-        // 이벤트 해제
-        if (InstanceFinder.ServerManager != null)
-            InstanceFinder.ServerManager.OnServerConnectionState -= HandleServerConnectionState;
-    }
-    private void HandleServerConnectionState(ServerConnectionStateArgs args)
-    {
-        if (args.ConnectionState == LocalConnectionState.Started)
-        {
-            Debug.Log("playerManager1");
-            if (_playerManager == null)
-            {
-                Debug.Log("playerManager2");
-                _playerManager = Instantiate(Resources.Load<GameObject>("Prefabs/Defaults/Server/PlayerManager"));
-                InstanceFinder.ServerManager.Spawn(_playerManager);
-                Debug.Log("서버에 playerManager가 추가됨");
-            }
-        }
         StartCoroutine(WaitForPlayerManager());
     }
     
@@ -87,7 +65,7 @@ public class MainmenuScenePanelController : PanelController
         
         _playerManager = pm.gameObject;
         SceneManager.LoadScene("MatchingScene");
-    }
+    }   
 
     private void OnGameStartClicked()
     {

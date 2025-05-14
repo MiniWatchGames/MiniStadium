@@ -2,7 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using FishNet;
+using FishNet.Connection;
+using FishNet.Managing.Scened;
 using FishNet.Object;
+using FishNet.Transporting;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
@@ -13,31 +16,22 @@ public class PlayerManager : NetworkBehaviour
     #region 유저 진입 및 퇴장
 
     //서버 프로퍼티
-    private Dictionary<string, UserAccountData> joinedUserList = new Dictionary<string, UserAccountData>();
+    public Dictionary<string, UserAccountData> joinedUserList = new Dictionary<string, UserAccountData>();
 
     //서버 클라이언트 공유 프로퍼티
     public bool _canStartGame = false;
 
     //클라이언트 프로퍼티
     public Action OnChangedStartState;
-    
-    public override void OnStartNetwork()
+    public Action<Dictionary<string, UserAccountData>> OnCanGetList;
+
+    public void Start()
     {
-        base.OnStartNetwork();
-        instance = this;
+        InstanceFinder.ClientManager.OnClientConnectionState += HandleClientConnectionState;
     }
 
-    public override void OnStopNetwork()
+    private void HandleClientConnectionState(ClientConnectionStateArgs args)
     {
-        base.OnStopNetwork();
-        if (instance == this)
-            instance = null;
-    }
-    
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        
         if (!IsOwner)
         {
             // 자신이 소유한 객체가 아니라면 행동 차단 (필요 없다면 제거 가능)
@@ -47,7 +41,9 @@ public class PlayerManager : NetworkBehaviour
 
         if (instance == null)
             instance = this;
+        Debug.Log(base.Owner);
     }
+    
     public override void OnStopClient()
     {
         base.OnStopClient();
@@ -58,11 +54,7 @@ public class PlayerManager : NetworkBehaviour
     {
         joinedUserList.Clear();
     }
-
-    public void DebugPlayerManager()
-    {
-        Debug.Log("hello");
-    }
+    
 
     /// <summary>
     /// 유저가 서버에 진입하면 서버에 진입 요청을 보냄
@@ -71,7 +63,6 @@ public class PlayerManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RequestUserIn(UserAccountData user)
     {
-        Debug.Log(user.ToString());
         HandleUserIn(user);
     }
     
@@ -95,7 +86,7 @@ public class PlayerManager : NetworkBehaviour
         {
             joinedUserList.Add(user.playerId, user);
             Debug.Log($"User Joined: {user.playerId}");
-            CheckCanStartGame();
+            CheckCanStartGame(user);
         }
     }
     
@@ -110,7 +101,7 @@ public class PlayerManager : NetworkBehaviour
             joinedUserList.Remove(user.playerId);
             Debug.Log($"User Left: {user.playerId}");
             _canStartGame = false;
-            CheckCanStartGame();
+            CheckCanStartGame(user);
         }
     }
     
@@ -118,16 +109,35 @@ public class PlayerManager : NetworkBehaviour
     /// 게임 시작 조건 확인 (서버)
     /// </summary>
     [Server]
-    private void CheckCanStartGame()
+    private void CheckCanStartGame(UserAccountData user)
     {
         Debug.Log($"[Server] Joined Count: {joinedUserList.Count}");
 
         bool newCanStartState = (joinedUserList.Count == 2);
         if (_canStartGame != newCanStartState)
         {
-            _canStartGame = newCanStartState;
-            NotifyClientsCanStartGame(_canStartGame);
+            foreach (var _user in joinedUserList)
+            {
+                if (_user.Key != user.playerId)
+                {
+                    user.enemyNickname = _user.Value.playerNickname;
+                    _canStartGame = newCanStartState;
+                    NotifyClientsCanStartGame(_canStartGame); 
+                }
+            }
         }
+    }
+    
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestJoinUserList(NetworkConnection conn)
+    {
+        NotifyJoinUserList(conn, joinedUserList);
+    }
+
+    [TargetRpc]
+    private void NotifyJoinUserList(NetworkConnection conn, Dictionary<string, UserAccountData> _joinedUserList)
+    {
+        OnCanGetList?.Invoke(_joinedUserList);
     }
 
     /// <summary>
@@ -138,9 +148,16 @@ public class PlayerManager : NetworkBehaviour
     {
         _canStartGame = canStartGame;
         Debug.Log($"[Client] CanStartGame = {_canStartGame}");
-
         if (_canStartGame)
             OnChangedStartState?.Invoke();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestSceneChange(string sceneName)
+    {
+        SceneLoadData sld = new SceneLoadData(sceneName);
+        if(_canStartGame)
+            InstanceFinder.SceneManager.LoadGlobalScenes(sld);
     }
 
     #endregion

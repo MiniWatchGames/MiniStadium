@@ -986,6 +986,8 @@ MonoBehaviour:
   matchingText: {fileID: 1745715599}
   gameTipMessage: {fileID: 996660860}
   progressBar: {fileID: 1731387349}
+  _playerName: {fileID: 801742337}
+  _enemyName: {fileID: 1613087872}
   popupMatchFinish: {fileID: 1334960260}
   fillSpeed: 0.1
   targetProgress: 1

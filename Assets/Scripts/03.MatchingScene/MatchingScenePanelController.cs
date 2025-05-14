@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using FishNet;
+using FishNet.Connection;
 using FishNet.Demo.AdditiveScenes;
 using FishNet.Managing;
+using FishNet.Managing.Client;
 using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
@@ -17,6 +19,9 @@ public class MatchingScenePanelController : PanelController
     [SerializeField] private TextMeshProUGUI matchingText; // "매칭이진행중입니다..." 문구 텍스트
     [SerializeField] private TextMeshProUGUI gameTipMessage; // 게임팁 문구 텍스트
     [SerializeField] private Image progressBar; // Fill 타입 Image로 설정된 진행바
+
+    [SerializeField] private TextMeshProUGUI _playerName;
+    [SerializeField] private TextMeshProUGUI _enemyName;
 
     [Header("[PopupPanel] MatchFinish")]
     [SerializeField] private GameObject popupMatchFinish; // [PopupPanel] MatchFinish 
@@ -44,49 +49,27 @@ public class MatchingScenePanelController : PanelController
         SetRandomTipMessages(); // 매칭 문구 설정
         _dataManager = FindObjectOfType<DataManager>();
         InstanceFinder.ClientManager.OnClientConnectionState += HandleClientConnectionState;
-        InstanceFinder.ServerManager.OnServerConnectionState += HandleServerConnectionState;
 
         // "매칭진행중입니다..." 텍스트 점 개수 반복
         StartCoroutine(AnimationDots());
-    }
-    private void HandleServerConnectionState(ServerConnectionStateArgs args)
-    {
-        if (args.ConnectionState == LocalConnectionState.Started)
-        {
-            _playerManager = FindObjectOfType<PlayerManager>();
-        }
     }
     private void HandleClientConnectionState(ClientConnectionStateArgs args)
     {
         if (args.ConnectionState == LocalConnectionState.Started)
         {
-            _playerManager = FindObjectOfType<PlayerManager>();
+            //_playerManager = FindObjectOfType<PlayerManager>();
             StartCoroutine(WaitForPlayerManager());
         }
     }
     private IEnumerator WaitForPlayerManager()
     {
-        while ((_playerManager = FindObjectOfType<PlayerManager>()) == null)
+        while (!InstanceFinder.ClientManager.Connection.IsValid || (_playerManager = FindObjectOfType<PlayerManager>()) == null)
             yield return null;
-        Debug.Log("Waiting for player manager");
+        _playerManager = FindObjectOfType<PlayerManager>();
+        NetworkConnection myConn = InstanceFinder.ClientManager.Connection;
+        _dataManager.currentUserAccount.conn = myConn;
         _playerManager.RequestUserIn(_dataManager.currentUserAccount);
         _playerManager.OnChangedStartState += OnMatchComplete;
-    }
-
-    private void Update()
-    {
-        if (isFinished) return;
-        
-        if (currentProgress < targetProgress)
-        {
-            currentProgress += fillSpeed * Time.deltaTime;
-            progressBar.fillAmount = currentProgress;
-
-            if (currentProgress >= targetProgress)
-            {
-                OnMatchComplete();
-            }
-        }
     }
     
     private void SetRandomTipMessages()
@@ -102,7 +85,22 @@ public class MatchingScenePanelController : PanelController
     {
         isFinished = true;
         popupMatchFinish.SetActive(true); // [PopupPanel] MatchFinish 패널 띄우기
-        StartCoroutine(WaitAndLoadInGame());
+        _playerManager.RequestJoinUserList(_dataManager.currentUserAccount.conn);
+        _playerManager.OnCanGetList += SetEnemyName;
+    }
+
+    private void SetEnemyName(Dictionary<string, UserAccountData> list)
+    {
+        foreach (var userAccount in list)
+        {
+            if (userAccount.Key == _dataManager.currentUserAccount.playerId)
+            {
+                _dataManager.currentUserAccount.enemyNickname = userAccount.Value.enemyNickname;
+                _playerName.text = _dataManager.currentUserAccount.playerNickname;
+                _enemyName.text = _dataManager.currentUserAccount.enemyNickname;
+                StartCoroutine(WaitAndLoadInGame());
+            }
+        }
     }
 
     #region 코루틴
@@ -124,7 +122,7 @@ public class MatchingScenePanelController : PanelController
     IEnumerator WaitAndLoadInGame()
     {
         yield return new WaitForSeconds(5f); // 5초 대기
-        SceneManager.LoadScene("InGameScene"); // InGameScene으로 장면 전환
+        _playerManager.RequestSceneChange("InGameScene");
     }
 
     #endregion

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using FishNet.Connection;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -209,6 +210,8 @@ public class UserAccountData
     public string playerPassword;
     public int playerTierScore;
     public int Score = 0;
+    public NetworkConnection conn;
+    public string enemyNickname;
 }
 
 public static class RandomIDGenerator
