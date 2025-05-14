@@ -46,7 +46,7 @@ public class SwordController : MonoBehaviour, IWeapon
     
     // 충돌 처리
     private Vector3[] _previousPositions;
-    private HashSet<Collider>[] _comboHitColliders;
+    private HashSet<GameObject>[] _comboHitGameObjects;
     private Ray _ray = new Ray();
     private RaycastHit[] _hits = new RaycastHit[10];
     private bool _isAttacking = false;
@@ -78,10 +78,10 @@ public class SwordController : MonoBehaviour, IWeapon
         
         _previousPositions = new Vector3[_triggerZones.Length];
         
-        _comboHitColliders = new HashSet<Collider>[_maxCombo];
+        _comboHitGameObjects = new HashSet<GameObject>[_maxCombo];
         for (int i = 0; i < _maxCombo; i++)
         {
-            _comboHitColliders[i] = new HashSet<Collider>();
+            _comboHitGameObjects[i] = new HashSet<GameObject>();
         }
         
         _slashEffects = new ParticleSystem[slashEffectPrefabs.Length];
@@ -100,7 +100,7 @@ public class SwordController : MonoBehaviour, IWeapon
     {
         _currentComboIndex = Mathf.Clamp(index, 0, _maxCombo - 1);
         // 새 콤보에 대해 충돌 데이터 초기화
-        _comboHitColliders[_currentComboIndex].Clear();
+        _comboHitGameObjects[_currentComboIndex].Clear();
         
         // 이전 위치 초기화
         for (int i = 0; i < _triggerZones.Length; i++)
@@ -114,7 +114,7 @@ public class SwordController : MonoBehaviour, IWeapon
     {
         _isAttacking = true;
         _currentComboIndex = 0;
-        _comboHitColliders[_currentComboIndex].Clear();
+        _comboHitGameObjects[_currentComboIndex].Clear();
         
         for (int i = 0; i < _triggerZones.Length; i++)
         {
@@ -138,7 +138,7 @@ public class SwordController : MonoBehaviour, IWeapon
     
     private void CheckCollisions()
     {
-        var currentHitColliders = _comboHitColliders[_currentComboIndex];
+        var currentHitGameObjects = _comboHitGameObjects[_currentComboIndex];
         
         for (int i = 0; i < _triggerZones.Length; i++)
         {
@@ -156,12 +156,12 @@ public class SwordController : MonoBehaviour, IWeapon
             for (int j = 0; j < hitCount; j++)
             {
                 var hit = _hits[j];
-                if (!currentHitColliders.Contains(hit.collider))
+                var hitGameObject = hit.collider.gameObject;
+        
+                if (!currentHitGameObjects.Contains(hitGameObject))
                 {
-                    currentHitColliders.Add(hit.collider);
-                    
-                    // 피격 객체에 데미지 적용
-                    ApplyDamage(hit.collider.gameObject, hit.point);
+                    currentHitGameObjects.Add(hitGameObject);
+                    ApplyDamage(hitGameObject, hit.point);
                 }
             }
             _previousPositions[i] = worldPosition;
@@ -189,9 +189,6 @@ public class SwordController : MonoBehaviour, IWeapon
             {
                 // 데미지 적용
                 damageable.TakeDamage(damageInfo);
-                
-                // 크로스헤어 알림용
-                //CombatEvents.OnTargetHit?.Invoke(target);
             }
         }
     }
