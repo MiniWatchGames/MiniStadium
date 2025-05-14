@@ -12,7 +12,7 @@ public class HpRegenerationPassive : MonoBehaviour, IPassive
     public void ApplyPassive(PlayerController playerController)
     {
         effects = playerController.GetComponent<PassiveEffects>();
-        effect = Instantiate(effects.effect1, playerController.GetComponentInChildren<Camera>().transform);
+        effect = Instantiate(effects.effect1, playerController.CameraController.transform);
         effect.transform.localPosition = new Vector3(0, -0.5f, 0.15f);
         if (helthRegen == null)
         {
@@ -23,15 +23,16 @@ public class HpRegenerationPassive : MonoBehaviour, IPassive
     IEnumerator HelthRegen(PlayerController playerController) {
         while (true) {
             if (playerController.CurrentHp.Value < playerController.BaseMaxHp.Value) { 
-                effect.SetActive(true);
+                effect?.SetActive(true);
                 playerController.CurrentHp.Value += 1;
             }
             yield return new WaitForSeconds(2f);
-            effect.SetActive(false);
+            effect?.SetActive(false);
         }
     }
     private void OnDestroy()
     {
-        StopAllCoroutines();
+        StopAllCoroutines(); 
+        Destroy(effect?.gameObject);
     }
 }
