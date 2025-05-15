@@ -29,6 +29,7 @@ public class RepairShop : MonoBehaviour
     [SerializeField] private TMP_Text descriptionText;
     [SerializeField] private TMP_Text roundText;
     [SerializeField] public AudioClip ErrorSound;
+    [SerializeField] public AudioClip PurchaseSound;
 
     private AudioListener audioListener;
     void Start()
@@ -52,6 +53,7 @@ public class RepairShop : MonoBehaviour
             errorMessage.SetActive(true);
             return;
         }
+        AudioManager.Instance.audioSource.PlayOneShot(PurchaseSound);
         currentMoney -= 200;
         RepairShopStatus.StatusReset(true);
         RepairShopWeapon.WeaponShopReset(true);
@@ -89,6 +91,7 @@ public class RepairShop : MonoBehaviour
             RepairShopSkill.BuyingSkill();
             RepairShopReceipt.ReceiptUpdateSlot(true, 0);
             RepairShopReceipt.FromReceiptToHud();
+            AudioManager.Instance.audioSource.PlayOneShot(PurchaseSound);
             ResetPrice();
         }
         else // 실패
