@@ -54,6 +54,8 @@ public class InGameManager : MonoBehaviour
 
 
     [SerializeField] private GameObject RepairShopUI;
+    [SerializeField] private int prizeWinner;
+    [SerializeField] private int prizeLoser;
     // [SerializeField] private GameObject FinishRoundUI;
     [SerializeField] private GameObject GameRoundInfoUI;
     [SerializeField] private GameState currentGameState;
@@ -206,7 +208,6 @@ public class InGameManager : MonoBehaviour
                 // FinishRoundUI.SetActive(true);
                 inGameUIAction?.Invoke();
                 SetGameTime(5, RoundState.RoundStart);
-
                 break;
         }
         enemyPlayer?.GetComponent<DummyAttacking>().StateChange?.Invoke(currentRoundState);
@@ -364,7 +365,7 @@ public class InGameManager : MonoBehaviour
     //플레이어가 죽을때 또는 죽였을 때 호출되야한다.
     public void EndRound(GameObject Loser)
     {
-        
+        RepairShop repairShop = RepairShopUI.GetComponent<RepairShop>();
         
         //라운드가 끝날때 마다 라운트 인포를 켜줘야 하니까.
         GameRoundInfoUI.gameObject.SetActive(true);
@@ -373,9 +374,13 @@ public class InGameManager : MonoBehaviour
             case Team.Player:
                 Debug.Log("Player Lose");
                 RedWinCount++;
+                repairShop.currentMoney += prizeLoser;
+                repairShop.UpdateMoneyText(repairShop.totalPrice);
                 break;
             case Team.Enemy:
                 BlueWinCount++;
+                repairShop.currentMoney += prizeWinner;
+                repairShop.UpdateMoneyText(repairShop.totalPrice);
                 break;
         }
         SetRoundState(RoundState.RoundEnd);
@@ -444,7 +449,7 @@ public class InGameManager : MonoBehaviour
             }
             LoseRound(player);
             SetWinLoseState(WinLoseState.Lose);
-           
+            
         };
         enemyPlayer.GetComponent<PlayerController>().OnPlayerDie = (enemy) =>
         {
@@ -455,7 +460,7 @@ public class InGameManager : MonoBehaviour
             }
             LoseRound(enemy);
             SetWinLoseState(WinLoseState.Win);
-           
+            
         };/*
         EnemyPlayer.GetComponent<DummyController>().OnDieCallBack = (enemy) =>
         {
