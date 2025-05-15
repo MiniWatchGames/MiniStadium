@@ -83,7 +83,9 @@ public class InGameManager : MonoBehaviour
     public PlayerController playerContoroller;
     private GameObject player;
     private GameObject enemyPlayer;
-
+    
+    private GameObject playerSpawner;
+    private GameObject enemySpawner;
     [SerializeField] public int currentRound = 0;
     public int BlueWinCount = 0;
     public int RedWinCount = 0;
@@ -165,7 +167,8 @@ public class InGameManager : MonoBehaviour
                 playerContoroller.SetSkillGage(playerHud.GetSkillGage());
                 //RepairShopUI.SetActive(!RepairShopUI.activeSelf);
                 player.GetComponent<CharacterController>().enabled = false;
-                player.gameObject.transform.position = mapSpawners[currentMap][0].transform.position;
+                player.gameObject.transform.position = playerSpawner.transform.position;
+                
                 player.GetComponent<CharacterController>().enabled = true;
                 Debug.Log("player spawned ");
                 
@@ -295,12 +298,35 @@ public class InGameManager : MonoBehaviour
             if (mapSpawners.ContainsKey(countSpanwer[i].transform.parent.gameObject))
             {
                 mapSpawners[countSpanwer[i].transform.parent.gameObject].Add(countSpanwer[i]);
+                if (countSpanwer[i].transform.parent.gameObject.activeSelf)
+                {
+                    if(countSpanwer[i].team == Team.Player)
+                    {
+                        enemySpawner = countSpanwer[i].gameObject;
+                    }
+                    else if(countSpanwer[i].team == Team.Enemy)
+                    {
+                        playerSpawner = countSpanwer[i].gameObject;
+                    }
+                }
             }
             else
             {
                 mapSpawners.Add(countSpanwer[i].transform.parent.gameObject, new List<Spawner>());
                 mapSpawners[countSpanwer[i].transform.parent.gameObject].Add(countSpanwer[i]);
+                if (countSpanwer[i].transform.parent.gameObject.activeSelf)
+                {
+                    if(countSpanwer[i].team == Team.Player)
+                    {
+                        enemySpawner = countSpanwer[i].gameObject;
+                    }
+                    else if(countSpanwer[i].team == Team.Enemy)
+                    {
+                        playerSpawner = countSpanwer[i].gameObject;
+                    }
+                }
             }
+            
         }
         maps.AddRange(GameObject.FindGameObjectsWithTag("Map"));
         for (int i = 0; i < maps.Count; i++)
@@ -395,6 +421,11 @@ public class InGameManager : MonoBehaviour
         }    
         enemyPlayer.GetComponent<PlayerController>().InitDummy();
         
+        enemyPlayer.GetComponent<CharacterController>().enabled = false;
+        enemyPlayer.GetComponent<PlayerController>().InitDummy();
+        
+        enemyPlayer.transform.position = enemySpawner.transform.position;
+        enemyPlayer.GetComponent<CharacterController>().enabled = true;
         //if(EnemyPlayer == null) return;
         enemyPlayer.tag = "Enemy";
         Debug.Log("Player got the Team");

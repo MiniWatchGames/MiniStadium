@@ -194,7 +194,7 @@ public class SwordController : MonoBehaviour, IWeapon
 
     public void PlaySlashEffect(int index)
     {
-        _audioSource.PlayOneShot(slashSounds[index], 1f);
+        AudioSource.PlayClipAtPoint(slashSounds[index], transform.position);
         _slashEffects[_currentComboIndex].Play();
     }
 
@@ -286,7 +286,7 @@ public class SwordController : MonoBehaviour, IWeapon
     {
         _firstSkillEffect.transform.position = _wallSpawnPosition;
         _firstSkillEffect.Play();
-        _audioSource.PlayOneShot(firstSkillSound, 1f);
+        AudioSource.PlayClipAtPoint(firstSkillSound, transform.position);
     }
     
     // 벽이 바닥에서 올라오는 애니메이션
