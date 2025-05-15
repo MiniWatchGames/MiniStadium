@@ -208,8 +208,10 @@ public class InGameManager : MonoBehaviour
                 // FinishRoundUI.SetActive(true);
                 inGameUIAction?.Invoke();
                 SetGameTime(5, RoundState.RoundStart);
-                RepairShopUI.GetComponent<RepairShop>().currentMoney 
+                RepairShop repairShop = RepairShopUI.GetComponent<RepairShop>();
+                repairShop.currentMoney 
                     += currentWinLoseState == WinLoseState.Win? prizeWinner : prizeLoser;
+                repairShop.UpdateMoneyText(repairShop.totalPrice);
                 break;
         }
     }
