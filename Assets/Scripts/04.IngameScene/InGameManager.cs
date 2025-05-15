@@ -68,7 +68,7 @@ public class InGameManager : MonoBehaviour
     GameObject currentMap;
     //맵 센터찾기
 
-
+    public RoundState CurrentRoundState { get => currentRoundState;}
     //팀 세팅용 딕셔너리
     Dictionary<GameObject, Team> teamDictionary = new Dictionary<GameObject, Team>();
 
@@ -93,7 +93,7 @@ public class InGameManager : MonoBehaviour
     private List<GameObject> maps = new List<GameObject>();
     public Action inGameUIAction;
     public float timer { get => gameTimer.currentTime; }
-
+    
     public GameObject GameRoundUI { get => GameRoundInfoUI; }
     public RoundState roundstate { get => currentRoundState; }
     #endregion
@@ -209,6 +209,7 @@ public class InGameManager : MonoBehaviour
 
                 break;
         }
+        enemyPlayer?.GetComponent<DummyAttacking>().StateChange?.Invoke(currentRoundState);
     }
 
     IEnumerator EndGame() {
@@ -256,7 +257,7 @@ public class InGameManager : MonoBehaviour
         gameTimer.SetTimer(time, Timer.TimerType.Decrease, () =>
         {
             //Debug.Log("Game Time End");
-            //gameTimer.OnTimerEndDelegate = null;
+            gameTimer.OnTimerEndDelegate = null;
             SetRoundState(state);
         }, (time) =>
         {
@@ -301,11 +302,11 @@ public class InGameManager : MonoBehaviour
                 {
                     if(countSpanwer[i].team == Team.Player)
                     {
-                        playerSpawner = countSpanwer[i].gameObject;
+                        enemySpawner = countSpanwer[i].gameObject;
                     }
                     else if(countSpanwer[i].team == Team.Enemy)
                     {
-                        enemySpawner = countSpanwer[i].gameObject;
+                        playerSpawner = countSpanwer[i].gameObject;
                     }
                 }
             }
@@ -317,15 +318,14 @@ public class InGameManager : MonoBehaviour
                 {
                     if(countSpanwer[i].team == Team.Player)
                     {
-                        playerSpawner = countSpanwer[i].gameObject;
+                        enemySpawner = countSpanwer[i].gameObject;
                     }
                     else if(countSpanwer[i].team == Team.Enemy)
                     {
-                        enemySpawner = countSpanwer[i].gameObject;
+                        playerSpawner = countSpanwer[i].gameObject;
                     }
                 }
             }
-            
             
         }
         maps.AddRange(GameObject.FindGameObjectsWithTag("Map"));
@@ -414,25 +414,25 @@ public class InGameManager : MonoBehaviour
         }
         int tmpRandom = Random.Range(0, 1);
 
-        
-        GameObject EnemyPlayer = GameObject.FindWithTag("Enemy");
-        
-        
-        if (EnemyPlayer == null) {
-            EnemyPlayer = Instantiate(EnemyPrefab, enemySpawner.transform.position, Quaternion.identity);
+        enemyPlayer = GameObject.FindWithTag("Enemy");
+        if (enemyPlayer == null) {
+            enemyPlayer = Instantiate(EnemyPrefab, new Vector3(6, 2, 3), Quaternion.identity);
+            enemyPlayer.GetComponent<DummyAttacking>().StateChange?.Invoke(currentRoundState);
         }    
-        EnemyPlayer.GetComponent<CharacterController>().enabled = false;
-        EnemyPlayer.GetComponent<PlayerController>().InitDummy();
+        enemyPlayer.GetComponent<PlayerController>().InitDummy();
         
-        EnemyPlayer.transform.position = enemySpawner.transform.position;
-        EnemyPlayer.GetComponent<CharacterController>().enabled = true;
+        enemyPlayer.GetComponent<CharacterController>().enabled = false;
+        enemyPlayer.GetComponent<PlayerController>().InitDummy();
+        
+        enemyPlayer.transform.position = enemySpawner.transform.position;
+        enemyPlayer.GetComponent<CharacterController>().enabled = true;
         //if(EnemyPlayer == null) return;
-        EnemyPlayer.tag = "Enemy";
+        enemyPlayer.tag = "Enemy";
         Debug.Log("Player got the Team");
 
         teamDictionary[player.gameObject] = Team.Player;
 
-        teamDictionary[EnemyPlayer] = Team.Enemy;
+        teamDictionary[enemyPlayer] = Team.Enemy;
 
         //플레이어가 죽었을때 패배 표시
         player.GetComponent<PlayerController>().OnPlayerDie = (player) =>
@@ -446,7 +446,7 @@ public class InGameManager : MonoBehaviour
             SetWinLoseState(WinLoseState.Lose);
            
         };
-        EnemyPlayer.GetComponent<PlayerController>().OnPlayerDie = (enemy) =>
+        enemyPlayer.GetComponent<PlayerController>().OnPlayerDie = (enemy) =>
         {
             if (currentWinLoseState == WinLoseState.Lose)
             {

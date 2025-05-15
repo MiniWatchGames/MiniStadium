@@ -6,13 +6,12 @@ using static RepairShopEnums;
 
 public class DummyController : MonoBehaviour, IDamageable
 {
-
     [SerializeField] private LayerMask groundLayer;
     Animator Animator;
     private CharacterController _characterController;
     private const float Gravity = -9.81f;
     private Vector3 _velocity = Vector3.zero;
-
+  
     public float _maxHp = 100;
     private ObservableFloat _currentHp;
     public Action<GameObject> OnDieCallBack; public bool IsGrounded
@@ -30,7 +29,7 @@ public class DummyController : MonoBehaviour, IDamageable
         Animator = GetComponent<Animator>();
         _currentHp = new ObservableFloat(_maxHp, "Dummy");
     }
-    
+   
     public void TakeDamage(DamageInfo damageInfo)
     {
         var damage = damageInfo.damage;

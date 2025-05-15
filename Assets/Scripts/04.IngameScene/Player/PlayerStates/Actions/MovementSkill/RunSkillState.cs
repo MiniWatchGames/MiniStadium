@@ -63,8 +63,13 @@ public class RunSkillState : PlayerActionState, ISkillData
             effects = _playerController.GetComponent<PassiveEffects>();
         }if(effect == null)
         {
-            effect = Instantiate(effects.effect7, _playerController.CameraController.transform);
-            effect.transform.localPosition = new Vector3(0, -0.5f, 2f);
+            Transform transform = _playerController.transform;
+            if (_playerController.CameraController != null) {
+                transform = _playerController.CameraController.transform;
+            } 
+                effect = Instantiate(effects.effect7, transform);
+                effect.transform.localPosition = new Vector3(0, -0.5f, 2f);
+            
         }
         else
         {

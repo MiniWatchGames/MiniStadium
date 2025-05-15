@@ -157,11 +157,10 @@ public class SwordController : MonoBehaviour, IWeapon
             {
                 var hit = _hits[j];
                 var hitGameObject = hit.collider.gameObject;
-        
                 if (!currentHitGameObjects.Contains(hitGameObject))
                 {
                     currentHitGameObjects.Add(hitGameObject);
-                    ApplyDamage(hitGameObject, hit.point);
+                     ApplyDamage(hitGameObject, hit.point);
                 }
             }
             _previousPositions[i] = worldPosition;

@@ -18,7 +18,9 @@ public class CombatManager : MonoBehaviour
     private float attackStartTransitionTime = 0.15f; // 공격 시작 시 전환 시간
     private float attackEndTransitionTime = 0.15f;   // 공격 종료 시 전환 시간
     private Coroutine _layerTransitionCoroutine; // 레이어 전환 코루틴
-    
+    public Dictionary<WeaponType, IAttackStrategy> AttackStrategies { get => _attackStrategies;}
+
+
     private void Awake()
     {
         InitializeStrategies();

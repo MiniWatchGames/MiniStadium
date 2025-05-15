@@ -84,7 +84,7 @@ public class AudioManager : MonoBehaviour
             // Ingame Scene
             case "IngameScene":
                 SetAudioClip(bgmClips[3]);
-                audioSource.volume = 0.1f;
+                audioSource.volume = 0.5f;
                 break;
         }
     }

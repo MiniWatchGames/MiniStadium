@@ -2171,6 +2171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b16a8e943de4d8d88b6ddb16c2b834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rightFoot: {fileID: 6774753163501701127}
+  leftFoot: {fileID: 6443654317877936445}
   head: {fileID: 2529236042057442688}
   groundLayer:
     serializedVersion: 2
