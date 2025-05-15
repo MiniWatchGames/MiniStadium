@@ -10464,7 +10464,6 @@ GameObject:
   - component: {fileID: 972784132}
   - component: {fileID: 972784131}
   - component: {fileID: 972784130}
-  - component: {fileID: 972784133}
   m_Layer: 5
   m_Name: '[Button] Purchase'
   m_TagString: Untagged
@@ -10586,19 +10585,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 972784128}
   m_CullTransparentMesh: 1
---- !u!114 &972784133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 972784128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 922b6b717d243c0488363df95524540f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clickSound: {fileID: 8300000, guid: aca8445b05b930742b93a2728cf599b2, type: 3}
 --- !u!1 &977876960
 GameObject:
   m_ObjectHideFlags: 0
@@ -15914,7 +15900,6 @@ GameObject:
   - component: {fileID: 1559200777}
   - component: {fileID: 1559200776}
   - component: {fileID: 1559200775}
-  - component: {fileID: 1559200778}
   m_Layer: 5
   m_Name: '[Button] ResetIcon'
   m_TagString: Untagged
@@ -16035,19 +16020,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1559200773}
   m_CullTransparentMesh: 1
---- !u!114 &1559200778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1559200773}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 922b6b717d243c0488363df95524540f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clickSound: {fileID: 8300000, guid: 449eb627546fc3143beecf99f1af0a4d, type: 3}
 --- !u!114 &1570132923 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
@@ -18146,7 +18118,8 @@ MonoBehaviour:
   nameText: {fileID: 1457462254}
   descriptionText: {fileID: 1471543544}
   roundText: {fileID: 1892951178}
-  ErrorSound: {fileID: 0}
+  ErrorSound: {fileID: 8300000, guid: 092789518b39f5d4dba0f9e1990892bc, type: 3}
+  PurchaseSound: {fileID: 8300000, guid: aca8445b05b930742b93a2728cf599b2, type: 3}
 --- !u!222 &1841625215
 CanvasRenderer:
   m_ObjectHideFlags: 0
