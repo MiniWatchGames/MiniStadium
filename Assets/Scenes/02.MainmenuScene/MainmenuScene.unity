@@ -11273,7 +11273,7 @@ MonoBehaviour:
   bgmSlider: {fileID: 184739773}
   sfxSlider: {fileID: 1863550485}
   mouseSlider: {fileID: 813298607}
-  applySettingButton: {fileID: 0}
+  applySettingButton: {fileID: 197519349}
 --- !u!1 &1921786502
 GameObject:
   m_ObjectHideFlags: 0
