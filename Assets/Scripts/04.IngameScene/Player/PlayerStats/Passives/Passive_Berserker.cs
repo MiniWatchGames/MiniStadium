@@ -27,6 +27,7 @@ public class Passive_Berserker : MonoBehaviour, IPassive, IStatObserver
 
     public void WhenStatChanged((float, string) data)
     {
+        if (this == null) return;
         if (data.Item2 == "currentHp")
         {
             if (data.Item1 <= controller?.BaseMaxHp.Value / 2 && !activated)
@@ -58,7 +59,6 @@ public class Passive_Berserker : MonoBehaviour, IPassive, IStatObserver
             controller?.RemoveStatTargetDecorate(StatType.Damage, modifierIndex);
             activated = false;
         }
-        StopAllCoroutines();
         Destroy(effect.gameObject);
     }
 }

@@ -31,6 +31,7 @@ public class IncreasingRandomStatEvery20Seconds : MonoBehaviour, IPassive
     {
         while (true)
         {
+            if (this == null) yield break;
             rand = Random.Range(0, 3);
             effect?.SetActive(true);
             switch (rand) {

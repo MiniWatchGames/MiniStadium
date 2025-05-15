@@ -34,8 +34,10 @@ public class DummyAttacking : MonoBehaviour
             switch (state)
             {
                 case InGameManager.RoundState.RoundEnd:
-                    StopCoroutine(Active);
-                    Active = null;
+                    if (Active != null) { 
+                        StopCoroutine(Active);
+                        Active = null;
+                    }
                     break;
 
                 case InGameManager.RoundState.InRound:
