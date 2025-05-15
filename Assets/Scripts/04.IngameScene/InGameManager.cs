@@ -208,10 +208,6 @@ public class InGameManager : MonoBehaviour
                 // FinishRoundUI.SetActive(true);
                 inGameUIAction?.Invoke();
                 SetGameTime(5, RoundState.RoundStart);
-                RepairShop repairShop = RepairShopUI.GetComponent<RepairShop>();
-                repairShop.currentMoney 
-                    += currentWinLoseState == WinLoseState.Win? prizeWinner : prizeLoser;
-                repairShop.UpdateMoneyText(repairShop.totalPrice);
                 break;
         }
     }
@@ -369,7 +365,7 @@ public class InGameManager : MonoBehaviour
     //플레이어가 죽을때 또는 죽였을 때 호출되야한다.
     public void EndRound(GameObject Loser)
     {
-        
+        RepairShop repairShop = RepairShopUI.GetComponent<RepairShop>();
         
         //라운드가 끝날때 마다 라운트 인포를 켜줘야 하니까.
         GameRoundInfoUI.gameObject.SetActive(true);
@@ -378,9 +374,13 @@ public class InGameManager : MonoBehaviour
             case Team.Player:
                 Debug.Log("Player Lose");
                 RedWinCount++;
+                repairShop.currentMoney += prizeLoser;
+                repairShop.UpdateMoneyText(repairShop.totalPrice);
                 break;
             case Team.Enemy:
                 BlueWinCount++;
+                repairShop.currentMoney += prizeWinner;
+                repairShop.UpdateMoneyText(repairShop.totalPrice);
                 break;
         }
         SetRoundState(RoundState.RoundEnd);

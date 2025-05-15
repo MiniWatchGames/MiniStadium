@@ -8425,6 +8425,11 @@ PrefabInstance:
       objectReference: {fileID: 1915014496}
     - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
+      propertyPath: prizeLoser
+      value: 600
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
+        type: 3}
       propertyPath: Damagefield
       value: 
       objectReference: {fileID: 74060739}
@@ -8438,6 +8443,11 @@ PrefabInstance:
         type: 3}
       propertyPath: InRoundTime
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
+        type: 3}
+      propertyPath: prizeWinner
+      value: 700
       objectReference: {fileID: 0}
     - target: {fileID: 3741645979634886639, guid: c239d90c0153eac4cbc5d17782afdf55,
         type: 3}
@@ -15583,6 +15593,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 0}
   audioMixer: {fileID: 24100000, guid: 316c152184ed06a47aecb5e8b6f783e3, type: 2}
+  bgmClips:
+  - {fileID: 8300000, guid: c4e080a48e6eefc4a97d1c029156edba, type: 3}
+  - {fileID: 8300000, guid: dbf66b56603075b489f14ce257bbec29, type: 3}
+  - {fileID: 8300000, guid: 98ffb4b024ecdfe4096a3dbb7a100425, type: 3}
+  - {fileID: 8300000, guid: da580f6a71fce4d8d9f3109e94573bc0, type: 3}
 --- !u!4 &1559087471
 Transform:
   m_ObjectHideFlags: 0

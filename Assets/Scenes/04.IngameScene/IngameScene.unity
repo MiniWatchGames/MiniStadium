@@ -15593,7 +15593,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 0}
   audioMixer: {fileID: 24100000, guid: 316c152184ed06a47aecb5e8b6f783e3, type: 2}
-  bgmClips: []
+  bgmClips:
+  - {fileID: 8300000, guid: c4e080a48e6eefc4a97d1c029156edba, type: 3}
+  - {fileID: 8300000, guid: dbf66b56603075b489f14ce257bbec29, type: 3}
+  - {fileID: 8300000, guid: 98ffb4b024ecdfe4096a3dbb7a100425, type: 3}
+  - {fileID: 8300000, guid: da580f6a71fce4d8d9f3109e94573bc0, type: 3}
 --- !u!4 &1559087471
 Transform:
   m_ObjectHideFlags: 0
