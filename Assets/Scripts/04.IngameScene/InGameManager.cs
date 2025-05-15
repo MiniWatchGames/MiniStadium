@@ -54,6 +54,8 @@ public class InGameManager : MonoBehaviour
 
 
     [SerializeField] private GameObject RepairShopUI;
+    [SerializeField] private int prizeWinner;
+    [SerializeField] private int prizeLoser;
     // [SerializeField] private GameObject FinishRoundUI;
     [SerializeField] private GameObject GameRoundInfoUI;
     [SerializeField] private GameState currentGameState;
@@ -206,7 +208,8 @@ public class InGameManager : MonoBehaviour
                 // FinishRoundUI.SetActive(true);
                 inGameUIAction?.Invoke();
                 SetGameTime(5, RoundState.RoundStart);
-
+                RepairShopUI.GetComponent<RepairShop>().currentMoney 
+                    += currentWinLoseState == WinLoseState.Win? prizeWinner : prizeLoser;
                 break;
         }
     }
@@ -444,7 +447,7 @@ public class InGameManager : MonoBehaviour
             }
             LoseRound(player);
             SetWinLoseState(WinLoseState.Lose);
-           
+            
         };
         EnemyPlayer.GetComponent<PlayerController>().OnPlayerDie = (enemy) =>
         {
@@ -455,7 +458,7 @@ public class InGameManager : MonoBehaviour
             }
             LoseRound(enemy);
             SetWinLoseState(WinLoseState.Win);
-           
+            
         };/*
         EnemyPlayer.GetComponent<DummyController>().OnDieCallBack = (enemy) =>
         {
