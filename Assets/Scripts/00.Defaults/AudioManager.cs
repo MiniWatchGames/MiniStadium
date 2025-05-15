@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -7,7 +8,8 @@ public class AudioManager : MonoBehaviour
     public AudioSource audioSource;
 
     [SerializeField] private AudioMixer audioMixer;
-
+    [SerializeField] private AudioClip[] bgmClips;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -15,6 +17,7 @@ public class AudioManager : MonoBehaviour
             Instance = this;
             audioSource = GetComponent<AudioSource>();
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
             LoadVolumes();
         }
         else
@@ -54,5 +57,43 @@ public class AudioManager : MonoBehaviour
         SetMasterVolume(PlayerPrefs.GetFloat("MasterVolume", 1f));
         SetBGMVolume(PlayerPrefs.GetFloat("BGMVolume", 1f));
         SetSFXVolume(PlayerPrefs.GetFloat("SFXVolume", 1f));
+    }
+
+    private void SetAudioClip(AudioClip clip)
+    {
+        audioSource.clip = clip;
+        audioSource.Play();
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        switch (scene.buildIndex)
+        {
+            // SignIn Scene
+            case 1:
+                SetAudioClip(bgmClips[0]);
+                break;
+            // Mainmenu Scene
+            case 2:
+                SetAudioClip(bgmClips[1]);
+                break;
+            // Matching Scene
+            case 3:
+                SetAudioClip(bgmClips[2]);
+                break;
+            // Ingame Scene
+            case 4:
+                SetAudioClip(bgmClips[3]);
+                audioSource.volume = 0.1f;
+                break;
+        }
+    }
+    
+    void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
     }
 }
