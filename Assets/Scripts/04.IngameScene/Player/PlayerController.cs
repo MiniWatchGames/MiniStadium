@@ -52,6 +52,8 @@ public enum StatType
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatObserver
 {
+    [SerializeField] GameObject rightFoot;
+    [SerializeField] GameObject leftFoot;
     [SerializeField] private Transform head;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private DamagedUxController _damagedUxController;
@@ -65,7 +67,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
     // input값 저장, 전달 
     private Vector2 _currentMoveInput;
-    public Vector2 CurrentMoveInput => _currentMoveInput;
+    public Vector2 CurrentMoveInput { get => _currentMoveInput; set => _currentMoveInput = value; }
     private const float InputBufferTime = 0.1f; // 100ms의 버퍼 타임
     private float _lastInputTime = -Mathf.Infinity;
     private const float ClickCooldown = 0.9f; // 공격 클릭 간 최소 간격 ( sword일 때만 )
@@ -734,8 +736,7 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
     public float GetDistanceToGround()
     {
         float maxDistance = 10f;
-        if (Physics.Raycast(_characterController.transform.position,
-                Vector3.down, out RaycastHit hit, maxDistance, groundLayer))
+        if (Physics.Raycast(_characterController.transform.position, Vector3.down, out RaycastHit hit, maxDistance, groundLayer))        
         {
             return hit.distance;
         }
@@ -1135,23 +1136,29 @@ public class PlayerController : MonoBehaviour, IInputEvents, IDamageable, IStatO
 
         // 스킬 쿨타임 받아오기
 
-        switch (_weaponSkills?.Count) {
-            case 1:
-                _firstWeaponSkillCoolTime = _weaponSkills[0].Item2 is ISkillData firstWeaponSkill && firstWeaponSkill.CoolTime?.Value != null ? firstWeaponSkill.CoolTime.Value : 0f;
-                break;
-            case 2:
-                _secondWeaponSkillCoolTime = _weaponSkills[1].Item2 is ISkillData secondWeaponSkill && secondWeaponSkill.CoolTime?.Value != null ? secondWeaponSkill.CoolTime.Value : 0f;
-                break;
+        for (int i =0; i < _weaponSkills.Count; i++) {
+            switch (i)
+            {
+                case 0:
+                    _firstWeaponSkillCoolTime = _weaponSkills[i].Item2 is ISkillData firstWeaponSkill && firstWeaponSkill.CoolTime?.Value != null ? firstWeaponSkill.CoolTime.Value : 0f;
+                    break;
+                case 1:
+                    _secondWeaponSkillCoolTime = _weaponSkills[i].Item2 is ISkillData secondWeaponSkill && secondWeaponSkill.CoolTime?.Value != null ? secondWeaponSkill.CoolTime.Value : 0f;
+                    break;
+            }
         }
 
-        switch (_movementSkills?.Count) {
+        for (int i = 0; i < _movementSkills.Count; i++)
+        {
+            switch (i) {
+            case 0:
+                _firstMovementSkillCoolTime =  _movementSkills[i].Item2 is ISkillData firstMovementSkill && firstMovementSkill.CoolTime?.Value != null ? firstMovementSkill.CoolTime.Value : 0f;
+                break;
             case 1:
-                _firstMovementSkillCoolTime =  _movementSkills[0].Item2 is ISkillData firstMovementSkill && firstMovementSkill.CoolTime?.Value != null ? firstMovementSkill.CoolTime.Value : 0f;
+                _secondMovementSkillCoolTime = _movementSkills[i].Item2 is ISkillData secondMovementSkill && secondMovementSkill.CoolTime?.Value != null ? secondMovementSkill.CoolTime.Value : 0f;
                 break;
-            case 2:
-                _secondMovementSkillCoolTime = _movementSkills[1].Item2 is ISkillData secondMovementSkill && secondMovementSkill.CoolTime?.Value != null ? secondMovementSkill.CoolTime.Value : 0f;
-                break;
-        }     
+            }
+        }
 
         _currentFirstWeaponSkillCoolTime = new ObservableFloat(0, "currentFirstWeaponSkillCoolTime");
         _currentSecondWeaponSkillCoolTime = new ObservableFloat(0, "currentSecondWeaponSkillCoolTime");

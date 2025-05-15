@@ -13,6 +13,7 @@ public class SwordAttackStrategy : IAttackStrategy
     private float _attackStartTime;
     private float _minAttackDuration = 0.5f; // 최소 공격 지속 시간
     private SwordController _swordController;
+    public bool ComboActive { set => _comboActive = value; }
     
     public void Enter(PlayerController playerController, GameObject weaponObject)
     {

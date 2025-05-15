@@ -436,12 +436,12 @@ GameObject:
   - component: {fileID: 7397074719971336562}
   - component: {fileID: 8564315523455457166}
   - component: {fileID: 2023165885778897446}
-  - component: {fileID: 5012145158824696111}
   - component: {fileID: 7725872679975783454}
   - component: {fileID: 6107916619662369295}
+  - component: {fileID: -1227128866206044795}
   m_Layer: 7
   m_Name: Dummy 1
-  m_TagString: Player
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -548,6 +548,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b16a8e943de4d8d88b6ddb16c2b834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rightFoot: {fileID: 1628996011761389380}
+  leftFoot: {fileID: 84398474335413383}
   head: {fileID: 7684241365501367372}
   groundLayer:
     serializedVersion: 2
@@ -599,18 +601,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 8564315523455457166}
---- !u!114 &5012145158824696111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592021047486761035}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e8e5c83d9414489b5a1c40f7d264893, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &7725872679975783454
 AudioSource:
   m_ObjectHideFlags: 0
@@ -720,6 +710,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dummy: {fileID: 8564315523455457166}
+--- !u!114 &-1227128866206044795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592021047486761035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd249edc69a71f94498f8057c4a4b4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect1: {fileID: 1247282762272248, guid: 8f8ccb3a03e68af4cb4db0098da19146, type: 3}
+  effect2: {fileID: 1617602193996184, guid: 672508e118abcc04eb8c428966936ba0, type: 3}
+  effect3: {fileID: 1679348057962266, guid: 043a259092d2c1d4eb5cf0d7a807a5c2, type: 3}
+  effect4Healer: {fileID: 8877596331768416466, guid: 25df25dc39da2f8448bcfd49b754f377,
+    type: 3}
+  effect5Berserker: {fileID: 1084983192572740, guid: c04b2745d5ca4cd40bb52e1f937e7a7d,
+    type: 3}
+  effect6: {fileID: 1343423572576872, guid: 63345b0c026b87e45b34506ee875c7ee, type: 3}
+  effect7: {fileID: 1161526018737128, guid: 4e98af0ece4a26c428343cafdaf41241, type: 3}
 --- !u!1 &1628996011761389380
 GameObject:
   m_ObjectHideFlags: 0
