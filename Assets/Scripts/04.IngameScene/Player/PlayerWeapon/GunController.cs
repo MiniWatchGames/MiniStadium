@@ -205,7 +205,8 @@ public class GunController : MonoBehaviour, IWeapon
         }
         
         // 발사 효과음
-        _audioSource.PlayOneShot(shotSound, 1f);
+        //_audioSource.PlayOneShot(shotSound, 1f);
+        AudioSource.PlayClipAtPoint(shotSound, firePoint.position, 1f);
         
         hitPosition = firePoint.position + _camera.transform.forward * range;
         bool hitTarget = false;
@@ -265,9 +266,6 @@ public class GunController : MonoBehaviour, IWeapon
             };
 
             damageable.TakeDamage(damageInfo);
-            
-            // 크로스헤어 알림용
-            //CombatEvents.OnTargetHit?.Invoke(target);
         }
     }
     
@@ -336,8 +334,9 @@ public class GunController : MonoBehaviour, IWeapon
     }
 
     public void ReloadSoundPlay() {
-        _audioSource.clip = ReloadSound;
-        _audioSource.Play();
+        // _audioSource.clip = ReloadSound;
+        // _audioSource.Play();
+        AudioSource.PlayClipAtPoint(ReloadSound, transform.position, 1f);
     }
     public void SoundStop() {
         _audioSource.Stop();
