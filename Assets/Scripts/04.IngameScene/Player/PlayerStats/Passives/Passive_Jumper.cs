@@ -14,6 +14,7 @@ public class Passive_Jumper : MonoBehaviour, IPassive, IStatObserver
     private bool affected;
     private ParticleSystem particle;
     private ActionState actionState;
+    private Coroutine jumpEffect;
     public void ApplyPassive(PlayerController playerController)
     {
         effects = playerController.GetComponent<PassiveEffects>();
@@ -30,6 +31,7 @@ public class Passive_Jumper : MonoBehaviour, IPassive, IStatObserver
     }
     public void WhenStatChanged((float, string) data)
     {
+        if (this == null) return;
         if (data.Item2 == "currentHp")
         {
             if (controller == null) return;
@@ -47,22 +49,28 @@ public class Passive_Jumper : MonoBehaviour, IPassive, IStatObserver
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCoroutine(ActivateForOneSecond());
+        if (!controller.IsGrounded) { 
+            if (controller.MovementFsm.CurrentState == MovementState.Jump)
+            {
+                if(jumpEffect == null)
+                    jumpEffect = StartCoroutine(ActivateForOneSecond());
+            }
         }
     }
     IEnumerator ActivateForOneSecond()
     {
+        if (this == null) yield break;
         effect?.SetActive(true);
         yield return new WaitForSeconds(2f);
         effect?.SetActive(false);
+        jumpEffect = null;
     }
     private void OnDestroy()
     {
         effect?.SetActive(false);
         if (affected)
             controller.RemoveStatTargetDecorate(StatType.JumpPower, modifierIndex);
+        controller?.CurrentHp.RemoveObserver(this);
         StopAllCoroutines();
         Destroy(effect?.gameObject);
     }

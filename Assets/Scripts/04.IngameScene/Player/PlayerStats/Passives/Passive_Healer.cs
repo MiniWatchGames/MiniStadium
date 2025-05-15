@@ -10,8 +10,10 @@ public class Passive_Healer : MonoBehaviour, IPassive, IStatObserver
     Coroutine healer;
     private float prevHp;
     private bool isDamaged;
+    private PlayerController _playerController;
     public void ApplyPassive(PlayerController playerController)
     {
+        _playerController = playerController;
         effects = playerController.GetComponent<PassiveEffects>();
         effect = Instantiate(effects.effect4Healer, playerController.CameraController.transform);
         effect.transform.localPosition = new Vector3(0, -0.5f, 0.15f);
@@ -25,6 +27,8 @@ public class Passive_Healer : MonoBehaviour, IPassive, IStatObserver
 
     public void WhenStatChanged((float, string) data)
     {
+        if (this == null) return;
+
         if (prevHp > data.Item1) {
             isDamaged = true;
             prevHp = data.Item1;
@@ -37,6 +41,7 @@ public class Passive_Healer : MonoBehaviour, IPassive, IStatObserver
         if (currentHp != null) {
             while (true)
             {
+                if (this == null) yield break;
                 if (isDamaged)
                 {
                     effect?.SetActive(false);
@@ -64,6 +69,7 @@ public class Passive_Healer : MonoBehaviour, IPassive, IStatObserver
     }
     private void OnDestroy()
     {
+        _playerController?.CurrentHp.RemoveObserver(this);
         StopAllCoroutines();
         Destroy(effect?.gameObject);
     }
