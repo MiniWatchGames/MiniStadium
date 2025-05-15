@@ -389,9 +389,12 @@ public class InGameManager : MonoBehaviour
 
         GameObject EnemyPlayer = GameObject.FindWithTag("Enemy");
         if (EnemyPlayer == null) {
-            EnemyPlayer = Instantiate(EnemyPrefab, new Vector3(5, 2, 3), Quaternion.identity);
+            EnemyPlayer = Instantiate(EnemyPrefab, mapSpawners[currentMap][1].transform.position, Quaternion.identity);
         }    
+        EnemyPlayer.GetComponent<CharacterController>().enabled = false;
         EnemyPlayer.GetComponent<PlayerController>().InitDummy();
+        EnemyPlayer.transform.position = mapSpawners[currentMap][1].transform.position;
+        EnemyPlayer.GetComponent<CharacterController>().enabled = true;
         //if(EnemyPlayer == null) return;
         EnemyPlayer.tag = "Enemy";
         Debug.Log("Player got the Team");

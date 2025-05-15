@@ -3133,6 +3133,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5497209138419773224, guid: e110408ae6a01a24683141c9534ec04f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 5497209138419773224, guid: e110408ae6a01a24683141c9534ec04f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.41
+      objectReference: {fileID: 0}
     - target: {fileID: 5531152803310576433, guid: e110408ae6a01a24683141c9534ec04f,
         type: 3}
       propertyPath: m_Size.z
@@ -18121,7 +18131,7 @@ MonoBehaviour:
   nameText: {fileID: 1457462254}
   descriptionText: {fileID: 1471543544}
   roundText: {fileID: 1892951178}
-  ErrorSound: {fileID: 8300000, guid: 092789518b39f5d4dba0f9e1990892bc, type: 3}
+  ErrorSound: {fileID: 0}
 --- !u!222 &1841625215
 CanvasRenderer:
   m_ObjectHideFlags: 0
