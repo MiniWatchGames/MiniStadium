@@ -67,22 +67,22 @@ public class AudioManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        switch (scene.buildIndex)
+        switch (scene.name)
         {
             // SignIn Scene
-            case 1:
+            case "SignScene":
                 SetAudioClip(bgmClips[0]);
                 break;
             // Mainmenu Scene
-            case 2:
+            case "MainmenuScene":
                 SetAudioClip(bgmClips[1]);
                 break;
             // Matching Scene
-            case 3:
+            case "MatchingScene":
                 SetAudioClip(bgmClips[2]);
                 break;
             // Ingame Scene
-            case 4:
+            case "IngameScene":
                 SetAudioClip(bgmClips[3]);
                 audioSource.volume = 0.1f;
                 break;
