@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public struct entityInField
@@ -28,7 +29,7 @@ public class SafeZone : MonoBehaviour, IStatObserver
     private Dictionary<GameObject, entityInField> objectsInField = new Dictionary<GameObject, entityInField>();
     private Dictionary<GameObject, Coroutine> activeCoroutines = new Dictionary<GameObject, Coroutine>();
     
-    
+    [SerializeField] private Volume purpleVolume; // 보라빛 효과 볼륨
    
     
     //public HashSet<GameObject> objectsInField = new HashSet<GameObject>();
@@ -36,7 +37,8 @@ public class SafeZone : MonoBehaviour, IStatObserver
     void Start()
     {
         magneticFieldCollider = GetComponent<Collider>();
-        
+        if (purpleVolume != null)
+            purpleVolume.weight = 0;
     }
 
     // Update is called once per frame
@@ -62,6 +64,8 @@ public class SafeZone : MonoBehaviour, IStatObserver
     }
     public void OnTriggerEnter(Collider other)
     {
+        if (purpleVolume != null)
+            purpleVolume.weight = 0;
         Debug.Log("OnTriggerEnter" + other.name);
         if (other.CompareTag("Player") || other.CompareTag("Enemy"))
         {
@@ -80,7 +84,6 @@ public class SafeZone : MonoBehaviour, IStatObserver
             }
             else
             {
-                
                 objectsInField.Add(other.gameObject, new entityInField()
                 {
                     entity = other.gameObject,
@@ -93,7 +96,6 @@ public class SafeZone : MonoBehaviour, IStatObserver
                     },
                     timer = 3f
                 });
-                
             }
         }
     }
@@ -112,6 +114,8 @@ public class SafeZone : MonoBehaviour, IStatObserver
     
     public void OnTriggerExit(Collider other)
     {
+        if (purpleVolume != null)
+            purpleVolume.weight = 1;
         if (other.CompareTag("Player") || other.CompareTag("Enemy"))
         {
             var entityInField = objectsInField[other.gameObject];
@@ -125,6 +129,11 @@ public class SafeZone : MonoBehaviour, IStatObserver
             
             //other.gameObject.GetComponent<TestStat>().ChangedHp -= magneticFieldDamage;
             //Debug.Log("OnTriggerEnter" + other.name);
+        }
+        if (other.CompareTag("PlayerCamera"))
+        {
+            if (purpleVolume != null)
+                purpleVolume.weight = 1;
         }
     }
 

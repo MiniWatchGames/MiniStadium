@@ -2366,9 +2366,10 @@ GameObject:
   - component: {fileID: 4383057569683828804}
   - component: {fileID: 3273303420382486837}
   - component: {fileID: 2051301180654909716}
+  - component: {fileID: 4232012103593185608}
   m_Layer: 0
   m_Name: Player Camera
-  m_TagString: Untagged
+  m_TagString: PlayerCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2470,7 +2471,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -2506,6 +2507,27 @@ MonoBehaviour:
   cameraOffset: {x: 0, y: 0.22, z: 0.15}
   positionSmoothSpeed: 30
   rotationSmoothSpeed: 30
+--- !u!135 &4232012103593185608
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7469125994218291045}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.01
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7506149422773820426
 GameObject:
   m_ObjectHideFlags: 0
