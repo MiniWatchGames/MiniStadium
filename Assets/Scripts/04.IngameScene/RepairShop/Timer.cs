@@ -56,6 +56,12 @@ public class Timer : MonoBehaviour
         }
         text.text = FormatSeconds(currentTime);
     }
+
+    public void ForceStart()
+    {
+        currentTime = 0;
+    }
+    
     public void ResetTimer()
     {
         

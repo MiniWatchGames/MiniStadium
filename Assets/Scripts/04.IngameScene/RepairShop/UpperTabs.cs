@@ -69,6 +69,7 @@ public class UpperTabs : MonoBehaviour
         WeaponTab.SetActive(true);
         StatusTab.SetActive(false);
         SkillTab.SetActive(false);
+        repairShop.SetDescription("","");
         
         currentTab = 0;
     }
@@ -80,6 +81,7 @@ public class UpperTabs : MonoBehaviour
         WeaponTab.SetActive(false);
         StatusTab.SetActive(true);
         SkillTab.SetActive(false);
+        repairShop.SetDescription("","");
         
         currentTab = 1;
     }
@@ -91,6 +93,7 @@ public class UpperTabs : MonoBehaviour
         WeaponTab.SetActive(false);
         StatusTab.SetActive(false);
         SkillTab.SetActive(true);
+        repairShop.SetDescription("","");
         
         currentTab = 2;
     }
